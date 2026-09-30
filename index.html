@@ -1,0 +1,54 @@
+<!doctype html><meta charset="utf-8">
+<title>폭투: 영남알프스를 지켜라</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Oswald:wght@200..700&display=block">
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; cursor: none; }
+  canvas { position: absolute; inset: 0; margin: auto; max-width: 100%; max-height: 100%; aspect-ratio: 16/9; width: 100%; height: auto; }
+  @media (min-aspect-ratio: 16/9) { canvas { height: 100%; width: auto; } }
+  :root { padding: 0 !important; background: #000; color-scheme: dark; }
+  html, body { position: fixed; inset: 0; width: 100%; overscroll-behavior: none; -webkit-touch-callout: none; }
+  #fontwarm { position: absolute; left: -9999px; font-family: 'Jua'; } #fontwarm b { font-family: 'Oswald'; font-weight: 700; }
+  #touch { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+  #touch .pad, #touch .btns { position: absolute; bottom: 3vh; pointer-events: none; }
+  #touch .pad { left: 3vw; width: 34vh; height: 34vh; }
+  #touch .btns { right: 3vw; width: 40vh; height: 34vh; }
+  #touch button { position: absolute; pointer-events: auto; border: 4px solid #000; border-radius: 50%; font: 3.4vh 'Jua', sans-serif; color: #000;
+    box-shadow: inset 0 0 0 3px #fff; opacity: .72; touch-action: none; padding: 0; }
+  #touch button.down { opacity: 1; transform: scale(.92); }
+  #touch .pad button { width: 11vh; height: 11vh; background: #ffe600; border-radius: 22%; font-size: 4.5vh; }
+  #touch .b-u { left: 11.5vh; top: 0; } #touch .b-d { left: 11.5vh; bottom: 0; } #touch .b-l { left: 0; top: 11.5vh; } #touch .b-r { right: 0; top: 11.5vh; }
+  #touch .btns button { width: 14vh; height: 14vh; }
+  #touch .b-p { left: 0; bottom: 0; background: #ffe600; } #touch .b-k { left: 17vh; bottom: 6vh; background: #19f5c8; } #touch .b-s { left: 26vh; top: 0; background: #ff2f8a; color: #fff; }
+  #touchToggle { position: fixed; right: 10px; top: 10px; z-index: 6; font: 14px 'Jua', sans-serif; background: rgba(0,0,0,.35); color: rgba(255,255,255,.55);
+    border: 1px solid rgba(255,255,255,.3); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+  #musicBtn { position: fixed; right: 118px; top: 10px; z-index: 6; font: 18px 'Jua', sans-serif; width: 40px; height: 32px; background: rgba(0,0,0,.35); color: rgba(255,255,255,.7);
+    border: 1px solid rgba(255,255,255,.3); border-radius: 8px; padding: 0; cursor: pointer; touch-action: none; }
+  #musicBtn:active { color: #ffe600; border-color: #ffe600; }
+  #musicBtn.off { color: rgba(255,150,160,.85); background: rgba(0,0,0,.35) linear-gradient(to top right, transparent calc(50% - 1.5px), #ff2f5a calc(50% - 1.5px), #ff2f5a calc(50% + 1.5px), transparent calc(50% + 1.5px)); }   /* 음악 끔: 빗금 친 음표 */
+  #touchToggle.on { color: #ffe600; border-color: #ffe600; }
+  #rotate { display: none; position: fixed; inset: 0; z-index: 20; background: #0b0614; color: #ffe600; font: 26px 'Jua', sans-serif; text-align: center;
+    align-items: center; justify-content: center; flex-direction: column; gap: 14px; padding: 0 24px; }
+  #rotate small { color: #fff; font-size: 17px; opacity: .8; }
+  @media (orientation: portrait) and (pointer: coarse) { #rotate { display: flex; } }
+</style>
+
+<canvas id="c" width="1920" height="1080"></canvas>
+<div id="fontwarm">영남알프스 <b>FIGHT 0123</b></div>
+<div id="touch">
+  <div class="pad">
+    <button class="b-u" data-b="u">▲</button><button class="b-l" data-b="l">◀</button><button class="b-r" data-b="r">▶</button><button class="b-d" data-b="d">▼</button>
+  </div>
+  <div class="btns">
+    <button class="b-s" data-b="s">필살</button><button class="b-p" data-b="p start">펀치</button><button class="b-k" data-b="k">킥</button>
+  </div>
+</div>
+<div id="rotate"><div style="font-size:60px">↻</div>휴대폰을 가로로 돌려 주세요<small>가로 화면에서 터치 버튼으로 플레이해요</small></div>
+<button id="touchToggle" title="Shift+T 로도 켜고 끔">터치 버튼</button>
+<button id="musicBtn" title="다음 곡 (M · Tab · 패드 Back)">♪</button>
+<script src="play/characters.js"></script>
+<script src="play/audio.js"></script>
+<script src="play/input.js"></script>
+<script src="play/game.js"></script>
