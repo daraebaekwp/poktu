@@ -972,7 +972,7 @@ const AI_CMD = { 1: 0, 2: .2, 3: .32 };   // CPU가 기술(커맨드)을 쓰는 
 const AIP = {
   1: { react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
   2: { react: 14, block: .45, lowRead: .6, antiAir: .4, sup: .7, jumpIn: .07, aggr: .65, chain: .7, dmgOut: 1, dmgIn: 1, walkIn: 1 },
-  3: { react: 8, block: .62, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.15, dmgIn: .9, walkIn: 1.1 },
+  3: { react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.15, dmgIn: .9, walkIn: 1.1 },
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
