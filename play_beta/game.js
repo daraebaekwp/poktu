@@ -171,7 +171,7 @@ async function loadAll() {
     })());
   }
   for (const r of ROSTER) jobs.push(load(r.face).then(i => IMG[r.face] = i));
-  for (const v of ['whale', 'buoy', 'fire', 'boom']) jobs.push(load(`vfx/${v}.webp`).then(i => IMG['vfx_' + v] = i));
+  for (const v of ['whale', 'buoy', 'fire', 'boom', 'tiger']) jobs.push(load(`vfx/${v}.webp`).then(i => IMG['vfx_' + v] = i));
   STAGES.forEach((s, i) => jobs.push(load(s.bg).then(img => { BG[i] = bakeBg(img); IMG['thumb' + i] = img; })));
   loadTotal = 120;
   A.setVoices(voiceSet);
@@ -359,7 +359,7 @@ function gunTick(f, v, sp) {
     fx.push({ type: 'muzzle', x: mx, y: my, dir: f.dir, t0: RT, rt: true, life: .14, r: 70 * Math.min(big, 1.4) });   // 총구 불꽃은 실제 시간으로 (슬로모션에서 너무 오래 남지 않게)
     for (let k = 0; k < 4; k++) fx.push({ type: 'streak', x: mx - f.dir * (20 + k * 30), y: my + (rnd() - .5) * 90, dir: f.dir, t0: T, life: .2, len: 120 + rnd() * 120 });
     // 10/2 간지: 탄피가 위로 튀고(금색 캡슐) · 총구 연기 · 반동 섬광
-    for (let k = 0; k < (last ? 3 : 1); k++) fx.push({ type: 'dot', x: f.x + f.dir * 60, y: my + 20, vx: -f.dir * (250 + rnd() * 250), vy: -700 - rnd() * 300, t0: T, life: .7, r: 9, col: '#ffcf3a' });
+    if (slow.k >= .99) for (let k = 0; k < (last ? 3 : 1); k++) fx.push({ type: 'dot', x: f.x + f.dir * 60, y: my + 20, vx: -f.dir * (250 + rnd() * 250), vy: -700 - rnd() * 300, t0: T, life: .7, r: 9, col: '#ffcf3a' });
     for (let k = 0; k < 3; k++) fx.push({ type: 'ring', x: mx + f.dir * (40 + k * 30), y: my - k * 14, t0: T + k * .04, life: .45, r: 60 + k * 30, col: 'rgba(230,230,230,.7)', lw: 10 - k * 2 });
     if (last) { overlay.white = .55; tw(overlay, { white: 0 }, .18, 'lin', true); }
     f.pose = d.pose; f.ox = -f.dir * (last ? 34 : 20); tw(f, { ox: 0 }, .14); cam.shake = Math.max(cam.shake, last ? 16 : 9); A.sfx('pew');
@@ -397,6 +397,12 @@ function drawGlasses(p) {   // 안경을 코드로 그림: 동그란 금테 두 
   ctx.restore();
 }
 function drawBullet(p) {   // 둥근 캡슐 총알 + 가로 잔상
+  if (p.fin && IMG.vfx_tiger) {   // 10/2 군인 마지막 총알 = "호랑이 기운": 빛나는 호랑이 머리가 포효하며 날아감
+    const img = IMG.vfx_tiger, dir = Math.sign(p.vx) || 1, w = 560 * (p.big || 1) * .7 * (1 + Math.sin(T * 20) * .04), h = w * img.height / img.width;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 1; i <= 3; i++) { ctx.globalAlpha = .12 / i; ctx.save(); ctx.translate(p.x - dir * i * 90, p.y); ctx.scale(dir, 1); ctx.drawImage(img, -w * .7, -h / 2, w, h); ctx.restore(); }
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.translate(p.x, p.y); ctx.scale(dir, 1); ctx.drawImage(img, -w * .7, -h / 2, w, h); ctx.restore();   // 본체는 색이 살게 보통 합성
+    if (rnd() < .6) fx.push({ type: 'dot', x: p.x - dir * w * .3, y: p.y + (rnd() - .5) * h * .5, vx: -dir * (100 + rnd() * 200), vy: -80 - rnd() * 120, t0: T, life: .5, r: 6 + rnd() * 8, col: rnd() < .5 ? '#ffd23f' : '#7fffd4' });
+    return; }
   const dir = Math.sign(p.vx) || 1, L = p.size * p.s, h = L * .42;
   ctx.save(); ctx.translate(p.x, p.y); ctx.scale(dir, 1); ctx.lineCap = 'round';
   if (p.slowShot && slow.k < 1) {   // 총알 시간: 뒤로 길게 끌리는 가로 꼬리
@@ -514,7 +520,7 @@ const CINE = {
       if (f.sp) f.sp.bt = false; slowSnap(); cineMood(0, 0, .2); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .28, 'out', true);
       const tx = clamp(d.x, 320, W - 320); rlater(.12, () => text('팡!', { size: 320, life: 1.1, x: tx, y: GROUND - 600, col: '#ffe600', stroke: '#ff2f8a', rot: -.08 }));
       shockwave(d.x, p.y, 1.3, '#ffd23f'); dust(d.x, Math.sign(p.vx) || 1, 18); cam.shake = 50; A.sfx('pang'); G.hitstop = 14;
-      rlater(.35, () => { stamp('명중!', { sub: '충성!', size: 170, y: 260, x: f.x < W / 2 ? W - 420 : 420, rot: -.1 }); shockwave(d.x, p.y, 2, '#d8ff5a'); });   // 10/2 군인 뽕: 명중 도장 + 한 겹 더
+      rlater(.35, () => { stamp('명중!', { sub: '호랑이 기운!', size: 170, y: 260, x: f.x < W / 2 ? W - 420 : 420, rot: -.1 }); shockwave(d.x, p.y, 2, '#d8ff5a'); });   // 10/2 군인 뽕: 명중 도장 + 한 겹 더
     },
     knock(f, d, dir) { d.vx = dir * 24; d.vy = -19; },
   },
