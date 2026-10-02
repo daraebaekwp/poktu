@@ -313,7 +313,7 @@ function endFreeze(f) {
   f.ox = f.dir * 30; tw(f, { ox: 0 }, .3);
   if (v.type === 'projectile') spawnProj(f, v, sp.dmg, v.y);
   else if (v.type === 'multi') { f.sp.shots = 0; }
-  else if (v.type === 'whirl') { G.proj.push({ kind: 'whirl', owner: f, x: f.x + f.dir * 170, y: GROUND, vx: f.dir * (v.speed || 10), hits: v.hits || 4, hitsLeft: v.hits || 4, cd: 0, dmg: sp.dmg, col: v.hitColor || '#fff', t: 0, on: 0, cine: sp.cine, sp: true }); A.sfx('wind'); tw(G.proj[G.proj.length - 1], { on: 1 }, .3); }
+  else if (v.type === 'whirl') { G.proj.push({ kind: 'whirl', owner: f, x: f.x + f.dir * 170, y: GROUND, vx: f.dir * (v.speed || 10), hits: v.hits || 4, hitsLeft: v.hits || 4, cd: 0, dmg: sp.dmg, col: v.hitColor || '#fff', t: 0, on: 0, cine: sp.cine, sp: true, petal: !!v.petal }); A.sfx('wind'); tw(G.proj[G.proj.length - 1], { on: 1 }, .3); }
   else if (v.type === 'siren') { f.sp.sirenAt = v.delay || 40; A.sfx('ring'); }
   if (sp.anim) f.pose = sp.anim[0][0];
   if (sp.fireVoice) A.voice(sp.fireVoice);   // 직장인: 동전 쏟아지는 소리
@@ -1125,7 +1125,23 @@ function drawCloud(x, y, s, al, dir) {
   for (let k = 0; k < 3; k++) { ctx.beginPath(); ctx.arc(20 + k * 50, 5, 30 + k * 12, rot + k, rot + k + 2.4); ctx.stroke(); }
   ctx.restore();
 }
+function drawPetal(x, y, r, rot, col) {   // 10/2 벚꽃 꽃잎 하나 (끝이 살짝 갈라진 물방울)
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.fillStyle = col; ctx.beginPath();
+  ctx.moveTo(0, -r); ctx.bezierCurveTo(r * .9, -r * .7, r * .8, r * .6, 0, r); ctx.bezierCurveTo(-r * .8, r * .6, -r * .9, -r * .7, 0, -r); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.ellipse(-r * .15, -r * .2, r * .22, r * .45, 0, 0, 7); ctx.fill(); ctx.restore();
+}
 function drawWhirl(p) {
+  if (p.on > 0 && p.petal) {   // 10/2 학생 "센치멘탈": 벚꽃잎 회오리 + 음표 + 분홍 빛 (산신령 억새 회오리와 다르게)
+    ctx.save(); ctx.globalAlpha = p.on;
+    const g = ctx.createRadialGradient(p.x, GROUND - 330, 20, p.x, GROUND - 330, 360); g.addColorStop(0, 'rgba(255,190,220,.45)'); g.addColorStop(1, 'rgba(255,190,220,0)');
+    ctx.fillStyle = g; ctx.fillRect(p.x - 380, GROUND - 720, 760, 720);
+    for (let i = 0; i < 70; i++) { const h = i / 70, a = T * 6 + i * 2.4, r = 70 + h * 200, y = GROUND - 30 - h * 680 + Math.sin(T * 3 + i) * 12, x = p.x + Math.cos(a) * r, front = Math.sin(a) > 0;
+      drawPetal(x, y, front ? 15 : 10, a * 1.7 + i, front ? (i % 3 ? '#ffc2dc' : '#ff8fc0') : 'rgba(255,200,225,.55)'); }
+    ctx.font = `64px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let k = 0; k < 6; k++) { const a = T * 2.2 + k * 1.05, x = p.x + Math.cos(a) * 230, y = GROUND - 220 - k * 80 + Math.sin(T * 4 + k) * 20;
+      ctx.lineWidth = 6; ctx.strokeStyle = '#2a1440'; ctx.strokeText(k % 2 ? '♪' : '♫', x, y); ctx.fillStyle = k % 2 ? '#ffffff' : '#ffd6e8'; ctx.fillText(k % 2 ? '♪' : '♫', x, y); }
+    ctx.restore(); return;
+  }
   if (p.on <= 0) return; ctx.save(); ctx.globalAlpha = p.on; ctx.lineCap = 'round';
   for (let i = 0; i < 80; i++) { const h = i / 80, a = T * 9 + i * 2.4, r = 60 + h * 190, y = GROUND - 30 - h * 700, x = p.x + Math.cos(a) * r, front = Math.sin(a) > 0;
     ctx.strokeStyle = front ? 'rgba(255,248,225,.95)' : 'rgba(210,190,150,.6)'; ctx.lineWidth = front ? 5 : 3;
