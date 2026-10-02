@@ -2156,7 +2156,7 @@ SCENES.continue = {
     const ph = s.tick % 1, nsc = warn ? 1.25 - .25 * EASE.out(Math.min(1, ph * 3)) : 1;
     ctx.save(); ctx.translate(cx, cy + 4); ctx.scale(nsc, nsc); label(String(s.left), 0, 0, 120, warn ? '#ff4040' : '#fff', NUM, 'center', 12); ctx.restore();
     label('초', cx, cy + R + 44, 36, '#fff', FONT, 'center', 6);
-    if (m.mode === 'arcade' && RUN) label(`이어하기 ${RUN.cont}번 · 기록 ${fmtTime(RUN.time)}`, cx, cy + R + 100, 26, '#ffe600', FONT, 'center', 5);
+    if (m.mode === 'arcade' && RUN) label(`기록 ${fmtTime(RUN.time)}`, cx, cy + R + 100, 26, '#ffe600', FONT, 'center', 5);
     label('▲ ▼ 로 고르고  펀치(F · A버튼)로 결정  ·  화면을 눌러도 돼요', W / 2, 1020, 38, '#fff', FONT, 'center', 7);
   },
 };
@@ -2243,9 +2243,9 @@ SCENES.ranking = {
     menuBg(s.t);
     label('명예의 전당', W / 2, 88, 96, '#ffe600', FONT, 'center', 12);
     label(SET.rounds === 3 ? 'BEST CLEAR TIME · TOP 10' : `BEST CLEAR TIME · TOP 10 · ${SET.rounds} ROUND${SET.rounds > 1 ? 'S' : ''}`, W / 2, 168, 34, '#19f5c8', NUM, 'center', 0);
-    const hx = [W / 2 - 610, W / 2 - 420, W / 2 - 150, W / 2 + 330, W / 2 + 610];
+    const hx = [W / 2 - 610, W / 2 - 420, W / 2 - 150, W / 2 + 470];   // 10/2: 이어하기 칸 뺌
     label('순위', hx[0], 222, 30, '#fff', FONT, 'center', 5); label('이름', hx[1], 222, 30, '#fff', FONT, 'center', 5); label('캐릭터', hx[2], 222, 30, '#fff', FONT, 'center', 5);
-    label('기록', hx[3], 222, 30, '#fff', FONT, 'center', 5); label('이어하기', hx[4], 222, 30, '#fff', FONT, 'center', 5);
+    label('기록', hx[3], 222, 30, '#fff', FONT, 'center', 5);
     if (!s.list.length) label('아직 기록이 없어요! 첫 번째 주인공이 되어 보세요', W / 2, 560, 54, '#fff', FONT, 'center', 8);
     s.list.forEach((r, i) => { const b = rankRow(i), hi = s.hi && r.name === s.hi.name && r.time === s.hi.time && r.date === s.hi.date, inT = EASE.out(Math.min(1, Math.max(0, (s.t - i * .06) / .3)));
       ctx.save(); ctx.globalAlpha = inT; ctx.translate((1 - inT) * 200, 0);
@@ -2256,7 +2256,6 @@ SCENES.ranking = {
       label(r.name || '???', hx[1], b.y + b.h / 2 + 2, 50, '#fff', NUM, 'center', 6);
       faceBox(r.key, hx[2] - 150, b.y + 5, 56); label(CHARS[r.key] ? CHARS[r.key].name : '?', hx[2] - 76, b.y + b.h / 2 + 2, 36, '#fff', FONT, 'left', 5);
       label(fmtTime(r.time), hx[3], b.y + b.h / 2 + 2, 50, hi ? '#fff' : '#ffe600', NUM, 'center', 6);
-      label(r.cont ? `${r.cont}번` : '-', hx[4], b.y + b.h / 2 + 2, 34, '#fff', FONT, 'center', 5);
       ctx.restore(); });
     if (s.from === 'miss' && s.mine) label(`내 기록 ${fmtTime(s.mine)} — 아쉽게 10위 밖!` + (s.list[0] ? `  1등까지 ${(s.mine - s.list[0].time).toFixed(1)}초!` : ' 다음엔 더 빨리!'), W / 2, 1030, 40, '#19f5c8', FONT, 'center', 7);
     else if (s.from === 'attract' && blink(1.2)) label('아무 버튼이나 누르면 시작!', W / 2, 1030, 46, '#ffe600', FONT, 'center', 7);
