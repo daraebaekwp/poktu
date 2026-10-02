@@ -242,7 +242,7 @@ window.CHARACTERS = {
       m_down: { h: 192 }, m_win: { h: 668 }, m_bow: { h: 443 }, m_taunt: { h: 575 },
       m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 340 },
       m_sp_windup: { h: 556 }, m_sp_charge: { h: 407 }, m_sp_slam: { h: 488 },
-      m_sp_salute: { h: 575 }, m_sp_aim: { h: 534 }, m_sp_fire: { h: 532 },   // 필살기 "충성!" 사격
+      m_sp_salute: { h: 575 }, m_sp_aim: { h: 534 }, m_sp_fire: { h: 532 }, m2_salute: { h: 585, flip: true }, m2_aim: { h: 540 }, m2_fire: { h: 540 },   // 10/2 새 경례·조준·사격 (진짜 게임 그림은 그대로 두려고 새 이름)   // 필살기 "충성!" 사격
     },
     moves: {
       punch:  { pose: 'm_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 195, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -264,14 +264,14 @@ window.CHARACTERS = {
       // 대표 필살기: 경례하며 "충성!" → 만화 총을 겨눠 탕탕탕 (둥근 총구 불꽃 · 캡슐 총알 · 마지막 발에 넉백). 피 없음 · 방사형 광선 없음
       // 9/29 연출: 경례 "충성!" → 겨누기 → 총알 시간(slowFrom 번째 총알부터 아주 느리게, 카메라가 총알을 따라감) → "팡!" 원래 속도로
       { name: '충성! 사격', cutin: 'cutins/m2.webp', col: '#d8ff5a', col2: '#3a5010', voice: 'm_salute', voiceAt: 60, shout: '충성!', hold: 40, cutinF: 60, cine: 'gun', burstCol: ['#d8ff5a', '#3a5010'],
-        windupPose: 'm_sp_salute', pre: [['m_sp_salute', 0], ['m_sp_aim', 88]], pose: 'm_sp_fire', anim: [['m_sp_aim', 0]], dmg: 32,
-        vfx: { type: 'gun', aimPose: 'm_sp_aim', at: 8, shots: 3, gap: 9, slowFrom: 2, speed: 38, size: 110, mx: 262, y: 450, lastBig: 1.5, hitColor: '#ffd23f' } },
+        windupPose: 'm2_salute', pre: [['m2_salute', 0], ['m2_aim', 88]], pose: 'm2_fire', anim: [['m2_aim', 0]], dmg: 32,
+        vfx: { type: 'gun', aimPose: 'm2_aim', at: 8, shots: 3, gap: 9, slowFrom: 2, speed: 38, size: 110, mx: 262, y: 450, lastBig: 1.5, hitColor: '#ffd23f' } },
       { name: '충성! 연속 사격', cutin: 'cutins/m3.webp', col: '#ffb347', col2: '#3a5010', voice: 'm_salute', voiceAt: 60, shout: '충성!', hold: 40, cutinF: 60, cine: 'gun', burstCol: ['#ffb347', '#3a5010'],
-        windupPose: 'm_sp_salute', pre: [['m_sp_salute', 0], ['m_sp_aim', 88]], pose: 'm_sp_fire', anim: [['m_sp_aim', 0]], dmg: 33,
-        vfx: { type: 'gun', aimPose: 'm_sp_aim', at: 8, shots: 5, gap: 7, slowFrom: 3, gapSlow: 4, speed: 40, size: 110, mx: 262, y: 450, lastBig: 1.7, hitColor: '#ffb347' } },
+        windupPose: 'm2_salute', pre: [['m2_salute', 0], ['m2_aim', 88]], pose: 'm2_fire', anim: [['m2_aim', 0]], dmg: 33,
+        vfx: { type: 'gun', aimPose: 'm2_aim', at: 8, shots: 5, gap: 7, slowFrom: 3, gapSlow: 4, speed: 40, size: 110, mx: 262, y: 450, lastBig: 1.7, hitColor: '#ffb347' } },
       { name: '충성! 대포알 사격', cutin: 'cutins/m2.webp', col: '#d8ff5a', col2: '#ff2f8a', voice: 'm_salute', voiceAt: 60, shout: '충성!!', hold: 40, cutinF: 60, cine: 'gun', burstCol: ['#d8ff5a', '#ff2f8a'],
-        windupPose: 'm_sp_salute', pre: [['m_sp_salute', 0], ['m_sp_aim', 88]], pose: 'm_sp_fire', anim: [['m_sp_aim', 0]], dmg: 36,
-        vfx: { type: 'gun', aimPose: 'm_sp_aim', at: 8, shots: 5, gap: 7, slowFrom: 2, gapSlow: 4, speed: 40, size: 120, mx: 262, y: 450, lastBig: 2.6, hitColor: '#d8ff5a' } },
+        windupPose: 'm2_salute', pre: [['m2_salute', 0], ['m2_aim', 88]], pose: 'm2_fire', anim: [['m2_aim', 0]], dmg: 36,
+        vfx: { type: 'gun', aimPose: 'm2_aim', at: 8, shots: 5, gap: 7, slowFrom: 2, gapSlow: 4, speed: 40, size: 120, mx: 262, y: 450, lastBig: 2.6, hitColor: '#d8ff5a' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
     introLines: [null, null, null],
