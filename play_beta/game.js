@@ -699,7 +699,7 @@ function updateFighter(f) {
       if (m.hop && f.st === 2) { f.vy = -m.hop.vy; f.vx = (m.hop.vx || 0) * f.dir; f.air = true; f.y -= 1; dust(f.x, f.dir, 4); }
       if (m.multi && f.st > m.startup && f.st < m.startup + m.active && (f.st - m.startup) % m.multi === 0) f.moveHit = false;
       if (f.st === m.startup) {
-        if (m.proj) { const v = m.proj; G.proj.push({ kind: 'shot', light: true, owner: f, img: v.img, x: f.x + f.dir * 130, y: GROUND - (v.y || 300), vx: f.dir * (v.speed || 15), size: v.size || 240, dmg: v.dmg || 6, col: v.col || '#fff', spin: true, t: 0, s: .4 }); tw(G.proj[G.proj.length - 1], { s: 1 }, .15); }
+        if (m.proj && !G.proj.some(p => p.owner === f && p.light && !p.dead && !p.sp)) { const v = m.proj; G.proj.push({ kind: 'shot', light: true, owner: f, img: v.img, x: f.x + f.dir * 130, y: GROUND - (v.y || 300), vx: f.dir * (v.speed || 15), size: v.size || 240, dmg: v.dmg || 6, col: v.col || '#fff', spin: true, t: 0, s: .4 }); tw(G.proj[G.proj.length - 1], { s: 1 }, .15); }
         if (m.wave) { const v = m.wave; G.proj.push({ kind: 'wave', owner: f, x: f.x + f.dir * 150, y: GROUND, vx: f.dir * (v.speed || 12), dmg: v.dmg || 6, kd: !!v.kd, col: v.col || '#fff3d0', t: 0 }); }
         if (m.rings) for (let i = 0; i < 3; i++) fx.push({ type: 'ring', x: f.x + f.dir * (170 + i * 80), y: f.y - 340, t0: T + i * .07, life: .45, r: 150 + i * 50, col: i % 2 ? '#ffffff' : '#ff8ad0', lw: 16 });
         if (m.meter) { f.meter = Math.min(100, f.meter + m.meter); f.glow = 1; tw(f, { glow: 0 }, .6); A.sfx('sparkle'); }
