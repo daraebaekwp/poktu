@@ -2483,7 +2483,14 @@ window.GAME = {
   const localLoad = rankLoad, localAdd = rankAdd;
   const on = () => SET.rounds === 3 && Array.isArray(shared);
   const toRec = r => ({ name: String(r.name || '').slice(0, 8), key: r.char, time: Number(r.time), cont: Number(r.cont) || 0, date: '' });
-  const use = list => { shared = list.map(toRec).filter(r => Number.isFinite(r.time)).sort((a, b) => a.time - b.time).slice(0, RANK_N); };
+  // 방금 보낸 기록은 시트에 저장된 게 확인될 때까지 화면에 계속 둠 (저장보다 순위 받기가 먼저 끝나면 잠깐 사라지던 문제, 10/2)
+  let pending = [];
+  const same = (a, b) => a.name === b.name && Math.abs(a.time - b.time) < .06;
+  const use = list => {
+    const got = list.map(toRec).filter(r => Number.isFinite(r.time));
+    pending = pending.filter(p => !got.some(r => same(r, p)));
+    shared = got.concat(pending).sort((a, b) => a.time - b.time).slice(0, RANK_N);
+  };
 
   function pull() {
     return fetch(SHEET_URL + '?n=' + RANK_N, { cache: 'no-store' })
@@ -2494,6 +2501,7 @@ window.GAME = {
   rankAdd = function (rec) {
     localAdd(rec);                                    // 이 기기에도 같이 저장 (인터넷 끊겨도 남게)
     if (SET.rounds !== 3 || BETA) return localLoad().indexOf(rec);   // 시험판 기록은 공유 순위에 안 올림
+    pending.push(rec);
     fetch(SHEET_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ name: rec.name, time: rec.time, char: rec.key, cont: rec.cont || 0 }) })
       .then(r => r.json()).then(d => { if (d && d.ok && Array.isArray(d.list)) use(d.list); }).catch(() => {});
@@ -2506,7 +2514,7 @@ window.GAME = {
   const R = SCENES.ranking, enter0 = R.enter, draw0 = R.draw;
   R.enter = function (s) {
     enter0.call(this, s);
-    pull().then(() => { if (scene === s && on()) s.list = rankLoad().map(r => (s.hi && r.name === s.hi.name && r.time === s.hi.time ? s.hi : r)); });
+    pull().then(() => { if (scene === s && on()) s.list = rankLoad().map(r => (s.hi && same(r, s.hi) ? s.hi : r)); });
   };
   R.draw = function (s) {
     draw0.call(this, s);
