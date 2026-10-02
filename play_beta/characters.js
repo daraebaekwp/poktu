@@ -421,7 +421,7 @@ window.CHARACTERS = {
       t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 429 }, t_block: { h: 510 }, t_hit: { h: 520 },
       t_down: { h: 150 }, t_win: { h: 560 }, t_lose: { h: 290 }, t_bow: { h: 470 }, t_taunt: { h: 515 },
       t_punch: { h: 510 }, t_scan: { h: 500, flip: true }, t_kick: { h: 540 }, t_upper: { h: 590 }, t_jumpatk: { h: 470 }, t_sweep: { h: 330 },
-      t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 515, flip: true },
+      t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 545, flip: true },
     },
     moves: {
       punch:  { pose: 't_punch', startup: 4, active: 4, recovery: 9, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
