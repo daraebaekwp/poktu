@@ -2515,10 +2515,19 @@ window.GAME = {
   pull();
 
   // ── 방문·플레이 기록 (10/2): 들어옴 / 시작 / 짐(몇 판) / 깸 — 게임 내용은 그대로, 숫자만 셈
-  const SID = Math.random().toString(36).slice(2, 10);
+  // 방문자 번호는 기기마다 한 번만 만들어 기억 (새로고침해도 같은 사람). 주소 끝 ?me=1 로 열면 그 기기는 '다래 기기' → 기록 안 남김, ?me=0 이면 해제
+  let SID = '', ME = false;
+  try {
+    SID = localStorage.getItem('pokto_sid') || '';
+    if (!SID) { SID = Math.random().toString(36).slice(2, 10); localStorage.setItem('pokto_sid', SID); }
+    const meQ = new URLSearchParams(location.search).get('me');
+    if (meQ === '1') { localStorage.setItem('pokto_me', '1'); alert('이 기기는 다래 기기로 표시됐어요. 이제 방문·플레이 기록에 안 남아요.'); }
+    if (meQ === '0') { localStorage.removeItem('pokto_me'); alert('다래 기기 표시를 풀었어요. 다시 기록에 남아요.'); }
+    ME = localStorage.getItem('pokto_me') === '1';
+  } catch (e) { SID = SID || Math.random().toString(36).slice(2, 10); }
   const DEV = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'pc';
   function logEv(type, extra) {
-    if (BETA) return;   // 시험판(beta.html)은 기록 안 남김
+    if (BETA || ME) return;   // 시험판(beta.html)·다래 기기는 기록 안 남김
     try { fetch(SHEET_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(Object.assign({ type, sid: SID, dev: DEV }, extra || {})) }).catch(() => {}); } catch (e) {}
   }
