@@ -519,7 +519,7 @@ window.CHARACTERS = {
     portrait: { sx: 267, sy: 209, size: 430 },
     facing: 1, size: 1, headH: 540,
     body: { hw: 72, h: 530, crouchH: 350 },
-    speed: { walk: 7, back: 5.5, jumpV: 24, jumpX: 7, gravity: 1.25 },
+    speed: { walk: 7.2, back: 5.7, jumpV: 24.5, jumpX: 7.2, gravity: 1.25 },
     meterGain: 1,   // 10/2 다래 '너무 셈' → 기본기·속도 한 단계 낮춤
     poses: {
       idle: 'r_idle', walk: 'r_walk', jump: 'r_jump', crouch: 'r_crouch', guard: 'r_block', crouchGuard: 'r_crouch',
@@ -539,8 +539,8 @@ window.CHARACTERS = {
       crouchPunch: { pose: 'r_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 160, y: 250, h: 420 }, level: 'mid', kd: true, antiAir: true, comboName: '실험 삼단!' },
       crouchKick:  { anim: [['r_crouch', 0], ['r_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 300, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
       jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 80, h: 240 }, level: 'high' },
-      cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 12]], startup: 14, active: 1, recovery: 26, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
-      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 5, antiAir: true, big: 1.1, popText: '가설 검증!' },
+      cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 9]], startup: 11, active: 1, recovery: 20, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
+      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 7, antiAir: true, big: 1.1, popText: '가설 검증!' },
       cmdClip:  { anim: [['r_taunt', 0], ['r_clip', 8]], startup: 9, active: 8, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 250, h: 220 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '보고서 결재!' },
     },
     commands: [
