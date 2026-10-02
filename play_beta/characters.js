@@ -460,7 +460,7 @@ window.CHARACTERS = {
   // ------------------------------------------------------------ 학생 (10/2 추가 · 한국 고등학교 교복, 고2)
   // 그림: sprites/h_*.webp · 강점: 균형형(직장인급) · 가방 휘두르기 · 무적 어퍼 · 필살기 "센치멘탈" 벚꽃 회오리
   hs: {
-    name: '학생', en: 'STUDENT', age: '17세', tag: '고2 · 야자 탈출',
+    name: '학생', en: 'STUDENT', age: '17세', tag: '고2 · 시험 끝!',
     signature: '"센치멘탈…" 벚꽃 회오리 · "말 걸지 마세요" 이어폰 음파',
     col: ['#7fb2ff', '#1a2a6a'],
     face: 'roster/face_hs.jpg', vs: null, fight: null, fightCut: 'roster/face_hs_nukki.webp',
@@ -488,12 +488,12 @@ window.CHARACTERS = {
       crouchKick:  { anim: [['h_crouch', 0], ['h_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 290, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
       jumpAttack:  { pose: 'h_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 200, y: 80, h: 240 }, level: 'high' },
       cmdBag:   { anim: [['h_crouch', 0], ['h_bag', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 150, h: 260 }, level: 'mid', kd: true, dash: 13, big: 1.1, popText: '가방 휘두르기!' },
-      cmdUpper: { anim: [['h_crouch', 0], ['h_upper', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '야자 탈출!' },
+      cmdUpper: { anim: [['h_crouch', 0], ['h_upper', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '시험 탈출!' },
       cmdIgnore:{ anim: [['h_taunt', 0], ['h_ignore', 8]], startup: 10, active: 8, recovery: 20, dmg: 6, hitstun: 36, blockstun: 16, push: 8, hitbox: { x: 40, w: 300, y: 250, h: 260 }, level: 'mid', rings: true, popText: '못 들었는데요?' },
     },
     commands: [
       { name: '가방 휘두르기', move: 'cmdBag', btn: 'p', motion: '236', easy: 'f', desc: '가방으로 퍽! 돌진' },
-      { name: '야자 탈출 어퍼', move: 'cmdUpper', btn: 'p', motion: '623', easy: 'df', desc: '뛰어오른 상대를 받아쳐요' },
+      { name: '시험 탈출 어퍼', move: 'cmdUpper', btn: 'p', motion: '623', easy: 'df', desc: '뛰어오른 상대를 받아쳐요' },
       { name: '못 들은 척', move: 'cmdIgnore', btn: 'p', motion: '214', easy: 'b', desc: '이어폰 음파 · 상대가 멍~' },
     ],
     specials: [
@@ -505,7 +505,7 @@ window.CHARACTERS = {
         windupPose: 'h_power', pre: [['h_power', 0], ['h_senti', 70]], pose: 'h_senti', dmg: 36, vfx: { type: 'whirl', speed: 12, hits: 7, hitColor: '#ffd6e8' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
-    introLines: [{ text: '아… 학원 가야 되는데.', voice: null }, null, { text: '야자 째고 왔습니다.', voice: null }],
+    introLines: [{ text: '시험 끝났다! 오늘은 논다!', voice: null }, null, { text: '시험도 끝났는데 한 판 해요.', voice: null }],
     endingAnswer: { text: '열일곱이요. 고2요.', voice: null },
   },
 
@@ -575,7 +575,7 @@ window.ROSTER = [
   { key: 'middle', face: 'roster/face_middle.jpg', name: '중년', en: 'MIDDLE-AGE', age: '58세', tag: '주말 산악회 회장', col: ['#ffb347', '#a02a00'] },
   { key: 'grandma', face: 'roster/face_grandma.jpg', name: '노인', en: 'GRANDMA', age: '80세', tag: '영남알프스 9봉 완등', col: ['#ff8ad0', '#7a1a5a'] },
   { key: 'darae', face: 'roster/face_darae.jpg', name: '예술가', en: 'ARTIST', age: '??세', tag: '마감 D-1, 잠 못 잠', col: ['#ff2f8a', '#2a0a4a'] },
-  { key: 'hs', face: 'roster/face_hs.jpg', name: '학생', en: 'STUDENT', age: '17세', tag: '고2 · 야자 탈출', col: ['#7fb2ff', '#1a2a6a'] },
+  { key: 'hs', face: 'roster/face_hs.jpg', name: '학생', en: 'STUDENT', age: '17세', tag: '고2 · 시험 끝!', col: ['#7fb2ff', '#1a2a6a'] },
   { key: 'researcher', face: 'roster/face_researcher.jpg', name: '연구원', en: 'RESEARCHER', age: '36세', tag: '12시 넘으면 내 시간', col: ['#c9a6ff', '#2a0a4a'] },
 ];
 window.BOSS_KEY = 'sage';
