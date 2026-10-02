@@ -517,7 +517,7 @@ window.CHARACTERS = {
     col: ['#c9a6ff', '#2a0a4a'],
     face: 'roster/face_researcher.jpg', vs: null, fight: null, fightCut: 'roster/face_researcher_nukki.webp',
     portrait: { sx: 267, sy: 209, size: 430 },
-    facing: 1, size: 1, headH: 540,
+    facing: 1, size: 1, headH: 540, def: 1.08,   // 10/2 유리대포: 맞으면 8% 더 아픔
     body: { hw: 72, h: 530, crouchH: 350 },
     speed: { walk: 7, back: 5.5, jumpV: 24, jumpX: 7, gravity: 1.25 },
     meterGain: 1,   // 10/2 다래 '너무 셈' → 기본기·속도 한 단계 낮춤
@@ -533,14 +533,14 @@ window.CHARACTERS = {
       r_power: { h: 530 }, r_eureka: { h: 560 }, r_midnight: { h: 520 }, r_clip: { h: 510 },
     },
     moves: {
-      punch:  { pose: 'r_punch', startup: 5, active: 4, recovery: 9, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 215, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
-      punch2: { pose: 'r_clip', startup: 5, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 13, hitbox: { x: 40, w: 215, y: 300, h: 180 }, level: 'mid', kd: true, big: 1.1, popText: '탁!' },
-      kick:   { pose: 'r_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 230, y: 300, h: 220 }, level: 'mid', links: { p: 'crouchPunch' } },
+      punch:  { pose: 'r_punch', startup: 5, active: 4, recovery: 9, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
+      punch2: { pose: 'r_clip', startup: 5, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 13, hitbox: { x: 40, w: 205, y: 300, h: 180 }, level: 'mid', kd: true, big: 1.1, popText: '탁!' },
+      kick:   { pose: 'r_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 220, y: 300, h: 220 }, level: 'mid', links: { p: 'crouchPunch' } },
       crouchPunch: { pose: 'r_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 160, y: 250, h: 420 }, level: 'mid', kd: true, antiAir: true, comboName: '실험 삼단!' },
       crouchKick:  { anim: [['r_crouch', 0], ['r_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 300, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
-      jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 215, y: 80, h: 240 }, level: 'high' },
-      cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 9]], startup: 11, active: 1, recovery: 20, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
-      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 7, antiAir: true, big: 1.1, popText: '가설 검증!' },
+      jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 205, y: 80, h: 240 }, level: 'high' },
+      cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 12]], startup: 14, active: 1, recovery: 26, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
+      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 3, antiAir: true, big: 1.1, popText: '가설 검증!' },
       cmdClip:  { anim: [['r_taunt', 0], ['r_clip', 8]], startup: 9, active: 8, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 250, h: 220 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '보고서 결재!' },
     },
     commands: [
