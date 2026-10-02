@@ -517,7 +517,7 @@ window.CHARACTERS = {
     col: ['#c9a6ff', '#2a0a4a'],
     face: 'roster/face_researcher.jpg', vs: null, fight: null, fightCut: 'roster/face_researcher_nukki.webp',
     portrait: { sx: 267, sy: 209, size: 430 },
-    facing: 1, size: 1, headH: 540, def: 1.08,   // 10/2 유리대포: 맞으면 8% 더 아픔
+    facing: 1, size: 1, headH: 540,
     body: { hw: 72, h: 530, crouchH: 350 },
     speed: { walk: 7, back: 5.5, jumpV: 24, jumpX: 7, gravity: 1.25 },
     meterGain: 1,   // 10/2 다래 '너무 셈' → 기본기·속도 한 단계 낮춤
@@ -540,7 +540,7 @@ window.CHARACTERS = {
       crouchKick:  { anim: [['r_crouch', 0], ['r_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 300, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
       jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 80, h: 240 }, level: 'high' },
       cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 12]], startup: 14, active: 1, recovery: 26, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
-      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 3, antiAir: true, big: 1.1, popText: '가설 검증!' },
+      cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 5, antiAir: true, big: 1.1, popText: '가설 검증!' },
       cmdClip:  { anim: [['r_taunt', 0], ['r_clip', 8]], startup: 9, active: 8, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 250, h: 220 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '보고서 결재!' },
     },
     commands: [
@@ -550,13 +550,13 @@ window.CHARACTERS = {
     ],
     specials: [
       { name: '12시 넘으면 내 시간이지~', cine: 'lab', cutin: null, col: '#c9a6ff', col2: '#1a0a3a', shout: '12시 넘으면 내 시간이지~', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#c9a6ff', '#7fff6a'],
-        windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 29,
+        windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 31,
         vfx: { type: 'multi', img: 'flask', size: 300, speed: 24, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'testtube' }, { delay: 16, y: 220 }, { delay: 24, y: 400, img: 'battery' }, { delay: 32, y: 300 }], hitColor: '#7fff6a' } },
       { name: '발견!', cine: 'lab', cutin: null, col: '#ffe600', col2: '#2a0a4a', shout: '발견!', shoutAt: 100, hold: 90, cutinF: 60, burstCol: ['#ffe600', '#c9a6ff'],
-        windupPose: 'r_power', pre: [['r_power', 0], ['r_eureka', 90]], pose: 'r_eureka', dmg: 26,
+        windupPose: 'r_power', pre: [['r_power', 0], ['r_eureka', 90]], pose: 'r_eureka', dmg: 28,
         vfx: { type: 'siren', delay: 22, text: '발견!', hitColor: '#ffe600' } },
       { name: '12시 넘으면 내 시간이지~!!', cine: 'lab', cutin: null, col: '#7fff6a', col2: '#0a2a1a', shout: '오늘 밤은 안 잔다!', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#7fff6a', '#c9a6ff'],
-        windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 33,
+        windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 35,
         vfx: { type: 'multi', img: 'battery', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'flask' }, { delay: 16, y: 220, img: 'testtube' }, { delay: 24, y: 400 }, { delay: 32, y: 300, img: 'flask', size: 420 }], hitColor: '#7fe8ff' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
