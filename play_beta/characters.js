@@ -475,8 +475,8 @@ window.CHARACTERS = {
       intro: 'h_bow', taunt: 'h_taunt', land: 'h_crouch',
     },
     META: {
-      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 400 }, h_block: { h: 520 }, h_hit: { h: 535 },
-      h_down: { h: 440 }, h_win: { h: 545 }, h_lose: { h: 330 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
+      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 520 }, h_hit: { h: 535 },
+      h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
     },
