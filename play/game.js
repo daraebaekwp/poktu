@@ -2398,6 +2398,27 @@ window.GAME = {
     label(on() ? '전체 순위' : '이 기기 순위', W - 60, 60, 34, on() ? '#19f5c8' : '#aaa', FONT, 'right', 5);
   };
   pull();
+
+  // ── 방문·플레이 기록 (10/2): 들어옴 / 시작 / 짐(몇 판) / 깸 — 게임 내용은 그대로, 숫자만 셈
+  const SID = Math.random().toString(36).slice(2, 10);
+  const DEV = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'pc';
+  function logEv(type, extra) {
+    try { fetch(SHEET_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ type, sid: SID, dev: DEV }, extra || {})) }).catch(() => {}); } catch (e) {}
+  }
+  logEv('visit');
+  let lastRun = null;
+  const go0 = go;
+  go = function (name, data) {
+    data = data || {};
+    try {
+      const m = data.match;
+      if (name === 'vs' && m && m.mode === 'arcade' && RUN && RUN !== lastRun) { lastRun = RUN; logEv('start', { char: m.p1, stage: m.stage }); }
+      if (name === 'continue' && m && m.mode === 'arcade') logEv('lose', { char: m.p1, stage: m.stage, cont: RUN ? RUN.cont : 0 });
+      if (name === 'ending' || (name === 'comic' && data.src === STORY_CLIPS.end)) logEv('clear', { char: data.p1 || (G && G.opt && G.opt.p1) || '', cont: RUN ? RUN.cont : 0 });
+    } catch (e) {}
+    return go0(name, data);
+  };
 })();
   window.__ready = true;
 })();
