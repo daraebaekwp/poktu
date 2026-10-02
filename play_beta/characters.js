@@ -240,7 +240,7 @@ window.CHARACTERS = {
     META: {
       m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 465 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561 },
       m_down: { h: 192 }, m_win: { h: 668 }, m_bow: { h: 443 }, m_taunt: { h: 575 },
-      m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 274 },
+      m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 340 },
       m_sp_windup: { h: 556 }, m_sp_charge: { h: 407 }, m_sp_slam: { h: 488 },
       m_sp_salute: { h: 575 }, m_sp_aim: { h: 534 }, m_sp_fire: { h: 532 },   // 필살기 "충성!" 사격
     },
@@ -297,7 +297,7 @@ window.CHARACTERS = {
     },
     META: {
       w_idle: { h: 545 }, w_walk: { h: 550 }, w_jump: { h: 470 }, w_crouch: { h: 400 }, w_guard: { h: 520 }, w_hit: { h: 560 },
-      w_down: { h: 190 }, w_win: { h: 620 }, w_lose: { h: 360 }, w_bow: { h: 470 }, w_taunt: { h: 560 },
+      w_down: { h: 265 }, w_win: { h: 620 }, w_lose: { h: 360 }, w_bow: { h: 470 }, w_taunt: { h: 560 },
       w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 480 }, w_sweep: { h: 330 },
       w_headbutt: { h: 470 }, w_towel: { h: 540 }, w_wrench: { h: 600 }, w_phone: { h: 545 }, w_power: { h: 560 }, w_joy: { h: 620 }, w_throw: { h: 520 },
     },
@@ -358,8 +358,8 @@ window.CHARACTERS = {
     },
     META: {
       k_idle: { h: 455 }, k_walk: { h: 460 }, k_jump: { h: 400 }, k_crouch: { h: 370 }, k_block: { h: 455 }, k_hit: { h: 470 },
-      k_down: { h: 150 }, k_win: { h: 560 }, k_lose: { h: 270 }, k_bow: { h: 430 }, k_taunt: { h: 460 },
-      k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 590 }, k_jumpatk: { h: 380 }, k_sweep: { h: 300 }, k_ram: { h: 270 },
+      k_down: { h: 255 }, k_win: { h: 476 }, k_lose: { h: 351 }, k_bow: { h: 430 }, k_taunt: { h: 460 },
+      k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 590 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },
       k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 500 }, k_hulk: { h: 560 }, k_hulkup: { h: 620 }, k_hulkbonk: { h: 540 }, k_scold: { h: 540 },
     },
     moves: {
@@ -418,10 +418,10 @@ window.CHARACTERS = {
       intro: 't_bow', taunt: 't_taunt', land: 't_crouch',
     },
     META: {
-      t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 390 }, t_block: { h: 510 }, t_hit: { h: 520 },
+      t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 429 }, t_block: { h: 510 }, t_hit: { h: 520 },
       t_down: { h: 150 }, t_win: { h: 560 }, t_lose: { h: 290 }, t_bow: { h: 470 }, t_taunt: { h: 515 },
-      t_punch: { h: 510 }, t_scan: { h: 500, flip: true }, t_kick: { h: 520 }, t_upper: { h: 590 }, t_jumpatk: { h: 470 }, t_sweep: { h: 330 },
-      t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 510, flip: true },
+      t_punch: { h: 510 }, t_scan: { h: 500, flip: true }, t_kick: { h: 426 }, t_upper: { h: 590 }, t_jumpatk: { h: 470 }, t_sweep: { h: 330 },
+      t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 408, flip: true },
     },
     moves: {
       punch:  { pose: 't_punch', startup: 4, active: 4, recovery: 9, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -476,8 +476,8 @@ window.CHARACTERS = {
     },
     META: {
       h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 400 }, h_block: { h: 520 }, h_hit: { h: 535 },
-      h_down: { h: 200 }, h_win: { h: 545 }, h_lose: { h: 330 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
-      h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 470 }, h_sweep: { h: 340 },
+      h_down: { h: 440 }, h_win: { h: 545 }, h_lose: { h: 330 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
+      h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
     },
     moves: {
@@ -527,9 +527,9 @@ window.CHARACTERS = {
       intro: 'r_bow', taunt: 'r_taunt', land: 'r_crouch',
     },
     META: {
-      r_idle: { h: 520 }, r_walk: { h: 530 }, r_jump: { h: 440 }, r_crouch: { h: 400 }, r_block: { h: 520 }, r_hit: { h: 530 },
-      r_down: { h: 170 }, r_win: { h: 560 }, r_lose: { h: 300, flip: true }, r_bow: { h: 500 }, r_taunt: { h: 530 },
-      r_punch: { h: 520 }, r_throw: { h: 500 }, r_kick: { h: 580 }, r_upper: { h: 610 }, r_jumpatk: { h: 470 }, r_sweep: { h: 340 },
+      r_idle: { h: 520 }, r_walk: { h: 530 }, r_jump: { h: 440 }, r_crouch: { h: 460 }, r_block: { h: 520 }, r_hit: { h: 530 },
+      r_down: { h: 238 }, r_win: { h: 616 }, r_lose: { h: 300, flip: true }, r_bow: { h: 500 }, r_taunt: { h: 583 },
+      r_punch: { h: 520 }, r_throw: { h: 500 }, r_kick: { h: 580 }, r_upper: { h: 610 }, r_jumpatk: { h: 508 }, r_sweep: { h: 425 },
       r_power: { h: 530 }, r_eureka: { h: 560 }, r_midnight: { h: 520 }, r_clip: { h: 510 },
     },
     moves: {
