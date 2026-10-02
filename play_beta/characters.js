@@ -46,9 +46,9 @@ window.CHARACTERS = {
     col: ['#ffe600', '#7b2cff'],
     face: 'roster/face_chodding.jpg', vs: 'roster/vs_g.jpg', fight: 'roster/fight_g.jpg', fightCut: 'roster/fight_g_nukki.webp',
     portrait: { sx: 151, sy: 357, size: 582 },       // 체력바 옆 얼굴: face 그림에서 잘라 쓸 정사각형
-    facing: 1, size: 1,
-    headH: 500,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
-    body: { hw: 70, h: 500, crouchH: 320 },           // 몸 판정(맞는 상자): 반폭, 서 있을 때 높이, 앉았을 때 높이
+    facing: 1, size: .86,                             // 10/2: 아홉 살이라 어른(예술가 등)보다 작게
+    headH: 440,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
+    body: { hw: 66, h: 440, crouchH: 290 },           // 몸 판정(맞는 상자): 반폭, 서 있을 때 높이, 앉았을 때 높이
     speed: { walk: 7.5, back: 6, jumpV: 25, jumpX: 7, gravity: 1.25 },
     meterGain: 1,
     poses: {
@@ -384,7 +384,7 @@ window.CHARACTERS = {
       // "생활근육!": 기 모으기 → 근육 할머니로 변신 → 거대한 꿀밤 주먹이 날아감
       { name: '생활근육!', cutin: 'cutins/k1.webp', col: '#ff8ad0', col2: '#7a1a5a', shout: '생활근육!', shoutAt: 90, hold: 120, cutinF: 60, burstCol: ['#ff8ad0', '#ffe600'],
         windupPose: 'k_power', pre: [['k_power', 0], ['k_transform', 90], ['k_hulk', 135]], pose: 'k_hulkbonk', anim: [['k_hulkup', 0], ['k_hulkbonk', 8]], dmg: 32,
-        vfx: { type: 'projectile', img: 'k_fist', size: 620, speed: 24, y: 380, hitColor: '#ffd23f' } },
+        vfx: { type: 'fistrain', img: 'k_fist', count: 8, size: 300, bigSize: 640, gap: .09, hitColor: '#ffd23f' } },
       // "훈육!": 근육 할머니가 손가락으로 딱 가리키면 → 피할 수 없는 훈육 (화면 전체)
       { name: '훈육!', cutin: 'cutins/k2.webp', col: '#ffd23f', col2: '#5a1a3a', shout: '훈육!', shoutAt: 115, hold: 90, cutinF: 60, burstCol: ['#ffd23f', '#ff8ad0'],
         windupPose: 'k_power', pre: [['k_power', 0], ['k_hulk', 75], ['k_scold', 112]], pose: 'k_scold', dmg: 31,
@@ -392,7 +392,7 @@ window.CHARACTERS = {
       // 3판: 더 큰 꿀밤
       { name: '생활근육!! 대왕 꿀밤', cutin: 'cutins/k1.webp', col: '#ff5ab4', col2: '#3a0a2a', shout: '생활근육!!', shoutAt: 90, hold: 120, cutinF: 60, burstCol: ['#ff5ab4', '#ffe600'],
         windupPose: 'k_power', pre: [['k_power', 0], ['k_transform', 90], ['k_hulk', 135]], pose: 'k_hulkbonk', anim: [['k_hulkup', 0], ['k_hulkbonk', 8]], dmg: 36,
-        vfx: { type: 'projectile', img: 'k_fist', size: 860, speed: 22, y: 400, hitColor: '#ffe600' } },
+        vfx: { type: 'fistrain', img: 'k_fist', count: 13, size: 330, bigSize: 860, gap: .07, hitColor: '#ffe600' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
     introLines: [{ text: '산은 다리로 오르는 기여~', voice: null }, null, { text: '9봉 다 올라 봤나?', voice: null }],
@@ -442,13 +442,13 @@ window.CHARACTERS = {
     ],
     rapid: { move: 'rapid', name: '계산 연타' },
     specials: [
-      { name: '집에 가고 싶다', cutin: null, col: '#5affc8', col2: '#0a3a3a', shout: '집에 가고 싶다…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#5affc8', '#ffe600'],
+      { name: '집에 가고 싶다', cine: 'quit', cutin: null, col: '#5affc8', col2: '#0a3a3a', shout: '집에 가고 싶다…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#5affc8', '#ffe600'],
         windupPose: 't_power', pre: [['t_power', 0]], pose: 't_throw', anim: [['t_throw', 0]], dmg: 31,
         vfx: { type: 'multi', img: 'kimbap', size: 280, speed: 24, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'bananamilk' }, { delay: 16, y: 220 }, { delay: 24, y: 400, img: 'bananamilk' }, { delay: 32, y: 300 }], hitColor: '#5affc8' } },
-      { name: '사장님 말 걸지 마세요', cutin: null, col: '#ff5a6a', col2: '#1a1a3a', shout: '사장님…', shoutAt: 70, hold: 90, cutinF: 60, burstCol: ['#ff5a6a', '#5affc8'],
+      { name: '사장님 말 걸지 마세요', cine: 'quit', cutin: null, col: '#ff5a6a', col2: '#1a1a3a', shout: '사장님…', shoutAt: 70, hold: 90, cutinF: 60, burstCol: ['#ff5a6a', '#5affc8'],
         windupPose: 't_power', pre: [['t_power', 0], ['t_stop', 95]], pose: 't_stop', dmg: 30,
         vfx: { type: 'siren', delay: 24, text: '말 걸지 마세요!', hitColor: '#ff5a6a' } },
-      { name: '집에 가고 싶다!!', cutin: null, col: '#7fe8ff', col2: '#06305a', shout: '집에 가고 싶다!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#7fe8ff', '#5affc8'],
+      { name: '집에 가고 싶다!!', cine: 'quit', cutin: null, col: '#7fe8ff', col2: '#06305a', shout: '집에 가고 싶다!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#7fe8ff', '#5affc8'],
         windupPose: 't_power', pre: [['t_power', 0]], pose: 't_throw', anim: [['t_throw', 0]], dmg: 35,
         vfx: { type: 'multi', img: 'kimbap', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 7, y: 470, img: 'bananamilk' }, { delay: 14, y: 220 }, { delay: 21, y: 400, img: 'bananamilk' }, { delay: 28, y: 300 }, { delay: 35, y: 450, img: 'bananamilk', size: 480 }], hitColor: '#7fe8ff' } },
     ],
@@ -497,11 +497,11 @@ window.CHARACTERS = {
       { name: '못 들은 척', move: 'cmdIgnore', btn: 'p', motion: '214', easy: 'b', desc: '이어폰 음파 · 상대가 멍~' },
     ],
     specials: [
-      { name: '센치멘탈', cutin: null, col: '#ffb7d5', col2: '#1a2a6a', shout: '센치멘탈…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ffb7d5', '#7fb2ff'],
+      { name: '센치멘탈', cine: 'senti', cutin: null, col: '#ffb7d5', col2: '#1a2a6a', shout: '센치멘탈…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ffb7d5', '#7fb2ff'],
         windupPose: 'h_power', pre: [['h_power', 0], ['h_senti', 70]], pose: 'h_senti', dmg: 32, vfx: { type: 'whirl', speed: 11, hits: 5, petal: true, hitColor: '#ffd6e8' } },
-      { name: '말 걸지 마세요', cutin: null, col: '#7fb2ff', col2: '#0a1440', shout: '말 걸지 마세요.', shoutAt: 90, hold: 90, cutinF: 60, burstCol: ['#7fb2ff', '#ffffff'],
+      { name: '말 걸지 마세요', cine: 'senti', cutin: null, col: '#7fb2ff', col2: '#0a1440', shout: '말 걸지 마세요.', shoutAt: 90, hold: 90, cutinF: 60, burstCol: ['#7fb2ff', '#ffffff'],
         windupPose: 'h_taunt', pre: [['h_taunt', 0], ['h_ignore', 80]], pose: 'h_ignore', dmg: 31, vfx: { type: 'projectile', img: 'sound', size: 520, speed: 18, y: 360, hitColor: '#bfe0ff' } },
-      { name: '센치멘탈!!', cutin: null, col: '#ff8ac0', col2: '#2a0a4a', shout: '센치멘탈!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ff8ac0', '#ffe600'],
+      { name: '센치멘탈!!', cine: 'senti', cutin: null, col: '#ff8ac0', col2: '#2a0a4a', shout: '센치멘탈!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ff8ac0', '#ffe600'],
         windupPose: 'h_power', pre: [['h_power', 0], ['h_senti', 70]], pose: 'h_senti', dmg: 36, vfx: { type: 'whirl', speed: 12, hits: 7, petal: true, hitColor: '#ffd6e8' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
@@ -549,13 +549,13 @@ window.CHARACTERS = {
       { name: '보고서 결재', move: 'cmdClip', btn: 'p', motion: '214', easy: 'b', desc: '클립보드로 탁! 돌진' },
     ],
     specials: [
-      { name: '12시 넘으면 내 시간이지~', cutin: null, col: '#c9a6ff', col2: '#1a0a3a', shout: '12시 넘으면 내 시간이지~', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#c9a6ff', '#7fff6a'],
+      { name: '12시 넘으면 내 시간이지~', cine: 'lab', cutin: null, col: '#c9a6ff', col2: '#1a0a3a', shout: '12시 넘으면 내 시간이지~', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#c9a6ff', '#7fff6a'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 29,
         vfx: { type: 'multi', img: 'flask', size: 300, speed: 24, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'testtube' }, { delay: 16, y: 220 }, { delay: 24, y: 400, img: 'battery' }, { delay: 32, y: 300 }], hitColor: '#7fff6a' } },
-      { name: '발견!', cutin: null, col: '#ffe600', col2: '#2a0a4a', shout: '발견!', shoutAt: 100, hold: 90, cutinF: 60, burstCol: ['#ffe600', '#c9a6ff'],
+      { name: '발견!', cine: 'lab', cutin: null, col: '#ffe600', col2: '#2a0a4a', shout: '발견!', shoutAt: 100, hold: 90, cutinF: 60, burstCol: ['#ffe600', '#c9a6ff'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_eureka', 90]], pose: 'r_eureka', dmg: 26,
         vfx: { type: 'siren', delay: 22, text: '발견!', hitColor: '#ffe600' } },
-      { name: '12시 넘으면 내 시간이지~!!', cutin: null, col: '#7fff6a', col2: '#0a2a1a', shout: '오늘 밤은 안 잔다!', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#7fff6a', '#c9a6ff'],
+      { name: '12시 넘으면 내 시간이지~!!', cine: 'lab', cutin: null, col: '#7fff6a', col2: '#0a2a1a', shout: '오늘 밤은 안 잔다!', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#7fff6a', '#c9a6ff'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 33,
         vfx: { type: 'multi', img: 'battery', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'flask' }, { delay: 16, y: 220, img: 'testtube' }, { delay: 24, y: 400 }, { delay: 32, y: 300, img: 'flask', size: 420 }], hitColor: '#7fe8ff' } },
     ],

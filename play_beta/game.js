@@ -315,10 +315,22 @@ function endFreeze(f) {
   else if (v.type === 'multi') { f.sp.shots = 0; }
   else if (v.type === 'whirl') { G.proj.push({ kind: 'whirl', owner: f, x: f.x + f.dir * 170, y: GROUND, vx: f.dir * (v.speed || 10), hits: v.hits || 4, hitsLeft: v.hits || 4, cd: 0, dmg: sp.dmg, col: v.hitColor || '#fff', t: 0, on: 0, cine: sp.cine, sp: true, petal: !!v.petal }); A.sfx('wind'); tw(G.proj[G.proj.length - 1], { on: 1 }, .3); }
   else if (v.type === 'siren') { f.sp.sirenAt = v.delay || 40; A.sfx('ring'); }
+  else if (v.type === 'fistrain') {   // 10/2 할머니 "생활근육!": 하늘에서 꿀밤 주먹이 우수수 → 마지막에 대왕 주먹
+    const o = opp(f), n = v.count || 8;
+    for (let i = 0; i < n; i++) later(i * (v.gap || .09), () => { if (!G || G.phase !== 'fight') return; const last = i === n - 1;
+      G.proj.push({ kind: 'shot', owner: f, img: v.img || 'k_fist', x: o.x + (last ? 0 : (rnd() - .5) * 420), y: GROUND - 1150 - rnd() * 150, vx: f.dir * .5, vy: last ? 30 : 34 + rnd() * 10, g: .9, floorY: GROUND - 50,
+        size: (last ? (v.bigSize || 640) : (v.size || 300) * (.8 + rnd() * .5)), dmg: last ? sp.dmg * .45 : sp.dmg * .55 / (n - 1), light: !last, fin: last, rotDown: true,
+        col: v.hitColor || '#ffd23f', t: 0, s: 1, cine: 'fistrain', sp: true }); A.sfx('whoosh'); });
+  }
   if (sp.anim) f.pose = sp.anim[0][0];
   if (sp.fireVoice) A.voice(sp.fireVoice);   // 직장인: 동전 쏟아지는 소리
   A.sfx('whoosh');
   const cn = CINE[sp.cine]; if (cn && cn.fire0) cn.fire0(f, f.sp);
+  // 10/2 모든 필살기 공통 화려함: 발사 순간 몸 둘레로 색 고리 3겹 + 반짝이 + 별가루 (방사형 광선 없음)
+  const bc = sp.burstCol || [sp.col, sp.col2 || '#fff'], cy = GROUND - 300;
+  for (let i = 0; i < 3; i++) fx.push({ type: 'ring', x: f.x, y: cy, t0: T + i * .06, life: .55, r: 220 + i * 140, col: i === 1 ? '#ffffff' : bc[i % 2], lw: 20 - i * 5 });
+  for (let i = 0; i < 36; i++) { const a = rnd() * Math.PI * 2, v2 = 300 + rnd() * 900; fx.push({ type: 'dot', x: f.x + f.dir * 80, y: cy, vx: Math.cos(a) * v2 + f.dir * 300, vy: Math.sin(a) * v2 - 200, t0: T + rnd() * .1, life: .5 + rnd() * .5, r: 6 + rnd() * 10, col: [bc[0], bc[1], '#ffffff', '#ffe600'][i % 4] }); }
+  overlay.white = Math.max(overlay.white || 0, .35); tw(overlay, { white: 0 }, .25, 'lin', true);
 }
 // ---------- 필살기 준비 동작 (멈춘 화면에서: 경례 "충성!" · "마감!" 외치고 안경 벗기) ----------
 function specialPre(f) {
@@ -346,6 +358,10 @@ function gunTick(f, v, sp) {
       col: v.hitColor || '#ffd23f', light: !last, big, t: 0, s: 1, slowShot: v.slowFrom != null && i >= v.slowFrom, fin: last, cine: d.cine, sp: true });
     fx.push({ type: 'muzzle', x: mx, y: my, dir: f.dir, t0: RT, rt: true, life: .14, r: 70 * Math.min(big, 1.4) });   // 총구 불꽃은 실제 시간으로 (슬로모션에서 너무 오래 남지 않게)
     for (let k = 0; k < 4; k++) fx.push({ type: 'streak', x: mx - f.dir * (20 + k * 30), y: my + (rnd() - .5) * 90, dir: f.dir, t0: T, life: .2, len: 120 + rnd() * 120 });
+    // 10/2 간지: 탄피가 위로 튀고(금색 캡슐) · 총구 연기 · 반동 섬광
+    for (let k = 0; k < (last ? 3 : 1); k++) fx.push({ type: 'dot', x: f.x + f.dir * 60, y: my + 20, vx: -f.dir * (250 + rnd() * 250), vy: -700 - rnd() * 300, t0: T, life: .7, r: 9, col: '#ffcf3a' });
+    for (let k = 0; k < 3; k++) fx.push({ type: 'ring', x: mx + f.dir * (40 + k * 30), y: my - k * 14, t0: T + k * .04, life: .45, r: 60 + k * 30, col: 'rgba(230,230,230,.7)', lw: 10 - k * 2 });
+    if (last) { overlay.white = .55; tw(overlay, { white: 0 }, .18, 'lin', true); }
     f.pose = d.pose; f.ox = -f.dir * (last ? 34 : 20); tw(f, { ox: 0 }, .14); cam.shake = Math.max(cam.shake, last ? 16 : 9); A.sfx('pew');
     sp.lastShot = sp.t;
   }
@@ -387,6 +403,7 @@ function drawBullet(p) {   // 둥근 캡슐 총알 + 가로 잔상
     const len = 900, g = ctx.createLinearGradient(0, 0, -len, 0); g.addColorStop(0, 'rgba(255,240,170,.85)'); g.addColorStop(1, 'rgba(255,240,170,0)');
     ctx.strokeStyle = g; ctx.lineWidth = h * .9; ctx.beginPath(); ctx.moveTo(-L * .2, 0); ctx.lineTo(-len, 0); ctx.stroke();
     ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(255,255,255,.7)'; for (const yy of [-h * 1.1, h * 1.1]) { ctx.beginPath(); ctx.moveTo(-L * .4, yy); ctx.lineTo(-len * .6, yy); ctx.stroke(); } }
+  if (!(p.slowShot && slow.k < 1)) { const len = 520, g = ctx.createLinearGradient(0, 0, -len, 0); g.addColorStop(0, 'rgba(255,220,120,.8)'); g.addColorStop(1, 'rgba(255,120,40,0)'); ctx.strokeStyle = g; ctx.lineWidth = h * .55; ctx.beginPath(); ctx.moveTo(-L * .2, 0); ctx.lineTo(-len, 0); ctx.stroke(); }   // 10/2 예광탄 꼬리
   ctx.globalCompositeOperation = 'lighter'; for (let i = 1; i <= 3; i++) { ctx.globalAlpha = .3 / i; ctx.strokeStyle = '#fff3a0'; ctx.lineWidth = h * (1 - i * .2); ctx.beginPath(); ctx.moveTo(-L * .2, 0); ctx.lineTo(-L * (.6 + i * .5), 0); ctx.stroke(); }
   ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
   ctx.beginPath(); ctx.moveTo(-L * .35, -h / 2); ctx.lineTo(L * .2, -h / 2); ctx.arc(L * .2, 0, h / 2, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-L * .35, h / 2); ctx.arc(-L * .35, 0, h / 2, Math.PI / 2, Math.PI * 1.5); ctx.closePath();
@@ -440,6 +457,43 @@ function heartbeat(times = 3, gap = .45) { for (let i = 0; i < times; i++) rlate
 function buoyPos(f, s) { const a = -2.75 + s * 3.05, r = 250; return { x: f.x - f.dir * 20 + Math.cos(a) * r * f.dir, y: GROUND - 340 + Math.sin(a) * r * .85, a }; }
 const cutF = sp => sp.def.cutinF || 72;
 const CINE = {
+  // ---------- 10/2 학생 "센치멘탈": 시간이 느려지고 화면 가득 벚꽃잎 · 맞으면 분홍 빛 ----------
+  senti: {
+    start() { cineMood(.1, .6, .4); },
+    pre(f, sp, t) { if (t === cutF(sp)) { slowMo(.45, 1.3); camTo(1.25, f.x + f.dir * 120, GROUND - 420, .5); A.sfx('slow'); }
+      if (t >= cutF(sp) && t % 2 === 0) for (let i = 0; i < 3; i++) fx.push({ type: 'dot', x: rnd() * W, y: -40 - rnd() * 200, vx: -120 - rnd() * 160, vy: 60 + rnd() * 90, t0: T, life: 1.6, r: 7 + rnd() * 8, col: ['#ffc2dc', '#ff9cc8', '#ffffff'][i] }); },
+    fire0(f) { slowSnap(); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .4, 'out', true); for (let i = 0; i < 50; i++) fx.push({ type: 'dot', x: rnd() * W, y: -60 - rnd() * 300, vx: -100 - rnd() * 200, vy: 80 + rnd() * 120, t0: T + rnd() * .5, life: 1.8, r: 8 + rnd() * 9, col: ['#ffc2dc', '#ff9cc8', '#ffffff', '#ffd6e8'][i % 4] }); },
+    hit(f, d, p, fin) { if (!fin) return; shockwave(d.x, GROUND - 320, 1.6, '#ff9cc8'); fx.push({ type: 'ring', x: d.x, y: GROUND - 320, t0: T + .1, life: .8, r: 900, col: '#ffd6e8', lw: 30 });
+      rlater(.1, () => text('센치멘탈…♪', { size: 170, life: 1.6, x: clamp(d.x, 400, W - 400), y: GROUND - 640, col: '#ffd6e8', stroke: '#7a2a5a', rot: -.05 })); overlay.white = .5; tw(overlay, { white: 0 }, .6, 'lin', true); },
+    siren(f, d) { text('말 걸지 마세요.', { size: 150, life: 1.8, y: 330, rot: -.04, col: '#bfe0ff', stroke: '#0a1440' }); for (let i = 0; i < 5; i++) fx.push({ type: 'ring', x: f.x, y: GROUND - 380, t0: T + i * .08, life: .7, r: 300 + i * 220, col: i % 2 ? '#ffffff' : '#7fb2ff', lw: 18 }); },
+  },
+  // ---------- 10/2 알바생: "집에 가고 싶다" 폭풍 → 맞으면 하얗게 터지며 "퇴근!!" 도장 (카타르시스) ----------
+  quit: {
+    start() { cineMood(.2, .6, .3); },
+    fire0(f) { cam.shake = 24; for (let i = 0; i < 8; i++) fx.push({ type: 'streak', x: f.x + f.dir * (100 + i * 60), y: GROUND - 200 - rnd() * 400, dir: f.dir, t0: T + i * .03, life: .35, len: 300 + rnd() * 200 }); },
+    hit(f, d, p, fin) { if (!fin) return; overlay.white = 1; tw(overlay, { white: 0 }, .7, 'lin', true); G.hitstop = 22; cam.shake = 60;
+      shockwave(d.x, GROUND - 300, 2.2, '#5affc8'); rlater(.15, () => shockwave(d.x, GROUND - 300, 1.4, '#ffe600'));
+      rlater(.3, () => stamp('퇴근!!', { sub: '오늘은 여기까지', size: 230, y: 300, x: f.x < W / 2 ? W - 460 : 460, rot: -.12, col: '#0a8a6a' })); },
+    siren(f, d) { overlay.white = .9; tw(overlay, { white: 0 }, .5, 'lin', true); cam.shake = 50; text('사장님 말 걸지 마세요!!', { size: 120, life: 1.8, y: 320, rot: -.04, col: '#ff5a6a', stroke: '#1a1a3a' });
+      rlater(.35, () => stamp('퇴근', { sub: '알바 끝', size: 220, y: 560, x: W / 2, rot: .08, col: '#ff3a4a' })); },
+  },
+  // ---------- 10/2 연구원: 초록 거품 실험실 · "발견!" 전구 번쩍 · "실험 성공!" 도장 ----------
+  lab: {
+    start() { cineMood(.3, .7, .3); },
+    pre(f, sp, t) { if (t >= cutF(sp) && t % 2 === 0) for (let i = 0; i < 2; i++) fx.push({ type: 'dot', x: rnd() * W, y: H + 20, vx: (rnd() - .5) * 60, vy: -500 - rnd() * 400, t0: T, life: 1.2, r: 6 + rnd() * 14, col: ['#7fff6a', '#c9a6ff'][i] }); },
+    fire0(f) { for (let i = 0; i < 4; i++) fx.push({ type: 'ring', x: f.x, y: GROUND - 320, t0: T + i * .07, life: .6, r: 260 + i * 160, col: i % 2 ? '#c9a6ff' : '#7fff6a', lw: 16 }); },
+    hit(f, d, p, fin) { if (!fin) return; shockwave(d.x, GROUND - 300, 1.8, '#7fff6a'); rlater(.12, () => shockwave(d.x, GROUND - 300, 1.2, '#c9a6ff'));
+      rlater(.3, () => stamp('실험 성공!', { sub: 'p < 0.05', size: 170, y: 290, x: f.x < W / 2 ? W - 480 : 480, rot: -.1, col: '#2a8a2a' })); },
+    siren(f, d) { overlay.white = 1; tw(overlay, { white: 0 }, .8, 'lin', true); cam.shake = 40; text('유레카!!', { size: 220, life: 1.6, y: 300, rot: -.05, col: '#ffe600', stroke: '#2a0a4a' });
+      for (let i = 0; i < 6; i++) fx.push({ type: 'ring', x: f.x + f.dir * 20, y: GROUND - 640, t0: T + i * .06, life: .7, r: 160 + i * 150, col: i % 2 ? '#ffffff' : '#ffe600', lw: 16 });
+      rlater(.35, () => stamp('발견!', { sub: '논문 각', size: 210, y: 560, x: W / 2, rot: .07, col: '#7a2ad8' })); },
+  },
+  // ---------- 할머니 "생활근육!": 떨어진 주먹이 땅에 쿵 ----------
+  fistrain: {
+    land(f, p) { p.dead = true; shockwave(p.x, GROUND - 30, p.fin ? 1.4 : .55, '#ffd23f'); dust(p.x, 1, p.fin ? 16 : 6); dust(p.x, -1, p.fin ? 16 : 6); cam.shake = Math.max(cam.shake, p.fin ? 40 : 14); A.sfx(p.fin ? 'stomp' : 'hit');
+      if (p.fin) rlater(.1, () => text('꿀밤!!', { size: 260, life: 1.1, x: clamp(p.x, 320, W - 320), y: GROUND - 560, col: '#ffe600', stroke: '#ff2f8a', rot: -.06 })); },
+    hit(f, d, p, fin) { if (fin) { text('꿀밤!!', { size: 260, life: 1.1, x: clamp(d.x, 320, W - 320), y: GROUND - 600, col: '#ffe600', stroke: '#ff2f8a', rot: -.06 }); cam.shake = 50; } },
+  },
   // ---------- 군인 "충성!": 경례 → 겨누기 → 총알 시간(아주 느리게, 총알 따라 카메라) → "팡!" 원래 속도
   gun: {
     start() { cineMood(.2, .5, .3); },
@@ -460,12 +514,24 @@ const CINE = {
       if (f.sp) f.sp.bt = false; slowSnap(); cineMood(0, 0, .2); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .28, 'out', true);
       const tx = clamp(d.x, 320, W - 320); rlater(.12, () => text('팡!', { size: 320, life: 1.1, x: tx, y: GROUND - 600, col: '#ffe600', stroke: '#ff2f8a', rot: -.08 }));
       shockwave(d.x, p.y, 1.3, '#ffd23f'); dust(d.x, Math.sign(p.vx) || 1, 18); cam.shake = 50; A.sfx('pang'); G.hitstop = 14;
+      rlater(.35, () => { stamp('명중!', { sub: '충성!', size: 170, y: 260, x: f.x < W / 2 ? W - 420 : 420, rot: -.1 }); shockwave(d.x, p.y, 2, '#d8ff5a'); });   // 10/2 군인 뽕: 명중 도장 + 한 겹 더
     },
     knock(f, d, dir) { d.vx = dir * 24; d.vy = -19; },
   },
   // ---------- 예술가 "작업 마감!": "예술가 아무나 하냐?!" → "작업 마감!" D-0 도장 + 원고 소용돌이 → 안경 벗기 슬로모션 클로즈업 → 던지기 → "마감 완료!" 도장 + 종이 폭발
   deadline: {
     start() { cineMood(.15, .5, .3); },
+    draw(f, sp) {   // 10/2 광기 모드: 필살기 동안 눈이 빨갛게 번쩍 + 눈에서 빨간 빛 꼬리 + 붉은 기운
+      const spr = SPR[f.key + '/' + f.pose]; if (!spr || !spr.head) return;
+      const fl = f.dir * f.C.facing * (spr.flip ? -1 : 1), hd = spr.head, hx = f.x + hd.x * fl, ey = f.y + hd.y + hd.size * 1.05, pul = .75 + Math.sin(RT * 30) * .25;
+      ctx.save(); ctx.globalCompositeOperation = 'lighter';
+      const au = ctx.createRadialGradient(f.x, f.y - 280, 40, f.x, f.y - 280, 420); au.addColorStop(0, `rgba(255,30,60,${.28 * pul})`); au.addColorStop(1, 'rgba(255,0,40,0)'); ctx.fillStyle = au; ctx.fillRect(f.x - 440, f.y - 720, 880, 720);
+      for (const ex2 of [hx + f.dir * 12, hx + f.dir * 46]) {
+        const tr = ctx.createLinearGradient(ex2, ey, ex2 - f.dir * 260, ey + 18); tr.addColorStop(0, `rgba(255,40,70,${.9 * pul})`); tr.addColorStop(1, 'rgba(255,40,70,0)');
+        ctx.strokeStyle = tr; ctx.lineWidth = 9; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ex2, ey); ctx.lineTo(ex2 - f.dir * 260, ey + 18); ctx.stroke();
+        const gl = ctx.createRadialGradient(ex2, ey, 2, ex2, ey, 30 * pul); gl.addColorStop(0, '#ffffff'); gl.addColorStop(.35, '#ff2a4a'); gl.addColorStop(1, 'rgba(255,0,40,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(ex2, ey, 30 * pul, 0, 7); ctx.fill(); }
+      ctx.restore();
+    },
     pre(f, sp, t) {
       const c = cutF(sp);
       if (t === c) { const ln = pick(f.C.superLines || [{ text: '예술가 아무나 하냐?!', voice: 'a_nobody' }]); say(f, ln.text, 1.45); A.voice(ln.voice);   // 첫 대사는 할 때마다 무작위 (말풍선 = 목소리)
@@ -512,6 +578,8 @@ const CINE = {
       const p = spawnProj(f, { img: 'whale', size: 700, speed: 0, spin: false, hitColor: 'rgb(255,200,60)' }, sp.def.dmg, 0);
       p.x = x0; p.y = y0; p.vx = (o.x - x0) / tt; p.vy = vy; p.g = g; p.floorY = GROUND - 250; p.crash = true;
       overlay.speedX = f.dir < 0 ? 1 : 0; A.sfx('fall');
+      for (let i = 0; i < 9; i++) later(.05 + i * .06, () => { if (!G) return; G.proj.push({ kind: 'shot', owner: f, img: 'whale', x: o.x + (rnd() - .5) * 900, y: GROUND - 1200 - rnd() * 200, vx: f.dir * .5, vy: 30 + rnd() * 12, g: 1, floorY: GROUND - 60,
+        size: 180 + rnd() * 120, dmg: 0, light: true, noHit: 99999, spin: true, col: '#ffd23f', t: 0, s: 1, cine: 'fistrain', sp: true }); });   // 10/2 꼬마 고래빵 비 (연출만)
     },
     hit(f, d, p) { shockwave(d.x, GROUND - 260, 1.6, '#ffd000'); crumbs(d.x, GROUND - 300, 30); dust(d.x, 1, 14); dust(d.x, -1, 14); cam.shake = 46; overlay.white = .7; tw(overlay, { white: 0 }, .45, 'lin'); A.sfx('bigboom'); text('쾅!', { size: 300, life: 1, x: clamp(d.x, 320, W - 320), y: GROUND - 620, col: '#ffd23f', stroke: '#7a3a00', rot: .06 }); },
     land(f, p) { shockwave(p.x, GROUND - 60, 1.2, '#ffd000'); dust(p.x, 1, 12); dust(p.x, -1, 12); crumbs(p.x, GROUND - 120, 20); cam.shake = 36; A.sfx('bigboom'); p.vx = 0; p.dead = true; },
@@ -562,7 +630,10 @@ const CINE = {
       if (t === c) { slowMo(.3, .75); camTo(1.7, f.x + f.dir * 280, headY(f) + 120, .3); cineMood(.35, 1, .2); A.sfx('slow'); }
       if (t === c + 34) { slowSnap(); camTo(1.2, f.x + f.dir * 120, GROUND - 430, .25); }
     },
-    hit(f, d, p, fin) { if (!fin) return; coinRain(d.x, 38); shockwave(d.x, p.y, 1.1, '#ffd23f'); text('입금 완료!', { size: 140, life: 1.4, y: 300, col: '#ffd23f', stroke: '#16307a', rot: -.05 }); cam.shake = 34; },
+    fire0(f, sp) {   // 10/2 더 화려하게: 화면 전체에 동전 비 + 금액 숫자가 톡톡
+      coinRain(W / 2, 44); for (let i = 0; i < 6; i++) rlater(.08 * i, () => pop(['+3,280,000', '+₩₩₩', '+보너스', '+야근수당', '+성과급', '+월급'][i], 300 + rnd() * (W - 600), 260 + rnd() * 260, '#ffd23f', 64));
+      fx.push({ type: 'ring', x: f.x, y: GROUND - 320, t0: T, life: .6, r: 700, col: '#ffd23f', lw: 26 }); },
+    hit(f, d, p, fin) { if (!fin) return; coinRain(d.x, 60); shockwave(d.x, p.y, 1.8, '#ffd23f'); text('입금 완료!', { size: 140, life: 1.4, y: 300, col: '#ffd23f', stroke: '#16307a', rot: -.05 }); cam.shake = 34; },
   },
   // ---------- 산신령: 발사 순간 둥근 기운 + 마지막 한 방에 잠깐 슬로모션
   sage: {
@@ -1179,8 +1250,8 @@ function drawProj(p) {
   gl.addColorStop(0, 'rgba(255,255,255,.45)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 7); ctx.fill(); ctx.restore();
   if (!img) { ctx.save(); ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(p.x, p.y, dw * .25, 0, 7); ctx.fill(); ctx.restore(); return; }
   const dh = dw * img.height / img.width;
-  ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 1; i < 5; i++) { ctx.globalAlpha = (1 - i / 5) * .3; ctx.save(); ctx.translate(p.x - dir * i * 70 * p.s, p.y); ctx.scale(dir, 1); ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh); ctx.restore(); } ctx.restore();
-  ctx.save(); ctx.translate(p.x, p.y); ctx.scale(dir, 1); ctx.rotate(p.spin ? T * 6 : Math.sin(T * 12) * .05); if (p.img === 'fire') ctx.scale(1 + Math.sin(T * 14) * .06, 1); ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh); ctx.restore();
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; for (let i = 1; i < 5; i++) { ctx.globalAlpha = (1 - i / 5) * .3; ctx.save(); ctx.translate(p.rotDown ? p.x : p.x - dir * i * 70 * p.s, p.rotDown ? p.y - i * 70 * p.s : p.y); ctx.scale(dir, 1); if (p.rotDown) ctx.rotate(Math.PI / 2); ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh); ctx.restore(); } ctx.restore();
+  ctx.save(); ctx.translate(p.x, p.y); ctx.scale(dir, 1); ctx.rotate(p.rotDown ? Math.PI / 2 + Math.sin(T * 20) * .06 : p.spin ? T * 6 : Math.sin(T * 12) * .05); if (p.img === 'fire') ctx.scale(1 + Math.sin(T * 14) * .06, 1); ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh); ctx.restore();
 }
 function drawFx(layer) {
   for (const f of fx) {
