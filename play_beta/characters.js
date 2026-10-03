@@ -44,7 +44,7 @@ window.CHARACTERS = {
   chodding: {
     name: '초딩', en: 'CHODING', age: '9세', tag: '산을 지키는 꼬마',
     col: ['#ffe600', '#7b2cff'],
-    face: 'roster/face_chodding.jpg', vs: 'roster/vs_g.jpg', fight: 'roster/fight_g.jpg', fightCut: 'roster/fight_g_nukki.webp',
+    face: 'roster/face_chodding.jpg', vs: 'roster/vs_g_nukki.webp', fight: 'roster/fight_g.jpg', fightCut: 'roster/fight_g_nukki.webp',
     portrait: { sx: 118, sy: 333, size: 647 },       // 체력바 옆 얼굴: face 그림에서 잘라 쓸 정사각형
     facing: 1, size: .86,                             // 10/2: 아홉 살이라 어른(예술가 등)보다 작게
     headH: 440,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
@@ -442,13 +442,13 @@ window.CHARACTERS = {
     ],
     rapid: { move: 'rapid', name: '계산 연타' },
     specials: [
-      { name: '집에 가고 싶다', cine: 'quit', cutin: null, col: '#5affc8', col2: '#0a3a3a', shout: '집에 가고 싶다…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#5affc8', '#ffe600'],
+      { name: '집에 가고 싶다', cine: 'quit', cutin: 'cutins/t1.webp', col: '#5affc8', col2: '#0a3a3a', shout: '집에 가고 싶다…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#5affc8', '#ffe600'],
         windupPose: 't_power', pre: [['t_power', 0]], pose: 't_throw', anim: [['t_throw', 0]], dmg: 28,
         vfx: { type: 'multi', img: 'kimbap', size: 280, speed: 24, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'bananamilk' }, { delay: 16, y: 220 }, { delay: 24, y: 400, img: 'bananamilk' }, { delay: 32, y: 300 }], hitColor: '#5affc8' } },
-      { name: '사장님 말 걸지 마세요', cine: 'quit', cutin: null, col: '#ff5a6a', col2: '#1a1a3a', shout: '사장님…', shoutAt: 70, hold: 90, cutinF: 60, burstCol: ['#ff5a6a', '#5affc8'],
+      { name: '사장님 말 걸지 마세요', cine: 'quit', cutin: 'cutins/t2.webp', col: '#ff5a6a', col2: '#1a1a3a', shout: '사장님…', shoutAt: 70, hold: 90, cutinF: 60, burstCol: ['#ff5a6a', '#5affc8'],
         windupPose: 't_power', pre: [['t_power', 0], ['t_stop', 95]], pose: 't_stop', dmg: 27,
         vfx: { type: 'siren', delay: 24, text: '말 걸지 마세요!', hitColor: '#ff5a6a' } },
-      { name: '집에 가고 싶다!!', cine: 'quit', cutin: null, col: '#7fe8ff', col2: '#06305a', shout: '집에 가고 싶다!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#7fe8ff', '#5affc8'],
+      { name: '집에 가고 싶다!!', cine: 'quit', cutin: 'cutins/t1.webp', col: '#7fe8ff', col2: '#06305a', shout: '집에 가고 싶다!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#7fe8ff', '#5affc8'],
         windupPose: 't_power', pre: [['t_power', 0]], pose: 't_throw', anim: [['t_throw', 0]], dmg: 32,
         vfx: { type: 'multi', img: 'kimbap', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 7, y: 470, img: 'bananamilk' }, { delay: 14, y: 220 }, { delay: 21, y: 400, img: 'bananamilk' }, { delay: 28, y: 300 }, { delay: 35, y: 450, img: 'bananamilk', size: 480 }], hitColor: '#7fe8ff' } },
     ],
@@ -497,11 +497,11 @@ window.CHARACTERS = {
       { name: '못 들은 척', move: 'cmdIgnore', btn: 'p', motion: '214', easy: 'b', desc: '이어폰 음파 · 상대가 멍~' },
     ],
     specials: [
-      { name: '센치멘탈', cine: 'senti', cutin: null, col: '#ffb7d5', col2: '#1a2a6a', shout: '센치멘탈…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ffb7d5', '#7fb2ff'],
+      { name: '센치멘탈', cine: 'senti', cutin: 'cutins/h1.webp', col: '#ffb7d5', col2: '#1a2a6a', shout: '센치멘탈…', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ffb7d5', '#7fb2ff'],
         windupPose: 'h_power', pre: [['h_power', 0], ['h_senti', 70]], pose: 'h_senti', dmg: 32, vfx: { type: 'whirl', speed: 11, hits: 5, petal: true, hitColor: '#ffd6e8' } },
-      { name: '말 걸지 마세요', cine: 'senti', cutin: null, col: '#7fb2ff', col2: '#0a1440', shout: '말 걸지 마세요.', shoutAt: 90, hold: 90, cutinF: 60, burstCol: ['#7fb2ff', '#ffffff'],
+      { name: '말 걸지 마세요', cine: 'senti', cutin: 'cutins/h2.webp', col: '#7fb2ff', col2: '#0a1440', shout: '말 걸지 마세요.', shoutAt: 90, hold: 90, cutinF: 60, burstCol: ['#7fb2ff', '#ffffff'],
         windupPose: 'h_taunt', pre: [['h_taunt', 0], ['h_ignore', 80]], pose: 'h_ignore', dmg: 31, vfx: { type: 'projectile', img: 'sound', size: 520, speed: 18, y: 360, hitColor: '#bfe0ff' } },
-      { name: '센치멘탈!!', cine: 'senti', cutin: null, col: '#ff8ac0', col2: '#2a0a4a', shout: '센치멘탈!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ff8ac0', '#ffe600'],
+      { name: '센치멘탈!!', cine: 'senti', cutin: 'cutins/h1.webp', col: '#ff8ac0', col2: '#2a0a4a', shout: '센치멘탈!!', shoutAt: 80, hold: 90, cutinF: 60, burstCol: ['#ff8ac0', '#ffe600'],
         windupPose: 'h_power', pre: [['h_power', 0], ['h_senti', 70]], pose: 'h_senti', dmg: 36, vfx: { type: 'whirl', speed: 12, hits: 7, petal: true, hitColor: '#ffd6e8' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
@@ -549,13 +549,13 @@ window.CHARACTERS = {
       { name: '보고서 결재', move: 'cmdClip', btn: 'p', motion: '214', easy: 'b', desc: '클립보드로 탁! 돌진' },
     ],
     specials: [
-      { name: '12시 넘으면 내 시간이지~', cine: 'lab', cutin: null, col: '#c9a6ff', col2: '#1a0a3a', shout: '12시 넘으면 내 시간이지~', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#c9a6ff', '#7fff6a'],
+      { name: '12시 넘으면 내 시간이지~', cine: 'lab', cutin: 'cutins/r1.webp', col: '#c9a6ff', col2: '#1a0a3a', shout: '12시 넘으면 내 시간이지~', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#c9a6ff', '#7fff6a'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 31,
         vfx: { type: 'multi', img: 'flask', size: 300, speed: 24, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'testtube' }, { delay: 16, y: 220 }, { delay: 24, y: 400, img: 'battery' }, { delay: 32, y: 300 }], hitColor: '#7fff6a' } },
-      { name: '발견!', cine: 'lab', cutin: null, col: '#ffe600', col2: '#2a0a4a', shout: '발견!', shoutAt: 100, hold: 90, cutinF: 60, burstCol: ['#ffe600', '#c9a6ff'],
+      { name: '발견!', cine: 'lab', cutin: 'cutins/r2.webp', col: '#ffe600', col2: '#2a0a4a', shout: '발견!', shoutAt: 100, hold: 90, cutinF: 60, burstCol: ['#ffe600', '#c9a6ff'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_eureka', 90]], pose: 'r_eureka', dmg: 28,
         vfx: { type: 'siren', delay: 22, text: '발견!', hitColor: '#ffe600' } },
-      { name: '12시 넘으면 내 시간이지~!!', cine: 'lab', cutin: null, col: '#7fff6a', col2: '#0a2a1a', shout: '오늘 밤은 안 잔다!', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#7fff6a', '#c9a6ff'],
+      { name: '12시 넘으면 내 시간이지~!!', cine: 'lab', cutin: 'cutins/r1.webp', col: '#7fff6a', col2: '#0a2a1a', shout: '오늘 밤은 안 잔다!', shoutAt: 80, hold: 100, cutinF: 60, burstCol: ['#7fff6a', '#c9a6ff'],
         windupPose: 'r_power', pre: [['r_power', 0], ['r_midnight', 70]], pose: 'r_throw', anim: [['r_throw', 0]], dmg: 35,
         vfx: { type: 'multi', img: 'battery', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 8, y: 470, img: 'flask' }, { delay: 16, y: 220, img: 'testtube' }, { delay: 24, y: 400 }, { delay: 32, y: 300, img: 'flask', size: 420 }], hitColor: '#7fe8ff' } },
     ],

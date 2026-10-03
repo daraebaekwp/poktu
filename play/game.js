@@ -1437,7 +1437,8 @@ function drawCutins() {
     for (let i = 0; i < 28; i++) { const yy = -bh / 2 + (i * 53 % bh), xx = ((i * 211 + t * 2600 * dir) % (W * 2)) - W; ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(xx + 260 * dir, yy); ctx.stroke(); }
     ctx.globalAlpha = 1; const img = IMG[f.img];
     if (img) { const s = bh * 1.9 / img.height, iw = img.width * s, ih = img.height * s, ix = (f.side === 'L' ? -W * .22 : W * .22) - iw / 2 + t * 40 * dir; ctx.drawImage(img, ix, -ih * .42, iw, ih); }
-    ctx.font = `110px ${FONT}`; ctx.textAlign = f.side === 'L' ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    ctx.font = `110px ${FONT}`; { const mw = W * .46, tw0 = ctx.measureText(f.name).width; if (tw0 > mw) ctx.font = `${Math.floor(110 * mw / tw0)}px ${FONT}`; }   // 10/3 긴 필살기 이름은 화면 안에 들어오게 줄임
+    ctx.textAlign = f.side === 'L' ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     const tx = f.side === 'L' ? W * .02 : -W * .02; ctx.lineWidth = 8; ctx.strokeStyle = '#000'; ctx.strokeText(f.name, tx, 20); ctx.fillStyle = '#fff'; ctx.fillText(f.name, tx, 20);
     ctx.font = `40px ${FONT}`; ctx.lineWidth = 5; ctx.strokeText(f.sub, tx, -72); ctx.fillStyle = f.col; ctx.fillText(f.sub, tx, -72);
     ctx.restore();
