@@ -80,6 +80,7 @@
       case 'fire': noise(.5, .3, 'bandpass', 900, 300, 0, MASTER, .8); for (let i = 0; i < 5; i++) noise(.03, .2, 'highpass', 3000, 5000, i * .07); break;
       case 'ring': for (let i = 0; i < 2; i++) { osc('sine', 1320, 1320, .12, .2, i * .35); osc('sine', 1580, 1580, .12, .15, i * .35 + .13); } break;
       case 'siren': { const v = .08 * Math.min(3, big); for (let i = 0; i < 2; i++) { osc('triangle', 880, 880, .18, v, i * .4); osc('triangle', 1175, 1175, .18, v, i * .4 + .2); } break; }   // big = 크기 (119 신고: 점점 크게)
+      case 'weewoo': { const v = .07 * Math.min(3, big); for (let i = 0; i < 2; i++) { const d = i * .7; osc('sawtooth', 960, 950, .33, v, d); osc('square', 962, 952, .33, v * .6, d); osc('sawtooth', 720, 712, .33, v, d + .35); osc('square', 722, 714, .33, v * .6, d + .35); } break; }   // 10/3 삐-뽀 삐-뽀 (구급차 2음)
       case 'cutin': noise(.35, .5, 'bandpass', 400, 4000, 0, MASTER, 1.2); osc('sawtooth', 220, 880, .3, .12); break;
       case 'stomp': osc('sine', 70, 30, .5, 1); noise(.4, .6, 'lowpass', 900, 80); break;
       case 'vs': osc('sine', 110, 40, .6, .9); noise(.5, .6, 'lowpass', 2000, 200); break;

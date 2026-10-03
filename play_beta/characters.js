@@ -63,7 +63,7 @@ window.CHARACTERS = {
       g_bow: { k: .85, ax: 402, ay: 1350 }, g_wink: { k: .8, ax: 452, ay: 1350 }, g_land: { k: .95, ax: 301, ay: 1354, flip: true },
       g_punch2: { k: 1.2, ax: 333, ay: 1232 }, g_rapid: { k: 1.2, ax: 247, ay: 1232 }, g_upper: { k: 1, ax: 233, ay: 1387 },
       g_kick: { k: 1.2, ax: 500, ay: 1232, flip: true }, g_round: { k: 1.2, ax: 187, ay: 1232 }, g_sweep: { k: 1, ax: 265, ay: 1387 },
-      g_knee: { k: 1, ax: 253, ay: 1387 }, g_charge: { k: .885, ax: 384, ay: 1385 }, g_special: { k: 1.2, ax: 333, ay: 1232 },
+      g_knee: { k: .64, ax: 531, ay: 1790 }, g_charge: { k: .885, ax: 384, ay: 1385 }, g_special: { k: 1.2, ax: 333, ay: 1232 },
       g_phone: { k: .865, ax: 280, ay: 1387 }, g_windup: { k: .865, ax: 260, ay: 1387 }, g_throw: { k: .865, ax: 297, ay: 1387 },
       g_head: { k: 1.2 }, g_shrug: { k: .8 },             // 임시 대체 그림(잘린 g_reel·g_sit 대신) — 위치는 자동 계산
     },
