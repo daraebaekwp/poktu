@@ -1636,7 +1636,7 @@ function drawBrand(cx, cy) {
   const mh = 24, mw = mh * 350 / 150, txt = '© 2026 Monster Pitcher. All rights reserved.';
   ctx.save(); ctx.font = `300 17px ${NUM}`; const tw = ctx.measureText(txt).width; ctx.restore();
   const x0 = cx - (mw + 10 + tw) / 2;
-  ctx.save(); ctx.globalAlpha = .6; if (MP_MARK.complete && MP_MARK.naturalWidth) ctx.drawImage(MP_MARK, x0, cy - mh / 2, mw, mh); label(txt, x0 + mw + 10, cy + 1, 17, '#fff', NUM, 'left', 0, 300); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 1; if (MP_MARK.complete && MP_MARK.naturalWidth) ctx.drawImage(MP_MARK, x0, cy - mh / 2, mw, mh); label(txt, x0 + mw + 10, cy + 1, 17, '#fff', NUM, 'left', 0, 300); ctx.restore();
 }
 function titleTop3(x, y, t) {   // 10/2: 타이틀 왼쪽 위 "전체 순위 TOP 3" — 들어오자마자 1등 기록이 보이게
   const list = rankLoad().slice(0, 3), w = 460, h = 70 + Math.max(1, list.length) * 74;
