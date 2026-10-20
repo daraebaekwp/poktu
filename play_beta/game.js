@@ -1626,9 +1626,19 @@ SCENES.title = {
     label('▼ 아래 = 기술표   ▲ 위 = 순위표', W / 2, 764, 30, '#19f5c8', FONT, 'center', 6);
     titleTop3(40, 104, s.t);
     drawGuide(W / 2, 800);
+    drawBrand(W / 2, 1064);
     if (s.hold > .3) { ctx.save(); ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(0, 0, W, H); ctx.restore(); label(`박람회 설정 여는 중… ${Math.ceil(3 - s.hold)}`, W / 2, H / 2, 70, '#ffe600', FONT, 'center', 9); }
   },
 };
+// 10/20: 회사 마크 + 저작권 줄 (타이틀 맨 아래)
+const MP_MARK = new Image(); MP_MARK.src = 'brand/mp_mark.svg';
+function drawBrand(cx, cy) {
+  const mh = 30, mw = mh * 350 / 150, txt = '© 2026 Monster Pitcher. All rights reserved.';
+  ctx.save(); ctx.font = `500 20px ${NUM}`; const tw = ctx.measureText(txt).width; ctx.restore();
+  const x0 = cx - (mw + 12 + tw) / 2;
+  if (MP_MARK.complete && MP_MARK.naturalWidth) ctx.drawImage(MP_MARK, x0, cy - mh / 2, mw, mh);
+  label(txt, x0 + mw + 12, cy + 1, 20, 'rgba(255,255,255,.85)', NUM, 'left', 4, 500);
+}
 function titleTop3(x, y, t) {   // 10/2: 타이틀 왼쪽 위 "전체 순위 TOP 3" — 들어오자마자 1등 기록이 보이게
   const list = rankLoad().slice(0, 3), w = 460, h = 70 + Math.max(1, list.length) * 74;
   ctx.save(); ctx.globalAlpha = .86; ctx.fillStyle = '#140828'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 20); ctx.fill(); ctx.globalAlpha = 1; ctx.lineWidth = 4; ctx.strokeStyle = '#ffd23f'; ctx.stroke(); ctx.restore();
