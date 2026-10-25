@@ -244,7 +244,7 @@ function knockout(target) { // 멈칫 → 보색 번짐 → 확대 튕김 → K.
   later(.05, () => { text('K.O.', { size: 470, life: 2.4, col: '#ff2030', stroke: '#ffe600', rot: -.05, font: NUM }); A.voice('a_ko'); cam.shake = 34; });
   later(1.9, () => tw(ex, { burst: 0 }, .6));
 }
-function cutin(img, side, name, col, col2, life = 1.2, sub = '필살기') { fx.push({ type: 'cutin', img, side, name, col, col2, t0: RT, rt: true, life, sub }); A.sfx('cutin'); }
+function cutin(img, side, name, col, col2, life = 1.2, sub = '필살기', ay = .42) { fx.push({ type: 'cutin', img, side, name, col, col2, t0: RT, rt: true, life, sub, ay }); A.sfx('cutin'); }   // ay = 그림을 띠에 맞추는 높이(작을수록 그림 위쪽이 보임)
 
 // =====================================================================
 //  파이터
@@ -300,7 +300,7 @@ function startSpecial(f) {
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
   tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND - 430 }, .35, 'io');
   ex.burstCol = sp.burstCol || [sp.col, sp.col2]; tw(ex, { burst: .75 }, .25);
-  cutin(IMG[sp.cutin] ? sp.cutin : f.C.face, f.x <= o.x ? 'L' : 'R', /[!?]$/.test(sp.name) ? sp.name : sp.name + '!', sp.col, sp.col2, cf / 60);
+  cutin(IMG[sp.cutin] ? sp.cutin : f.C.face, f.x <= o.x ? 'L' : 'R', /[!?]$/.test(sp.name) ? sp.name : sp.name + '!', sp.col, sp.col2, cf / 60, '필살기', IMG[sp.cutin] && sp.cutinY ? sp.cutinY : .42);   // 10/25 얼굴이 위에 있는 그림은 cutinY로 올림
   overlay.white = .7; tw(overlay, { white: 0 }, .3, 'lin', true); rlater(.12, () => { overlay.white = .45; tw(overlay, { white: 0 }, .2, 'lin', true); });   // 10/2 필살기 시작 번쩍번쩍
   const cn = CINE[sp.cine]; if (cn && cn.start) cn.start(f, f.sp);
   if (sp.notify) { const n = sp.notify; fx.push({ type: 'notify', title: n.title || '알림', body: n.text, col: sp.col, t0: T + (n.at ?? .75), life: n.life || 1.9 }); later(n.at ?? .75, () => A.voice(n.voice)); }   // 직장인: 월급 입금 알림
@@ -1467,7 +1467,7 @@ function drawCutins() {
     ctx.globalAlpha = .5; ctx.strokeStyle = f.col; ctx.lineWidth = 3;
     for (let i = 0; i < 28; i++) { const yy = -bh / 2 + (i * 53 % bh), xx = ((i * 211 + t * 2600 * dir) % (W * 2)) - W; ctx.beginPath(); ctx.moveTo(xx, yy); ctx.lineTo(xx + 260 * dir, yy); ctx.stroke(); }
     ctx.globalAlpha = 1; const img = IMG[f.img];
-    if (img) { const s = bh * 1.9 / img.height, iw = img.width * s, ih = img.height * s, ix = (f.side === 'L' ? -W * .22 : W * .22) - iw / 2 + t * 40 * dir; ctx.drawImage(img, ix, -ih * .42, iw, ih); }
+    if (img) { const s = bh * 1.9 / img.height, iw = img.width * s, ih = img.height * s, ix = (f.side === 'L' ? -W * .22 : W * .22) - iw / 2 + t * 40 * dir; ctx.drawImage(img, ix, -ih * (f.ay ?? .42), iw, ih); }
     ctx.font = `110px ${FONT}`; { const mw = W * .46, tw0 = ctx.measureText(f.name).width; if (tw0 > mw) ctx.font = `${Math.floor(110 * mw / tw0)}px ${FONT}`; }   // 10/3 긴 필살기 이름은 화면 안에 들어오게 줄임
     ctx.textAlign = f.side === 'L' ? 'left' : 'right'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     const tx = f.side === 'L' ? W * .02 : -W * .02; ctx.lineWidth = 8; ctx.strokeStyle = '#000'; ctx.strokeText(f.name, tx, 20); ctx.fillStyle = '#fff'; ctx.fillText(f.name, tx, 20);
@@ -1608,10 +1608,10 @@ SCENES.title = {
     if (s.t > .4 && (IN.p[0].pressed.d || IN.p[1].pressed.d)) { A.sfx('select'); go('movelist', { back: 'title' }); return; }   // ↓ = 기술표
     if (s.t > .4 && (IN.p[0].pressed.u || IN.p[1].pressed.u)) { A.sfx('select'); go('ranking', { from: 'title' }); return; }   // 10/2 ↑ = 순위표
     if (s.t > .4 && IN.anyPressed && s.pend == null) s.pend = s.t;   // 눌림 → 0.25초 안에 세 버튼이 다 안 눌리면 시작
-    if (s.pend != null && s.t - s.pend > .3) { A.sfx('select'); go('mode'); return; }
+    if (s.pend != null && s.t - s.pend > .3) { A.sfx('select'); go('howto'); return; }   // 10/25: 시작하면 조작법 화면을 한 번 거쳐 감
     if (IN.idleMs() > idleMs()) startDemo();
   },
-  click(x, y) { if (scene.t > .3) { A.sfx('select'); if (y > 740 && y < 790 && Math.abs(x - W / 2) < 300) go('movelist', { back: 'title' }); else if (x < 520 && y > 100 && y < 400) go('ranking', { from: 'title' }); else go('mode'); } },
+  click(x, y) { if (scene.t > .3) { A.sfx('select'); if (y > 925 && y < 975 && Math.abs(x - W / 2) < 300) go('movelist', { back: 'title' }); else if (x < 520 && y > 100 && y < 400) go('ranking', { from: 'title' }); else go('howto'); } },
   draw(s) {
     const bg = BG[2]; const z = 1.04 + Math.sin(s.t * .15) * .02;
     ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2); if (bg) ctx.drawImage(bg, -40, -40); ctx.restore();
@@ -1620,12 +1620,12 @@ SCENES.title = {
     const bob = Math.sin(s.t * 4) * 8;
     if (READY.chodding) spriteAt('chodding', 'g_win', 330, 1010 + bob * .3, 1);
     if (READY.sage) spriteAt('sage', 's_flex', 1590, 1010 - bob * .3, -1);
-    logo(W / 2, 330 + Math.sin(s.t * 2) * 6, 1);
-    if (blink(1.4)) label('아무 버튼이나 누르면 시작!', W / 2, 660, 64, '#ffffff', FONT, 'center', 10);
-    label('PRESS ANY BUTTON', W / 2, 722, 32, '#ffe600', NUM, 'center', 6);
-    label('▼ 아래 = 기술표   ▲ 위 = 순위표', W / 2, 764, 30, '#19f5c8', FONT, 'center', 6);
-    titleTop3(40, 104, s.t);
-    drawGuide(W / 2, 788);
+    logo(W / 2, 370 + Math.sin(s.t * 2) * 6, 1);   // 10/25 살짝 내림
+    if (blink(1.4)) label('아무 버튼이나 누르면 시작!', W / 2, 790, 64, '#ffffff', FONT, 'center', 6);   // 10/25 덜 두껍게
+    label('PRESS ANY BUTTON', W / 2, 862, 34, '#ffe600', NUM, 'center', 6);
+    label('▼ 아래 = 기술표   ▲ 위 = 순위표', W / 2, 950, 28, '#19f5c8', FONT, 'center', 6);
+    titleTop3(40, 104, s.t);   // 10/25: 조작법 상자는 다음 화면(howto)으로 옮김
+    label('2026 문화도시 울산 「AI 콘텐츠 활성화」 사업으로 만든 게임입니다.', W / 2, 44, 22, 'rgba(255,255,255,.85)', NUM, 'center', 0, 300);   // 10/25 다래: 위쪽 가운데 작게
     drawBrand(W / 2, 1060);
     if (s.hold > .3) { ctx.save(); ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(0, 0, W, H); ctx.restore(); label(`박람회 설정 여는 중… ${Math.ceil(3 - s.hold)}`, W / 2, H / 2, 70, '#ffe600', FONT, 'center', 9); }
   },
@@ -1663,6 +1663,28 @@ function drawGuide(cx, y) {
   });
   label('뒤로 누르고 있으면 막기 · 아래 = 앉기 · 위 = 점프 · 때리면 SUPER 게이지가 차요 → 가득 차면 필살기!  ·  M(패드 Back) = 노래 바꾸기', cx, y + 232, 30, '#ffe600', FONT, 'center', 6);
 }
+
+// ---------- 조작법 (10/25: 타이틀에서 시작하면 한 번 보여 주고 넘어감) ----------
+SCENES.howto = {
+  enter(s) { IN.lastInput = IN.now(); },
+  update(s) {
+    if (s.t > .6 && (IN.p[0].pressed.d || IN.p[1].pressed.d)) { A.sfx('select'); go('movelist', { back: 'howto' }); return; }
+    if (s.t > .6 && IN.anyPressed) { A.sfx('select'); go('mode'); return; }
+    if (IN.idleMs() > idleMs()) go('title');
+  },
+  click() { if (scene.t > .4) { A.sfx('select'); go('mode'); } },
+  draw(s) {
+    const bg = BG[2]; if (bg) ctx.drawImage(bg, -40, -40);
+    ctx.fillStyle = 'rgba(10,6,30,.82)'; ctx.fillRect(0, 0, W, H);
+    label('조작법', W / 2, 150, 92, '#ffe600', FONT, 'center', 12);
+    label('HOW TO PLAY', W / 2, 214, 32, '#19f5c8', NUM, 'center', 0);
+    drawGuide(W / 2, 360);
+    label('▼ 아래 = 캐릭터별 기술표', W / 2, 690, 32, '#19f5c8', FONT, 'center', 6);
+    if (blink(1.4)) label('아무 버튼이나 누르면 계속!', W / 2, 830, 68, '#ffffff', FONT, 'center', 10);
+    label('PRESS ANY BUTTON', W / 2, 896, 32, '#ffe600', NUM, 'center', 6);
+    drawBrand(W / 2, 1060);
+  },
+};
 
 // ---------- 박람회 설정 (숨은 화면: 타이틀에서 F+G+H 3초) ----------
 const SET_ROWS = [
