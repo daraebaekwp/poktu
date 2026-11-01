@@ -768,7 +768,8 @@ function updateFighter(f) {
 function landed(f) {
   A.sfx('land');
   if (f.state === 'attack') { f.vx = 0; dust(f.x, f.dir, 6); f.sy = .9; tw(f, { sy: 1 }, .2, 'back'); }
-  if (f.state === 'jump') { f.airAtk = -1; setState(f, 'land', P(f).land || P(f).crouch); f.vx = 0; f.sy = .86; tw(f, { sy: 1 }, .22, 'back'); dust(f.x, f.dir, 5); }
+  if (f.state === 'jump') { f.airAtk = -1; faceOpp(f); setState(f, 'land', P(f).land || P(f).crouch);   // 11/1 넘어가서 착지하면 그 순간 상대 쪽으로 돌아섬 (전엔 5프레임 뒤라 그 사이 공격하면 등 뒤로 헛침)
+  f.vx = 0; f.sy = .86; tw(f, { sy: 1 }, .22, 'back'); dust(f.x, f.dir, 5); }
   else if (f.state === 'knockdown') { setState(f, 'down', P(f).down); f.rot = 0; f.vx *= .4; cam.shake = Math.max(cam.shake, 14); dust(f.x, f.dir, 12); f.sy = .9; tw(f, { sy: 1 }, .3, 'back'); A.sfx('stomp'); }
   else if (f.state === 'ko') { setState(f, 'dead', P(f).down); f.rot = 0; f.vx *= .3; cam.shake = 26; dust(f.x, f.dir, 16); A.sfx('stomp'); }
   else if (f.state === 'hitstun') { f.vx *= .5; }
@@ -969,7 +970,7 @@ function pushApart(a, b) {
   const vOverlap = !(a.y < b.y - b.C.body.h * .75 || b.y < a.y - a.C.body.h * .75);
   if (!vOverlap || Math.abs(dx) >= min) return;
   if (['dead', 'ko'].includes(a.state) || ['dead', 'ko'].includes(b.state)) return;
-  const s = dx === 0 ? (a.side === 0 ? 1 : -1) : Math.sign(dx), over = (min - Math.abs(dx)) / 2;
+  const s = dx === 0 ? (a.side === 0 ? 1 : -1) : Math.sign(dx), over = Math.min(12, (min - Math.abs(dx)) / 2);   // 11/1 겹치면 한 번에 툭 밀지 않고 몇 프레임에 걸쳐 스르륵 (착지 때 40px 순간이동처럼 보였음)
   a.x -= s * over; b.x += s * over;
   if (a.x < WALL_L) { b.x += WALL_L - a.x; a.x = WALL_L; } if (b.x > WALL_R) { a.x -= b.x - WALL_R; b.x = WALL_R; }
   if (b.x < WALL_L) { a.x += WALL_L - b.x; b.x = WALL_L; } if (a.x > WALL_R) { b.x -= a.x - WALL_R; a.x = WALL_R; }
