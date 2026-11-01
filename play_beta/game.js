@@ -515,7 +515,8 @@ const CINE = {
     frame(f, sp) {
       if (!sp.bt || slow.k >= .999) return;
       let p = null; for (const q of G.proj) if (q.owner === f && q.img === 'bullet' && !q.dead) p = q;
-      if (p) camFollow(p.x - f.dir * 170, p.y + 60, 1.75, .12, -.05 * f.dir);
+      if (p) { const o = opp(f), gap = Math.abs(o.x - p.x), z = clamp(W * .7 / (gap + 380), 1.05, 1.75);   // 11/2 멀리서 쏘면 맞는 상대가 화면 밖이었음 → 총알과 상대가 같이 보이게 거리만큼 덜 확대
+        camFollow(z < 1.7 ? (p.x + o.x) / 2 : p.x - f.dir * 170, p.y + 60, z, .12, -.05 * f.dir); }
     },
     hit(f, d, p, fin) {
       if (!fin) return;
@@ -768,7 +769,9 @@ function updateFighter(f) {
 function landed(f) {
   A.sfx('land');
   if (f.state === 'attack') { f.vx = 0; dust(f.x, f.dir, 6); f.sy = .9; tw(f, { sy: 1 }, .2, 'back'); }
-  if (f.state === 'jump') { f.airAtk = -1; faceOpp(f); setState(f, 'land', P(f).land || P(f).crouch);   // 11/1 넘어가서 착지하면 그 순간 상대 쪽으로 돌아섬 (전엔 5프레임 뒤라 그 사이 공격하면 등 뒤로 헛침)
+  if (f.state === 'jump') { f.airAtk = -1;
+    { const o = opp(f), mn = f.C.body.hw + o.C.body.hw + 10; if (Math.abs(o.x - f.x) < mn && (f.x <= WALL_L + 1 || f.x >= WALL_R - 1)) { f.x = clamp(o.x + (f.x >= WALL_R - 1 ? -mn : mn), WALL_L, WALL_R); } }   // 11/2 벽에 붙은 상대는 넘을 자리가 없음 → 벽과 상대 사이로 끼지 않고 원래 쪽에 착지
+    faceOpp(f); setState(f, 'land', P(f).land || P(f).crouch);   // 11/1 넘어가서 착지하면 그 순간 상대 쪽으로 돌아섬 (전엔 5프레임 뒤라 그 사이 공격하면 등 뒤로 헛침)
   f.vx = 0; f.sy = .86; tw(f, { sy: 1 }, .22, 'back'); dust(f.x, f.dir, 5); }
   else if (f.state === 'knockdown') { setState(f, 'down', P(f).down); f.rot = 0; f.vx *= .4; cam.shake = Math.max(cam.shake, 14); dust(f.x, f.dir, 12); f.sy = .9; tw(f, { sy: 1 }, .3, 'back'); A.sfx('stomp'); }
   else if (f.state === 'ko') { setState(f, 'dead', P(f).down); f.rot = 0; f.vx *= .3; cam.shake = 26; dust(f.x, f.dir, 16); A.sfx('stomp'); }
@@ -1341,9 +1344,11 @@ function drawFx(layer) {
     }
     if (layer === 'bubble' && f.type === 'bubble') {
       const o = f.who, left = o.x < W / 2, inT = Math.min(1, t / .15), sc = .6 + .4 * EASE.back(inT), outA = a > .85 ? (1 - a) / .15 : 1;
-      const bx = clamp(left ? o.x + 290 : o.x - 290, 330, W - 330), by = headY(o) + 90;
+      ctx.font = `62px ${FONT}`; const w = ctx.measureText(f.str).width + 84;
+      // 11/2 말풍선이 얼굴을 가리거나(길 때), 옆으로 비키면 상대 머리에 붙어 누가 말하는지 헷갈렸음 → 말하는 사람 머리 바로 위, 꼬리는 그 사람 쪽
+      const bx = clamp(o.x + (left ? 1 : -1) * Math.min(120, w / 2 - 90), w / 2 + 20, W - w / 2 - 20), by = Math.max(150, headY(o) - 70);
       ctx.globalAlpha = outA; ctx.translate(bx, by); ctx.scale(sc, sc);
-      ctx.font = `62px ${FONT}`; const w = ctx.measureText(f.str).width + 84, h = 108, r = 44, L = -w / 2, R = w / 2, top = -h, bot = 0;
+      ctx.font = `62px ${FONT}`; const h = 108, r = 44, L = -w / 2, R = w / 2, top = -h, bot = 0;
       const tx = left ? L + 70 : R - 70, tip = left ? tx - 46 : tx + 46;
       if (f.str === '여긴 내 산인데?') { ctx.globalAlpha0 = outA; emberPops(t, w, h); }   // 말풍선 뒤에서 튀어나옴
       ctx.beginPath(); ctx.moveTo(L + r, top); ctx.lineTo(R - r, top); ctx.arcTo(R, top, R, top + r, r); ctx.lineTo(R, bot - r); ctx.arcTo(R, bot, R - r, bot, r);
@@ -1577,7 +1582,7 @@ function bigFace(img, x, y, w, h, k, flip, col, locked, hue) {
   ctx.globalAlpha = .25; ctx.fillStyle = col[0]; for (let yy = y; yy < y + h; yy += 30) for (let xx = x + ((yy / 30) % 2) * 15; xx < x + w; xx += 30) { ctx.beginPath(); ctx.arc(xx, yy, 5, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
   if (img) { if (locked) ctx.filter = 'grayscale(1) brightness(.45)'; else if (hue) ctx.filter = `hue-rotate(${hue}deg)`; const s = Math.max(w, h) / img.width * 1.02; ctx.drawImage(img, x + w / 2 - img.width * s / 2, y + h / 2 - img.height * s / 2 + 20, img.width * s, img.height * s); ctx.filter = 'none'; }
   ctx.restore(); sticker(() => slantPanel(x, y, w, h, k, flip), null, 12);
-  if (locked) { lockIcon(x + w / 2, y + h / 2 - 30, 2); label('준비중', x + w / 2, y + h / 2 + 90, 70, '#fff', FONT, 'center', 10); }
+  if (locked) { lockIcon(x + w / 2, y + h / 2 - 30, 2); label('준비 중', x + w / 2, y + h / 2 + 90, 70, '#fff', FONT, 'center', 10); }
 }
 function lockIcon(x, y, s = 1) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.lineWidth = 9; ctx.strokeStyle = '#000'; ctx.fillStyle = '#ffe600';
   ctx.beginPath(); ctx.arc(0, -14, 20, Math.PI, 0); ctx.lineTo(20, 0); ctx.moveTo(-20, 0); ctx.lineTo(-20, -14); ctx.stroke(); ctx.lineWidth = 5; ctx.strokeStyle = '#ffe600'; ctx.stroke();
@@ -2058,7 +2063,7 @@ SCENES.select = {
   },
   confirm(s, side) {
     const i = s.cur[side];
-    if (!allowed(i, side, s.mode)) { s.shake[side] = 1; A.sfx('deny'); const t = tileInfo(i); pop(i === BOSS_I ? '보스는 2P만!' : '준비중이에요!', tileRect(i).x + 75, tileRect(i).y - 10, '#ff8ad0', 44); return; }
+    if (!allowed(i, side, s.mode)) { s.shake[side] = 1; A.sfx('deny'); const t = tileInfo(i); pop(i === BOSS_I ? '보스는 2P만!' : '준비 중이에요!', tileRect(i).x + 75, tileRect(i).y - 10, '#ff8ad0', 44); return; }
     s.picked[side] = resolvePick(i, side, s.mode); s.done[side] = true; A.sfx('select');
     const C = CHARS[s.picked[side]]; if (C && C.voices && C.voices.intro) A.voice(C.voices.intro, .9);
   },
@@ -2082,22 +2087,22 @@ SCENES.select = {
       sticker(() => { ctx.beginPath(); ctx.rect(b.x, b.y, b.s, b.s); }, t.col[1], on ? 10 : 6);
       if (t.img) { ctx.save(); ctx.beginPath(); ctx.rect(b.x + 4, b.y + 4, b.s - 8, b.s - 8); ctx.clip(); if (locked || (i === BOSS_I && s.mode === 'arcade')) ctx.filter = 'grayscale(1) brightness(.5)'; ctx.drawImage(t.img, b.x + 4, b.y + 4, b.s - 8, b.s - 8); ctx.restore(); }
       else if (i === RAND_I) label('?', b.x + b.s / 2, b.y + b.s / 2 - 10, 110, '#fff', NUM, 'center', 10);
-      if (!READY[t.key] && i !== RAND_I) { lockIcon(b.x + b.s / 2, b.y + 52, .9); label('준비중', b.x + b.s / 2, b.y + b.s - 22, 28, '#ffe600', FONT, 'center', 6); }
+      if (!READY[t.key] && i !== RAND_I) { lockIcon(b.x + b.s / 2, b.y + 52, .9); label('준비 중', b.x + b.s / 2, b.y + b.s - 22, 28, '#ffe600', FONT, 'center', 6); }
       else if (i === BOSS_I && s.mode === 'arcade') { label('BOSS', b.x + b.s / 2, b.y + 40, 32, '#ff2f8a', NUM, 'center', 6); label(t.name, b.x + b.s / 2, b.y + b.s - 22, 28, '#fff', FONT, 'center', 6); }
       else label(t.name, b.x + b.s / 2, b.y + b.s - 22, 28, on ? t.col[0] : '#fff', FONT, 'center', 6);
       const bl = Math.sin(s.t * 24) > 0;
       if (on0) { ctx.lineWidth = 7; ctx.strokeStyle = s.done[0] ? '#ffe600' : bl ? '#ffe600' : '#fff'; ctx.strokeRect(b.x - 7, b.y - 7, b.s + 14, b.s + 14); label('1P', b.x + 8, b.y - 18, 32, '#ffe600', NUM, 'left', 6); }
       if (on1) { ctx.lineWidth = 7; ctx.strokeStyle = s.done[1] ? '#ff2f8a' : bl ? '#ff2f8a' : '#fff'; ctx.strokeRect(b.x - 12, b.y - 12, b.s + 24, b.s + 24); label('2P', b.x + b.s - 8, b.y - 18, 32, '#ff2f8a', NUM, 'right', 6); }
       ctx.restore(); }
-    const hint = s.mode === 'arcade' ? (s.resume != null ? `${STAGES[s.resume].round} ${STAGES[s.resume].place}부터 이어서 해요! · 다른 캐릭터로 바꿔도 돼요` : '파이터를 고르세요 · 펀치 = 결정  킥 = 뒤로') : (s.done[0] && !s.done[1] ? '2P도 골라 주세요! (방향키 · 숫자1)' : '1P · 2P 각자 고르세요 · 2P는 산신령도 고를 수 있어요');
+    const hint = s.mode === 'arcade' ? (s.resume != null ? `${STAGES[s.resume].round} ${STAGES[s.resume].place}부터 이어서! · 캐릭터 바꿔도 돼요` : '파이터를 고르세요 · 펀치 = 결정  킥 = 뒤로') : (s.done[0] && !s.done[1] ? '2P도 골라 주세요! (방향키 · 숫자1)' : '1P · 2P 각자 고르세요 · 2P는 산신령도 고를 수 있어요');
     label(hint, W / 2, 196, 30, '#fff', FONT, 'center', 5);   // 10/2: 칸이 3줄이 되어 제목 아래로
     { const hk = s.picked[0] || tileInfo(s.cur[0]).key, HC = CHARS[hk];   // 1P 캐릭터 기술 한 줄 힌트
       if (HC && READY[hk] && HC.commands) { const lines = HC.commands.map(c => `${ARROW[EASY[c.easy]]} + ${BTN_STYLE[c.btn][0]}   ${c.name}`); if (HC.rapid) lines.push(`펀치 연타   ${HC.rapid.name}`); if (HC.signature) lines.push(`필살기   ${HC.signature}`);
-        const lh = 28, hgt = 54 + lines.length * lh + 18, y0 = Math.min(880, H - 6 - hgt), bw = 680;   // 10/2: 줄이 많아도 화면 안 · 긴 줄은 글씨 줄임
+        const lh = lines.length > 4 ? 23 : 28, hgt = 50 + lines.length * lh + 16, y0 = 884, bw = 680;   // 11/2 다섯 줄이면 캐릭터 칸 아랫줄 이름을 가렸음 → 칸 아래에서 시작, 줄 간격 줄임   // 10/2: 줄이 많아도 화면 안 · 긴 줄은 글씨 줄임
         ctx.save(); ctx.fillStyle = 'rgba(12,6,30,.97)'; ctx.strokeStyle = '#ffe600'; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect(W / 2 - bw / 2, y0, bw, hgt, 18); ctx.fill(); ctx.stroke(); ctx.restore();
-        label(`${HC.name} 기술`, W / 2, y0 + 24, 28, '#19f5c8', FONT, 'center', 5);
-        lines.forEach((t, i) => { ctx.font = `24px ${FONT}`; const fs = Math.min(24, Math.floor(24 * (bw - 40) / Math.max(1, ctx.measureText(t).width))); label(t, W / 2, y0 + 56 + i * lh, fs, '#ffe600', FONT, 'center', 5); });
-        label('자세한 기술표: 타이틀에서 ▼', W / 2, y0 + 52 + lines.length * lh, 20, '#c9b8ff', FONT, 'center', 4); } }
+        label(`${HC.name} 기술`, W / 2, y0 + 22, 26, '#19f5c8', FONT, 'center', 5);
+        lines.forEach((t, i) => { ctx.font = `24px ${FONT}`; const fs = Math.min(lh > 24 ? 24 : 21, Math.floor(24 * (bw - 40) / Math.max(1, ctx.measureText(t).width))); label(t, W / 2, y0 + 50 + i * lh, fs, '#ffe600', FONT, 'center', 5); });
+        label('자세한 기술표: 타이틀에서 ▼', W / 2, y0 + 46 + lines.length * lh, 19, '#c9b8ff', FONT, 'center', 4); } }
     for (let side = 0; side < 2; side++) if (s.done[side] && !(s.mode === 'arcade' && side === 1)) { const x = side === 0 ? 340 : W - 340; ctx.save(); ctx.translate(x, 500); ctx.rotate(-.12); label('OK!', 0, 0, 90, side ? '#ff2f8a' : '#ffe600', NUM, 'center', 12); ctx.restore(); }
     if (s.goT >= 0) { const t = s.t - s.goT, sc = t < .25 ? 3 - 2 * EASE.back(t / .25) : 1; ctx.save(); ctx.translate(W / 2, 470); ctx.rotate(-.1); ctx.scale(sc, sc); label('SELECT!', 0, 0, 120, '#ffe600', NUM, 'center', 14); ctx.restore(); }
     drawFx('screen');
@@ -2151,7 +2156,7 @@ SCENES.vs = {
         ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror && C.vs) ctx.scale(-1, 1); ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
       ctx.restore(); }
     ctx.lineWidth = 24; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.moveTo(W / 2 + sl, 0); ctx.lineTo(W / 2 - sl, H); ctx.stroke(); ctx.lineWidth = 10; ctx.strokeStyle = '#ffe600'; ctx.stroke();
-    profile(pickedInfo(m.p1), 40 - (1 - inP) * 700, H - 210, false); profile(pickedInfo(m.p2), W - 600 + (1 - inP) * 700, 60, true);
+    profile(pickedInfo(m.p1), 40 - (1 - inP) * 700, H - 210, false); profile(pickedInfo(m.p2), W - 600 + (1 - inP) * 700, 120, true);   // 11/2 오른쪽 위 ♪·터치 버튼 단추와 겹쳐서 조금 내림
     const vsS = t < .3 ? 0 : t < .55 ? 3 - 2 * EASE.back((t - .3) / .25) : 1 + Math.sin(t * 8) * .03;
     if (vsS) { ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.1); ctx.scale(vsS, vsS); label('VS', 0, 0, 300, '#ffe600', NUM, 'center', 26); ctx.restore(); }
     const st = STAGES[m.stage]; if (t > .8 && !Q.has('novsround')) label(m.mode === 'versus' ? `${st.place}` : `${st.round} · ${st.place}`, W / 2, H - 70, 50, '#fff', FONT, 'center', 8);
@@ -2244,7 +2249,7 @@ SCENES.movelist = {
       label(`또는 ${[...(c.motion || '')].map(d => ARROW[+d]).join('')} + ${BTN_STYLE[c.btn][0]}`, ex + 14, y2, 26, '#c9b8ff', FONT, 'left', 4);
       if (c.desc) label(c.desc, X2 + 14, y2 + 44, 28, '#ffe600', FONT, 'left', 4);
       y2 += (C.commands.length > 3 ? 90 : 104); }
-    y2 += 6; head('필살기 (SUPER MAX 일 때)', X2, y2, '#ff2f8a'); y2 += 70;
+    y2 += 6; head('필살기 (SUPER MAX일 때)', X2, y2, '#ff2f8a'); y2 += 70;
     if (C.signature) { label(C.signature, X2 + 10, y2, 30, '#ffe600', FONT, 'left', 5); y2 += 48; }   // 대표 필살기 한 줄 설명
     C.specials.forEach((sp, i) => { chips(X2 + 10, y2, ['s'], .9); label(`${['1판', '2판', '3판'][i]}  ${sp.name}`, X2 + 120, y2, 32, '#fff', FONT, 'left', 5); y2 += 50; });
     chips(X2 + 10, y2, ['콤보가 맞는 중에', 's', '=', '필살 캔슬!'], .85);
@@ -2286,7 +2291,7 @@ SCENES.continue = {
     for (const p of players) {
       if (p.pressed.u) { s.sel = (s.sel + 2) % 3; A.sfx('move'); s.tick = Math.min(s.tick, AFTER_SEC - 8); }   // 움직이면 최소 8초는 남겨 둠
       if (p.pressed.d) { s.sel = (s.sel + 1) % 3; A.sfx('move'); s.tick = Math.min(s.tick, AFTER_SEC - 8); }
-      if (s.t > .8 && (p.pressed.p || p.pressed.k || p.pressed.s || p.pressed.start)) { this.choose(s, s.sel); return; }
+      if (s.t > .8 && (p.pressed.p || p.pressed.s || p.pressed.start)) { this.choose(s, s.sel); return; }   // 11/2 킥은 다른 화면처럼 '뒤로'가 아니라서 결정에서 뺌 (경기 끝에 막 누르다 바로 다시하기 되던 것)
     }
     if (s.tick >= AFTER_SEC) {
       if (s.match.mode === 'arcade') { s.over = s.t; A.bgmStop(); } else go('title');
@@ -2603,7 +2608,7 @@ window.GAME = {
   };
   R.draw = function (s) {
     draw0.call(this, s);
-    label(on() ? '전체 순위' : '이 기기 순위', W - 60, 60, 34, on() ? '#19f5c8' : '#aaa', FONT, 'right', 5);
+    label(on() ? '전체 순위' : '이 기기 순위', W - 60, 120, 34, on() ? '#19f5c8' : '#aaa', FONT, 'right', 5);
   };
   pull();
 

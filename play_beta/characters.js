@@ -80,7 +80,7 @@ window.CHARACTERS = {
       cmdSpin:  { anim: [['g_windup', 0], ['g_round', 7]], startup: 9, active: 9, recovery: 18, dmg: 9, hitstun: 22, blockstun: 12, push: 14, hitbox: { x: 20, w: 240, y: 220, h: 220 }, level: 'mid', kd: true, dash: 10, voice: 'g_iyap' },
       rapid:    { anim: [['g_rapid', 0], ['g_punch2', 5], ['g_rapid', 10], ['g_punch2', 15], ['g_rapid', 20]], startup: 3, active: 22, recovery: 10, dmg: 2, hitstun: 12, blockstun: 8, push: 3, hitbox: { x: 40, w: 170, y: 300, h: 140 }, level: 'mid', multi: 6 },
       crouchPunch: { pose: 'g_upper', startup: 4, active: 6, recovery: 16, dmg: 9, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 150, y: 250, h: 380 }, level: 'mid', kd: true, voice: 'g_hat', antiAir: true },   // 10/2 리치 짧은 대신 아래 공격 강화
-      crouchKick:  { anim: [['g_duck', 0], ['g_sweep', 6]], startup: 5, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 260, y: 0, h: 110 }, level: 'low', kd: true, voice: 'g_yap', hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
+      crouchKick:  { anim: [['g_duck', 0], ['g_sweep', 5]], startup: 5, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 260, y: 0, h: 110 }, level: 'low', kd: true, voice: 'g_yap', hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
       jumpAttack:  { pose: 'g_knee', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 175, y: 120, h: 220 }, level: 'high', voice: 'g_yap' },
     },
     commands: [
@@ -190,10 +190,10 @@ window.CHARACTERS = {
     moves: {
       punch:  { pose: 'a_punch', startup: 5, active: 4, recovery: 10, dmg: 5, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 195, y: 300, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
       punch2: { pose: 'a_punch2', startup: 5, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 12, hitbox: { x: 40, w: 195, y: 220, h: 200 }, level: 'mid', kd: true, big: 1.1, popText: '탁!' },
-      kick:   { pose: 'a_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 215, y: 250, h: 180 }, level: 'mid', links: { p: 'crouchPunch' } },
+      kick:   { pose: 'a_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 250, y: 250, h: 180 }, level: 'mid', links: { p: 'crouchPunch' } },
       crouchPunch: { pose: 'a_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 150, y: 250, h: 380 }, level: 'mid', kd: true, antiAir: true, comboName: '마감 삼단!' },
       crouchKick:  { anim: [['a_crouch', 0], ['a_sp_swing', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 270, y: 180, h: 160 }, level: 'mid', kd: true },
-      jumpAttack:  { pose: 'a_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 120, h: 220 }, level: 'high' },
+      jumpAttack:  { pose: 'a_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 255, y: 120, h: 220 }, level: 'high' },
       cmdLaptop: { anim: [['a_punch', 0], ['a_punch2', 8]], startup: 10, active: 7, recovery: 18, dmg: 9, hitstun: 22, blockstun: 14, push: 14, hitbox: { x: 30, w: 220, y: 220, h: 220 }, level: 'mid', kd: true, dash: 11, big: 1.1, popText: '탁!' },
       cmdShout:  { anim: [['a_taunt', 0], ['a_sp_shout', 8]], startup: 10, active: 8, recovery: 22, dmg: 5, hitstun: 40, blockstun: 16, push: 6, hitbox: { x: 40, w: 330, y: 200, h: 320 }, level: 'mid', rings: true, popText: '아아아!' },
       cmdShovel: { anim: [['a_sp_windup', 0], ['a_sp_swing', 12]], startup: 14, active: 8, recovery: 16, dmg: 11, hitstun: 24, blockstun: 16, push: 14, hitbox: { x: 30, w: 240, y: 60, h: 360 }, level: 'high', kd: true, hop: { vy: 16, vx: 7 }, big: 1.2 },
@@ -238,7 +238,7 @@ window.CHARACTERS = {
       intro: 'm_bow', taunt: 'm_taunt', land: 'm_crouch',
     },
     META: {
-      m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 465 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561 },
+      m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 465 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561, flip: true },
       m_down: { h: 192 }, m_win: { h: 668 }, m_bow: { h: 443 }, m_taunt: { h: 575 },
       m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 340 },
       m_sp_windup: { h: 556 }, m_sp_charge: { h: 407 }, m_sp_slam: { h: 488 },
@@ -277,18 +277,18 @@ window.CHARACTERS = {
     introLines: [null, null, null],
     endingAnswer: { text: '스물한 살입니다!', voice: null },
   },
-  // ------------------------------------------------------------ 직장인 (울산 공단 12년차)
+  // ------------------------------------------------------------ 직장인 (울산 공단 12년 차)
   // 그림: sprites/w_*.png (여백 둔 투명 PNG, META 의 h = 화면에 보일 몸 높이) · 효과 그림: vfx/w_coin·w_bills·w_bag·w_storm.png
   // 필살기 "월급 입금!": 휴대폰 진동·띵동 → 입금 알림 창 → "월급 입금!" 외치고 → 지폐·동전 폭풍 (둥근 동전·가로 속도선만, 방사형 광선 없음)
   worker: {
-    name: '직장인', en: 'WORKER', age: '42세', tag: '울산 공단 12년차',
+    name: '직장인', en: 'WORKER', age: '42세', tag: '울산 공단 12년 차',
     col: ['#5ab8ff', '#16307a'],
     face: 'roster/face_worker.jpg', vs: null, fight: null, fightCut: 'roster/face_worker_nukki.webp',
     portrait: { sx: 257, sy: 180, size: 475 },
     signature: '휴대폰 띵동! "월급 입금!" 돈 폭풍',
     facing: 1, size: 1, headH: 560,
     body: { hw: 78, h: 540, crouchH: 360 },
-    speed: { walk: 6.8, back: 5.3, jumpV: 24, jumpX: 7, gravity: 1.25 },
+    speed: { walk: 7.6, back: 5.8, jumpV: 24, jumpX: 7, gravity: 1.25 },
     meterGain: 1,
     poses: {
       idle: 'w_idle', walk: 'w_walk', jump: 'w_jump', crouch: 'w_crouch', guard: 'w_guard', crouchGuard: 'w_crouch',
@@ -303,14 +303,14 @@ window.CHARACTERS = {
     },
     moves: {
       punch:  { pose: 'w_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 195, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' }, voice: 'w_hup' },
-      punch2: { pose: 'w_punch2', startup: 5, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 12, hitbox: { x: 40, w: 195, y: 300, h: 170 }, level: 'mid', kd: true, big: 1.1, voice: 'w_hup2' },
-      kick:   { pose: 'w_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 215, y: 200, h: 180 }, level: 'mid', links: { p: 'crouchPunch' }, voice: 'w_yeong' },
+      punch2: { pose: 'w_punch2', startup: 5, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 12, hitbox: { x: 40, w: 155, y: 300, h: 170 }, level: 'mid', kd: true, big: 1.1, voice: 'w_hup2' },
+      kick:   { pose: 'w_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 175, y: 200, h: 180 }, level: 'mid', links: { p: 'crouchPunch' }, voice: 'w_yeong' },
       crouchPunch: { pose: 'w_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 150, y: 250, h: 400 }, level: 'mid', kd: true, antiAir: true, comboName: '정시 퇴근 삼단!' },
       crouchKick:  { anim: [['w_crouch', 0], ['w_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 270, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
-      jumpAttack:  { pose: 'w_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 100, h: 220 }, level: 'high', voice: 'w_hup' },
+      jumpAttack:  { pose: 'w_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 360, y: 100, h: 220 }, level: 'high', voice: 'w_hup' },
       // 기술
-      cmdHelmet: { anim: [['w_crouch', 0], ['w_headbutt', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 16, hitbox: { x: 20, w: 200, y: 300, h: 200 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '안전 제일!', voice: 'w_yeong' },
-      cmdTowel:  { anim: [['w_taunt', 0], ['w_towel', 11]], startup: 13, active: 10, recovery: 24, dmg: 6, hitstun: 20, blockstun: 10, push: 13, hitbox: { x: 40, w: 290, y: 280, h: 160 }, level: 'mid', multi: 5, popText: '휘릭!', voice: 'w_hup2' },   // 11/1 박람회 피드백: 수건만 써도 다 깸 → 조금 느리게·짧게·약하게 (수건만 쓰기 시험: CPU 보통 상대 18판 16승 → 8승)
+      cmdHelmet: { anim: [['w_crouch', 0], ['w_headbutt', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 16, hitbox: { x: 20, w: 160, y: 300, h: 200 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '안전 제일!', voice: 'w_yeong' },
+      cmdTowel:  { anim: [['w_taunt', 0], ['w_towel', 11]], startup: 13, active: 10, recovery: 24, dmg: 6, hitstun: 20, blockstun: 10, push: 13, hitbox: { x: 40, w: 290, y: 280, h: 160 }, level: 'mid', multi: 5, popText: '휘릭!', voice: 'w_hup2' },   // 11/2 판정을 그림에 맞게 줄인 만큼 걷기 6.8→7.6로 보충 · 11/1 박람회 피드백: 수건만 써도 다 깸 → 조금 느리게·짧게·약하게 (수건만 쓰기 시험: CPU 보통 상대 18판 16승 → 8승)
       cmdWrench: { anim: [['w_crouch', 0], ['w_wrench', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 190, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 14, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '깡!', voice: 'w_hup' },
     },
     commands: [
@@ -335,7 +335,7 @@ window.CHARACTERS = {
     ],
     voices: { intro: 'w_intro', attack: ['w_hup', 'w_hup2', 'w_yeong'], hurt: ['w_hurt', 'w_ugh'], win: 'w_win', lose: 'w_lose', taunt: 'w_taunt', ko: 'w_hurt' },
     introLines: [{ text: '안전 제일! 한 판 붙어 봅시다!', voice: 'w_intro' }, { text: '퇴근 시간 다 됐다!', voice: 'w_taunt' }, { text: '안전 제일! 한 판 붙어 봅시다!', voice: 'w_intro' }],
-    endingAnswer: { text: '마흔둘! 공단 12년차요!', voice: 'w_ending42' },   // 9/29 나이 42세로. w_ending42.mp3 가 생기면 나옴(없으면 말풍선만 — 예전 w_ending.mp3 는 "서른여덟"이라 안 씀)
+    endingAnswer: { text: '마흔둘! 공단 12년 차요!', voice: 'w_ending42' },   // 9/29 나이 42세로. w_ending42.mp3 가 생기면 나옴(없으면 말풍선만 — 예전 w_ending.mp3 는 "서른여덟"이라 안 씀)
   },
 
   // ------------------------------------------------------------ 할머니 (10/2 추가 · 영남알프스 9봉 완등)
@@ -364,12 +364,12 @@ window.CHARACTERS = {
     },
     moves: {
       punch:  { pose: 'k_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 180, y: 300, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
-      punch2: { pose: 'k_poke', startup: 6, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 14, hitbox: { x: 40, w: 280, y: 280, h: 120 }, level: 'mid', kd: true, big: 1.1, popText: '콕!' },
+      punch2: { pose: 'k_poke', startup: 6, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 14, hitbox: { x: 40, w: 215, y: 280, h: 120 }, level: 'mid', kd: true, big: 1.1, popText: '콕!' },
       kick:   { pose: 'k_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 195, y: 220, h: 180 }, level: 'mid', links: { p: 'crouchPunch' } },
       crouchPunch: { pose: 'k_upper', startup: 5, active: 6, recovery: 16, dmg: 9, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 170, y: 250, h: 420 }, level: 'mid', kd: true, antiAir: true, comboName: '등산 삼단!' },   // 10/2 리치 짧은 대신 아래 공격 강화
-      crouchKick:  { anim: [['k_crouch', 0], ['k_sweep', 6]], startup: 6, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 300, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
+      crouchKick:  { anim: [['k_crouch', 0], ['k_sweep', 6]], startup: 6, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 210, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
       jumpAttack:  { pose: 'k_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 180, y: 100, h: 220 }, level: 'high' },
-      cmdPoke:  { anim: [['k_crouch', 0], ['k_poke', 7]], startup: 9, active: 8, recovery: 18, dmg: 9, hitstun: 22, blockstun: 14, push: 16, hitbox: { x: 40, w: 340, y: 270, h: 140 }, level: 'mid', kd: true, dash: 9, big: 1.1, popText: '스틱 찌르기!' },
+      cmdPoke:  { anim: [['k_crouch', 0], ['k_poke', 7]], startup: 9, active: 8, recovery: 18, dmg: 9, hitstun: 22, blockstun: 14, push: 16, hitbox: { x: 40, w: 250, y: 270, h: 140 }, level: 'mid', kd: true, dash: 9, big: 1.1, popText: '스틱 찌르기!' },
       cmdRam:   { anim: [['k_crouch', 0], ['k_ram', 8]], startup: 10, active: 10, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 220, y: 60, h: 220 }, level: 'mid', kd: true, dash: 15, big: 1.1, popText: '배낭 박치기!' },
       cmdUpper: { anim: [['k_crouch', 0], ['k_upper', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 190, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 14, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '스틱 올려치기!' },
       cmdDrink: { pose: 'k_drink', startup: 18, active: 1, recovery: 20, meter: 25, popStart: '꿀꺽!' },
@@ -418,7 +418,7 @@ window.CHARACTERS = {
       intro: 't_bow', taunt: 't_taunt', land: 't_crouch',
     },
     META: {
-      t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 429 }, t_block: { h: 510 }, t_hit: { h: 520 },
+      t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 429 }, t_block: { h: 510 }, t_hit: { h: 520, flip: true },
       t_down: { h: 150 }, t_win: { h: 560 }, t_lose: { h: 290 }, t_bow: { h: 470 }, t_taunt: { h: 515 },
       t_punch: { h: 510 }, t_scan: { h: 500, flip: true }, t_kick: { h: 540 }, t_upper: { h: 590 }, t_jumpatk: { h: 470 }, t_sweep: { h: 330 },
       t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 545, flip: true },
@@ -453,7 +453,7 @@ window.CHARACTERS = {
         vfx: { type: 'multi', img: 'kimbap', size: 340, speed: 25, shots: [{ delay: 0, y: 330 }, { delay: 7, y: 470, img: 'bananamilk' }, { delay: 14, y: 220 }, { delay: 21, y: 400, img: 'bananamilk' }, { delay: 28, y: 300 }, { delay: 35, y: 450, img: 'bananamilk', size: 480 }], hitColor: '#7fe8ff' } },
     ],
     voices: { intro: null, attack: [], hurt: [], win: null, lose: null },
-    introLines: [{ text: '어서오세요… 아니, 덤벼요.', voice: null }, null, { text: '퇴근까지 3시간…', voice: null }],
+    introLines: [{ text: '어서 오세요… 아니, 덤벼요.', voice: null }, null, { text: '퇴근까지 3시간…', voice: null }],
     endingAnswer: { text: '스물여덟이요. 집에 가도 돼요?', voice: null },
   },
 
@@ -475,19 +475,19 @@ window.CHARACTERS = {
       intro: 'h_bow', taunt: 'h_taunt', land: 'h_crouch',
     },
     META: {
-      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 520 }, h_hit: { h: 535 },
+      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 520 }, h_hit: { h: 535, flip: true },
       h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
     },
     moves: {
       punch:  { pose: 'h_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
-      punch2: { pose: 'h_bag', startup: 6, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 14, hitbox: { x: 20, w: 230, y: 150, h: 260 }, level: 'mid', kd: true, big: 1.1, popText: '퍽!' },
+      punch2: { pose: 'h_bag', startup: 6, active: 5, recovery: 16, dmg: 8, hitstun: 24, blockstun: 12, push: 14, hitbox: { x: 20, w: 195, y: 150, h: 260 }, level: 'mid', kd: true, big: 1.1, popText: '퍽!' },
       kick:   { pose: 'h_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 220, y: 300, h: 220 }, level: 'mid', links: { p: 'crouchPunch' } },
       crouchPunch: { pose: 'h_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 160, y: 250, h: 420 }, level: 'mid', kd: true, antiAir: true, comboName: '하교 삼단!' },
       crouchKick:  { anim: [['h_crouch', 0], ['h_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 290, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
       jumpAttack:  { pose: 'h_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 205, y: 80, h: 240 }, level: 'high' },
-      cmdBag:   { anim: [['h_crouch', 0], ['h_bag', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 150, h: 260 }, level: 'mid', kd: true, dash: 13, big: 1.1, popText: '가방 휘두르기!' },
+      cmdBag:   { anim: [['h_crouch', 0], ['h_bag', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 210, y: 150, h: 260 }, level: 'mid', kd: true, dash: 13, big: 1.1, popText: '가방 휘두르기!' },
       cmdUpper: { anim: [['h_crouch', 0], ['h_upper', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '시험 탈출!' },
       cmdIgnore:{ anim: [['h_taunt', 0], ['h_ignore', 8]], startup: 10, active: 8, recovery: 20, dmg: 6, hitstun: 36, blockstun: 16, push: 8, hitbox: { x: 40, w: 300, y: 250, h: 260 }, level: 'mid', rings: true, popText: '못 들었는데요?' },
     },
@@ -538,10 +538,10 @@ window.CHARACTERS = {
       kick:   { pose: 'r_kick', startup: 8, active: 5, recovery: 15, dmg: 8, hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 50, w: 200, y: 300, h: 220 }, level: 'mid', links: { p: 'crouchPunch' } },
       crouchPunch: { pose: 'r_upper', startup: 6, active: 6, recovery: 16, dmg: 7, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 160, y: 250, h: 420 }, level: 'mid', kd: true, antiAir: true, comboName: '실험 삼단!' },
       crouchKick:  { anim: [['r_crouch', 0], ['r_sweep', 6]], startup: 7, active: 6, recovery: 18, dmg: 7, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 300, y: 0, h: 110 }, level: 'low', kd: true, hy: 60 },
-      jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 80, h: 240 }, level: 'high' },
+      jumpAttack:  { pose: 'r_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 245, y: 80, h: 240 }, level: 'high' },
       cmdFlask: { anim: [['r_crouch', 0], ['r_throw', 9]], startup: 11, active: 1, recovery: 20, proj: { img: 'flask', size: 220, speed: 17, y: 340, dmg: 7, col: '#7fff6a' }, popStart: '플라스크!' },
       cmdUpper: { anim: [['r_crouch', 0], ['r_upper', 3]], startup: 5, active: 10, recovery: 22, dmg: 9, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 180, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 16, vx: 3 }, invul: 7, antiAir: true, big: 1.1, popText: '가설 검증!' },
-      cmdClip:  { anim: [['r_taunt', 0], ['r_clip', 8]], startup: 9, active: 8, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 260, y: 250, h: 220 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '보고서 결재!' },
+      cmdClip:  { anim: [['r_taunt', 0], ['r_clip', 8]], startup: 9, active: 8, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 220, y: 250, h: 220 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '보고서 결재!' },
     },
     commands: [
       { name: '플라스크 던지기', move: 'cmdFlask', btn: 'p', motion: '236', easy: 'f', desc: '부글부글 플라스크가 날아가요' },
@@ -570,7 +570,7 @@ window.ROSTER = [
   { key: 'chodding', face: 'roster/face_chodding.jpg', name: '초딩', en: 'CHODING', age: '9세', tag: '산을 지키는 꼬마', col: ['#ffe600', '#7b2cff'] },
   { key: 'student', face: 'roster/face_student.jpg', name: '대학생', en: 'STUDENT', age: '22세', tag: '밤샘 과제 3일째', col: ['#9dff5a', '#1f6a3a'] },
   { key: 'parttime', face: 'roster/face_parttime.jpg', name: '알바생', en: 'PART-TIMER', age: '28세', tag: '편의점 야간 근무', col: ['#5affc8', '#0a5a5a'] },
-  { key: 'worker', face: 'roster/face_worker.jpg', name: '직장인', en: 'WORKER', age: '42세', tag: '울산 공단 12년차', col: ['#5ab8ff', '#16307a'] },
+  { key: 'worker', face: 'roster/face_worker.jpg', name: '직장인', en: 'WORKER', age: '42세', tag: '울산 공단 12년 차', col: ['#5ab8ff', '#16307a'] },
   { key: 'soldier', face: 'roster/face_soldier.jpg', name: '군인', en: 'SOLDIER', age: '21세', tag: '휴가 첫날', col: ['#d8ff5a', '#3a5010'] },
   { key: 'middle', face: 'roster/face_middle.jpg', name: '중년', en: 'MIDDLE-AGE', age: '58세', tag: '주말 산악회 회장', col: ['#ffb347', '#a02a00'] },
   { key: 'grandma', face: 'roster/face_grandma.jpg', name: '노인', en: 'GRANDMA', age: '80세', tag: '영남알프스 9봉 완등', col: ['#ff8ad0', '#7a1a5a'] },
