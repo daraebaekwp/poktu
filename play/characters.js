@@ -49,7 +49,7 @@ window.CHARACTERS = {
     facing: 1, size: .86,                             // 10/2: 아홉 살이라 어른(예술가 등)보다 작게
     headH: 440,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
     body: { hw: 66, h: 440, crouchH: 290 },           // 몸 판정(맞는 상자): 반폭, 서 있을 때 높이, 앉았을 때 높이
-    speed: { walk: 7.5, back: 6, jumpV: 25, jumpX: 7, gravity: 1.25 },
+    speed: { walk: 9.2, back: 7.2, jumpV: 25, jumpX: 8.5, gravity: 1.25 },   // 11/1 박람회 피드백: 리치가 짧으니 더 빠르게 (7.5→9.2)
     meterGain: 1,
     poses: {
       idle: 'g_guard', walk: 'g_walk', jump: 'g_jump', crouch: 'g_duck', guard: 'g_block', crouchGuard: 'g_duck',
@@ -310,7 +310,7 @@ window.CHARACTERS = {
       jumpAttack:  { pose: 'w_jumpatk', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 195, y: 100, h: 220 }, level: 'high', voice: 'w_hup' },
       // 기술
       cmdHelmet: { anim: [['w_crouch', 0], ['w_headbutt', 8]], startup: 10, active: 9, recovery: 18, dmg: 10, hitstun: 24, blockstun: 14, push: 16, hitbox: { x: 20, w: 200, y: 300, h: 200 }, level: 'mid', kd: true, dash: 14, big: 1.1, popText: '안전 제일!', voice: 'w_yeong' },
-      cmdTowel:  { anim: [['w_taunt', 0], ['w_towel', 9]], startup: 11, active: 10, recovery: 18, dmg: 8, hitstun: 22, blockstun: 12, push: 14, hitbox: { x: 40, w: 340, y: 280, h: 160 }, level: 'mid', multi: 5, popText: '휘릭!', voice: 'w_hup2' },
+      cmdTowel:  { anim: [['w_taunt', 0], ['w_towel', 11]], startup: 13, active: 10, recovery: 24, dmg: 6, hitstun: 20, blockstun: 10, push: 13, hitbox: { x: 40, w: 290, y: 280, h: 160 }, level: 'mid', multi: 5, popText: '휘릭!', voice: 'w_hup2' },   // 11/1 박람회 피드백: 수건만 써도 다 깸 → 조금 느리게·짧게·약하게 (수건만 쓰기 시험: CPU 보통 상대 18판 16승 → 8승)
       cmdWrench: { anim: [['w_crouch', 0], ['w_wrench', 4]], startup: 5, active: 10, recovery: 22, dmg: 10, hitstun: 24, blockstun: 14, push: 10, hitbox: { x: 0, w: 190, y: 200, h: 460 }, level: 'mid', kd: true, hop: { vy: 14, vx: 3 }, invul: 8, antiAir: true, big: 1.1, popText: '깡!', voice: 'w_hup' },
     },
     commands: [

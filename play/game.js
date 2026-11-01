@@ -286,6 +286,7 @@ function startMove(f, key, btn, chained) {
   if (m.proj && G.proj.some(p => p.owner === f && p.light)) { key = 'punch'; m = f.C.moves.punch; }   // 작은 발사체는 한 번에 하나
   f.chainN = chained ? f.chainN + 1 : 0; f.moveHits = 0; f.bannered = false; f.fromJump = T - f.jumpHitT < .8;
   f.move = m; f.moveKey = key; f.moveBtn = btn; f.moveHit = false; f.buf = null; f.vx = 0;
+  { const oo = G && G.f && opp(f); if (oo && oo.ai) { const sn = oo.ai.seen || (oo.ai.seen = {}); for (const k in sn) sn[k] *= .85; sn[key] = (sn[key] || 0) + 1; } }   // 11/1 CPU가 상대 기술 습관을 기억 (오래된 건 점점 잊음)
   if (m.invul) f.invul = m.invul;
   setState(f, 'attack', m.pose || (m.anim && m.anim[0][0]));
   f.sx = .94; tw(f, { sx: 1 }, m.startup / 60 + .02);
@@ -296,6 +297,7 @@ function startSpecial(f) {
   const o = opp(f);
   f.meter = 0; f.vx = 0; setState(f, 'special', sp.windupPose || P(f).idle); f.sp = { def: sp, t: 0, fired: false, shots: 0 };
   const cf = sp.cutinF || 72;                                       // 컷인 길이(프레임)
+  if (!o.ai && (sp.vfx || {}).type !== 'siren') fx.push({ type: 'pop', str: (o.x < f.x ? '← ' : '→ ') + '눌러서 막기!', x: o.x, y: headY(o) - 70, col: '#19f5c8', size: 56, t0: T + .5, life: 2.2 });   // 11/1 막는 법 알려 주기 (사람이 맞는 쪽일 때만 · 가드 불가 신고형은 빼고)
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
   tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND - 430 }, .35, 'io');
@@ -841,7 +843,7 @@ function projHit(p, d) {
   if (G.phase !== 'fight') return;   // 9/30: 승패가 난 뒤(K.O.·TIME OVER)에는 더 맞지 않음 → 진 사람이 'YOU WIN'을 보는 일 없게
   const a = p.owner, dirPush = Math.sign(p.vx) || 1;
   if (canBlock(d, 'mid', a)) {
-    if (p.sp) { d.hp = Math.max(0, d.hp - 8); if (d.hp <= 0) { doKO(d, a, dirPush); return true; } } else d.hp = Math.max(1, d.hp - 3); setState(d, 'blockstun', d.in.d ? P(d).crouchGuard : P(d).guard); d.stun = 22; d.vx = dirPush * 10;   // 10/2: 필살기는 막혀도 8 깎이고 마무리 가능
+    if (p.sp) { d.hp = Math.max(0, d.hp - Math.max(2, Math.round(p.dmg * .25))); if (d.hp <= 0) { doKO(d, a, dirPush); return true; } } else d.hp = Math.max(1, d.hp - 3); setState(d, 'blockstun', d.in.d ? P(d).crouchGuard : P(d).guard); d.stun = 22; d.vx = dirPush * 10;   // 10/2: 필살기는 막혀도 조금 깎이고 마무리 가능 · 11/1: 한 발마다 8씩 깎여 여러 발 필살기는 막아도 다 맞은 것과 같았음 → 피해의 1/4만
     G.hitstop = 6; cam.shake = Math.max(cam.shake, 14); spark(d.x - dirPush * 60, p.y, 1, '#9fd8ff'); A.sfx('guard'); pop('GUARD', d.x, headY(d) - 60, '#9fd8ff', 56);
     if (p.sp && slow.k < 1) { slowSnap(); cineMood(0, 0, .25); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .28, 'out', true); }   // 막으면 슬로모션 끝
     return true;
@@ -963,6 +965,7 @@ function projUpdate(k = 1) {   // k = 슬로모션 속도 (1 = 보통). 발사�
 }
 function pushApart(a, b) {
   const min = a.C.body.hw + b.C.body.hw + 10, dx = b.x - a.x;
+  if ((a.air && a.y < GROUND - 30) || (b.air && b.y < GROUND - 30)) return;   // 11/1 박람회 피드백: 점프로 상대를 뛰어넘을 수 있게 (뛰어오르면 바로 밀지 않음, 착지했을 때 겹치면 넘어간 쪽으로 밀려남)
   const vOverlap = !(a.y < b.y - b.C.body.h * .75 || b.y < a.y - a.C.body.h * .75);
   if (!vOverlap || Math.abs(dx) >= min) return;
   if (['dead', 'ko'].includes(a.state) || ['dead', 'ko'].includes(b.state)) return;
@@ -976,10 +979,11 @@ function pushApart(a, b) {
 //  CPU (난이도 1 쉬움 · 2 보통 · 3 어려움)
 // =====================================================================
 const AI_CMD = { 1: 0, 2: .2, 3: .32 };   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
+// 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
-  1: { react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
-  2: { react: 14, block: .45, lowRead: .6, antiAir: .4, sup: .7, jumpIn: .07, aggr: .65, chain: .7, dmgOut: 1, dmgIn: 1, walkIn: 1 },
-  3: { react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.15, dmgIn: .9, walkIn: 1.1 },
+  1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
+  2: { punish: .4, adapt: .3, react: 14, block: .45, lowRead: .6, antiAir: .4, sup: .7, jumpIn: .07, aggr: .65, chain: .7, dmgOut: 1, dmgIn: 1, walkIn: 1 },
+  3: { punish: .7, adapt: .4, react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.05, dmgIn: .97, walkIn: 1.1 },   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
@@ -998,13 +1002,27 @@ function aiStep(f) {
   const doCmd = c => { out.l = out.r = out.u = out.d = false; if (c.easy === 'f' || c.easy === 'df') out[toward] = true; if (c.easy === 'b') out[away] = true; if (c.easy === 'df') out.d = true; press(c.btn); ai.cd = Math.round(P_.react * (.8 + Math.random() * .6)); return out; };
   // 점프 중 공격
   if (f.state === 'jump' && f.airAtk < 0 && dist < 330 && f.vy > -8 && Math.random() < .5) press('k');
+  // 11/1 빈틈 반격: 상대가 헛치거나 막혀서 굳어 있는 동안, 손이 닿으면 반격 (반응 시간 뒤, 한 기술에 한 번만 시도)
+  if (o.state !== 'attack') ai.punTried = false;
+  else if (!ai.punTried && !o.air && o.move && !o.move.invul && ['idle', 'walk', 'crouch', 'guardwait', 'land'].includes(f.state)) {
+    const m = o.move, rec0 = m.startup + m.active, since = o.st - rec0, left = rec0 + m.recovery - o.st;
+    if (since >= (P_.react >> 2) && left >= 6) { ai.punTried = true;
+      if (dist <= kreach + 20 && Math.random() < P_.punish * (f.hp - o.hp > 35 ? .5 : 1)) { out.l = out.r = out.u = out.d = false; press(dist <= reach ? 'p' : 'k'); ai.cd = Math.round(P_.react * .6); return out; } }
+  }
   if (ai.cd > 0) { ai.cd--; return out; }
   out.l = out.r = out.u = out.d = false;
   if (!['idle', 'walk', 'crouch', 'guardwait', 'land'].includes(f.state)) { ai.cd = 2; return out; }
   const oAtk = (o.state === 'attack' && o.move && o.move.hitbox && o.st < o.move.startup + o.move.active && dist < (o.move.hitbox.x + o.move.hitbox.w + f.C.body.hw + 90)) || (o.state === 'jump' && dist < 420);
   const projIn = G.proj.find(p => p.owner === o && Math.sign(p.vx) === Math.sign(f.x - p.x) && Math.abs(p.x - f.x) < 650);
   const r = Math.random();
-  if ((oAtk || projIn || o.state === 'special') && r < P_.block + (projIn ? (projIn.sp ? -.1 : .15) : (o.state === 'special' ? -.1 : 0))) {
+  // 11/1 억울하지 않게: 두 번 연속 막으면 다음엔 덜 막음 · CPU가 피로 크게 앞서면 조금 봐줌
+  if (f.state === 'hitstun') ai.blockRun = 0;
+  const ease = (f.hp - o.hp > 35 ? -.12 : 0) - ((ai.blockRun || 0) >= 2 ? .3 : 0);
+  const habit = (oAtk || projIn) && o.moveKey ? Math.min(P_.adapt, Math.max(0, ((ai.seen || {})[o.moveKey] || 0) - 1.5) * .12) : 0;   // 11/1 같은 기술을 계속 쓰면 점점 더 잘 막음
+  if (ai.readCd > 0) ai.readCd--;
+  if ((oAtk || projIn || o.state === 'special') && r < P_.block + habit + ease + (projIn ? (projIn.sp ? -.1 : .15) : (o.state === 'special' ? -.1 : 0))) {
+    if (habit > .15 && r > P_.block && !(ai.readCd > 0)) { say(f, '또 그거?', 1.1); ai.readCd = 400; }   // 습관 덕에 막았을 때 가끔 한마디
+    ai.blockRun = (ai.blockRun || 0) + 1;
     out[away] = true; if (oAtk && o.move && o.move.level === 'low' && Math.random() < P_.lowRead) out.d = true;
     ai.cd = 14 + (P_.react >> 1); return out;
   }
@@ -1056,7 +1074,7 @@ function startMatch(opt) { // opt: { mode: 'arcade'|'versus'|'demo', stage, p1, 
   const tr = Math.max(t, 1.0); G.roundAt = tr;
   ev.push({ t: tr, fn: () => { for (const f of G.f) { setState(f, 'idle', P(f).idle); } text(G.mode === 'versus' ? st.place : st.round, { size: 170, life: 1.3, col: '#ffffff', stroke: G.stage === 2 ? '#5a1a1a' : '#15306b' }); tw(hud, { show: 1 }, .5); A.voice(G.mode === 'versus' ? 'a_round1' : st.announce); } });
   ev.push({ t: tr + 1.15, fn: () => { fx.push({ type: 'fightcut', t0: T, life: 1.2 }); A.sfx('cutin'); cam.shake = 12; A.voice('a_fight'); } });
-  ev.push({ t: tr + 1.45, fn: () => { G.phase = 'fight'; A.bgm('fight'); } });   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
+  ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
   A.bgm(null); A.bgmStop();
 }
 function updateMatch() {
@@ -1074,6 +1092,7 @@ function updateMatch() {
   }
   if (G.freeze > 0) {
     G.freeze--; const f = G.freezeBy; f.st++; if (f.sp) { f.sp.t++; specialPre(f); }
+    { const d = opp(f); if (!d.ai && ['idle', 'walk', 'crouch', 'guardwait'].includes(d.state)) { const away = d.x < f.x ? d.in.l : d.in.r; d.holdBack = away; if (away) { if (d.state !== 'guardwait') setState(d, 'guardwait'); d.vx = 0; d.pose = d.in.d ? P(d).crouchGuard : P(d).guard; } } }   // 11/1 박람회 피드백: 필살기 연출 동안 뒤를 누르면 바로 막는 자세 → 미리 막을 수 있음
     if (G.freeze === 0) { f.st = 0; }
   } else {
     // 슬로모션이면 k 만큼만 진행 (k = .2 → 5화면에 한 번). 날아가는 것(발사체)은 매 화면 k 만큼 부드럽게
