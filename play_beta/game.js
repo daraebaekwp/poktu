@@ -798,6 +798,7 @@ function canBlock(d, level, from) {
   if (!['idle', 'walk', 'crouch', 'guardwait', 'blockstun'].includes(d.state)) return false;
   const awayHeld = from.x > d.x ? d.in.l : d.in.r; if (!awayHeld) return false;
   const low = d.in.d;
+  if (from.state === 'special' || from.sp) return true;   // 11/4: 필살기는 서서·앉아 상관없이 뒤만 누르면 막힘
   if (level === 'low' && !low) return false;
   if (level === 'high' && low) return false;
   return true;
@@ -1096,7 +1097,7 @@ function updateMatch() {
   }
   if (G.freeze > 0) {
     G.freeze--; const f = G.freezeBy; f.st++; if (f.sp) { f.sp.t++; specialPre(f); }
-    { const d = opp(f); if (!d.ai && ['idle', 'walk', 'crouch', 'guardwait'].includes(d.state)) { const away = d.x < f.x ? d.in.l : d.in.r; d.holdBack = away; if (away) { if (d.state !== 'guardwait') setState(d, 'guardwait'); d.vx = 0; d.pose = d.in.d ? P(d).crouchGuard : P(d).guard; } } }   // 11/1 박람회 피드백: 필살기 연출 동안 뒤를 누르면 바로 막는 자세 → 미리 막을 수 있음
+    { const d = opp(f); if (!d.ai && !d.air && d.y >= GROUND && ['idle', 'walk', 'crouch', 'guardwait', 'attack', 'land', 'jumpsquat'].includes(d.state)) { const away = d.x < f.x ? d.in.l : d.in.r; d.holdBack = away; if (away) { if (d.state !== 'guardwait') setState(d, 'guardwait'); d.vx = 0; d.pose = d.in.d ? P(d).crouchGuard : P(d).guard; } } }   // 11/1 박람회 피드백: 필살기 연출 동안 뒤를 누르면 바로 막는 자세 → 미리 막을 수 있음 · 11/4: 치고받던 중(attack)이어도 막는 자세로
     if (G.freeze === 0) { f.st = 0; }
   } else {
     // 슬로모션이면 k 만큼만 진행 (k = .2 → 5화면에 한 번). 날아가는 것(발사체)은 매 화면 k 만큼 부드럽게
