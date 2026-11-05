@@ -2180,7 +2180,7 @@ SCENES.vs = {
       ctx.fillStyle = 'rgba(255,255,255,.13)'; for (let y = 0; y < H; y += 40) for (let x = -900 + (y / 40 % 2) * 20; x < W + 900; x += 40) { ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); }   // 10/2 물방울 무늬 판넬
       const img = IMG[C.vs] || IMG[C.fightCut] || IMG[C.face]; const mirror = side === 0 ? C.facing !== 1 : C.facing !== -1;   // 10/2: 배경 뺀 그림(누끼) 먼저
       if (img) { const sc = Math.max(H / img.height, W * .66 / img.width) * (1 + Math.min(t, 3) * .02), cx = side ? W * .76 : W * .24;
-        ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror && C.vs) ctx.scale(-1, 1); ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
+        ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror) ctx.scale(-1, 1);   /* 11/6 다래: 예술가 등 vs 그림 없는 캐릭터도 상대 쪽 보게 */ ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
       ctx.restore(); }
     ctx.lineWidth = 24; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.moveTo(W / 2 + sl, 0); ctx.lineTo(W / 2 - sl, H); ctx.stroke(); ctx.lineWidth = 10; ctx.strokeStyle = '#ffe600'; ctx.stroke();
     profile(pickedInfo(m.p1), 40 - (1 - inP) * 700, H - 210, false); profile(pickedInfo(m.p2), W - 600 + (1 - inP) * 700, 120, true);   // 11/2 오른쪽 위 ♪·터치 버튼 단추와 겹쳐서 조금 내림

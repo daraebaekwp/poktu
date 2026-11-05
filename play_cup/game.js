@@ -12,7 +12,7 @@ const FONT = '"Jua", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif';
 const NUM = '"Oswald", "Jua", sans-serif';
 const Q = new URLSearchParams(location.search);
 const CUP = !!window.POKTU_CUP;              // 11/4 대회판: 1P vs 2P 3판 2선승, 순위·기록 없음
-const CUPS = { w: [0, 0], n: 0 };
+const CUPS = { w: [0, 0], n: 0, r: 0 };   // r: 무승부 포함 판 수
 const DEBUG = Q.has('debug');
 const MANUAL = Q.has('manual');
 const BETA = /beta\.html$/.test(location.pathname) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);   // 10/2 시험판: 기록·공유 순위 안 남김   // 점검용: 화면은 그리되 게임은 GAME.steps() 로만 진행
@@ -1103,7 +1103,7 @@ function startMatch(opt) { // opt: { mode: 'arcade'|'versus'|'demo', stage, p1, 
     if (f.C.boss && G.mode === 'arcade' && G.stage === STAGES.length - 1) { const top = rankLoad()[0]; if (top && top.name) l = { text: `${String(top.name).slice(0, 8)}의 기록 ${fmtTime(top.time)}… 깰 수 있겠느냐?`, voice: null }; }
     if (l) { const tt = t; ev.push({ t: tt, skip: true, fn: () => { say(f, l.text, 1.7); A.voice(l.voice); } }); t += 1.9; } }
   const tr = Math.max(t, 1.0); G.roundAt = tr;
-  ev.push({ t: tr, fn: () => { for (const f of G.f) { setState(f, 'idle', P(f).idle); } text(G.mode === 'versus' ? st.place : st.round, { size: 170, life: 1.3, col: '#ffffff', stroke: G.stage === 2 ? '#5a1a1a' : '#15306b' }); tw(hud, { show: 1 }, .5); A.voice(G.mode === 'versus' ? 'a_round1' : st.announce); } });
+  ev.push({ t: tr, fn: () => { for (const f of G.f) { setState(f, 'idle', P(f).idle); } const cupR = CUP && G.mode === 'versus' ? CUPS.r : -1, cupFin = cupR >= 0 && CUPS.w[0] === 1 && CUPS.w[1] === 1; text(cupR >= 0 ? (cupFin ? 'FINAL ROUND' : `ROUND ${cupR + 1}`) : G.mode === 'versus' ? st.place : st.round, { size: 170, life: 1.3, col: '#ffffff', stroke: G.stage === 2 ? '#5a1a1a' : '#15306b' }); tw(hud, { show: 1 }, .5); A.voice(cupR >= 0 ? (cupFin ? 'a_final' : ['a_round1', 'a_round2'][cupR] || null) : G.mode === 'versus' ? 'a_round1' : st.announce); /* 11/6 다래: 대회판은 무승부도 한 판으로 세서 ROUND 1·2·3·4…, 1:1이면 FINAL, 3판부터는 목소리 없음 */ } });
   ev.push({ t: tr + 1.15, fn: () => { fx.push({ type: 'fightcut', t0: T, life: 1.2 }); A.sfx('cutin'); cam.shake = 12; A.voice('a_fight'); } });
   ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; G.fightAt = T; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
   A.bgm(null); A.bgmStop();
@@ -1182,6 +1182,7 @@ function finishMatch() {
   const w = G.winner, o = G.opt;
   if (G.mode === 'demo') return go('ranking', { from: 'attract' });   // 데모 → 순위표 → 타이틀 (전시 반복)
   if (G.mode === 'versus' && CUP) {   // 대회: 무승부면 같은 판 다시, 2승 먼저 하면 우승 화면
+    CUPS.r++;
     if (!w) return go('vs', { match: o });
     CUPS.w[w.side]++; CUPS.n++;
     if (CUPS.w[w.side] >= 2) return go('cupwin', { match: o, side: w.side });
@@ -1502,7 +1503,7 @@ function drawHud() {
   const secs = Math.ceil(G.timer / 60); ctx.lineWidth = 7; ctx.strokeStyle = '#000'; const ts = String(Math.max(0, secs)).padStart(2, '0'); ctx.strokeText(ts, 0, 22);
   ctx.fillStyle = secs <= 10 && Math.sin(T * 10) > 0 ? '#ff4040' : '#ffe600'; ctx.fillText(ts, 0, 22); ctx.restore();
   const S = STAGES[G.stage]; ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = '#000';
-  ctx.font = `700 27px ${NUM}`; ctx.letterSpacing = '4px'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; const lr = G.mode === 'versus' ? (CUP ? `ROUND ${CUPS.n + 1}` : 'VERSUS') : S.round; ctx.strokeText(lr, W / 2 + 2, y + 97); ctx.fillStyle = '#fff'; ctx.fillText(lr, W / 2 + 2, y + 97); ctx.letterSpacing = '0px'; ctx.textBaseline = 'alphabetic'; ctx.lineWidth = 5;
+  ctx.font = `700 27px ${NUM}`; ctx.letterSpacing = '4px'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; const lr = G.mode === 'versus' ? (CUP ? (CUPS.w[0] === 1 && CUPS.w[1] === 1 ? 'FINAL' : `ROUND ${CUPS.r + 1}`) : 'VERSUS') : S.round; ctx.strokeText(lr, W / 2 + 2, y + 97); ctx.fillStyle = '#fff'; ctx.fillText(lr, W / 2 + 2, y + 97); ctx.letterSpacing = '0px'; ctx.textBaseline = 'alphabetic'; ctx.lineWidth = 5;
   const pl = CUP && G.mode === 'versus' ? `${CUPS.w[0]}  :  ${CUPS.w[1]}` : S.place; ctx.font = CUP && G.mode === 'versus' ? `700 44px ${NUM}` : `36px ${FONT}`; const ply = CUP && G.mode === 'versus' ? y + 162 : y + 144; ctx.strokeText(pl, W / 2, ply); ctx.fillStyle = '#19f5c8'; ctx.fillText(pl, W / 2, ply);   // 11/6 다래: ROUND 글자와 점수가 겹쳐서 점수를 아래로
   supBar(290, H - 64, 480, a.meter, false, 0); supBar(W - 290 - 480, H - 64, 480, b.meter, true, 1);
   ctx.restore();
@@ -2152,12 +2153,12 @@ SCENES.stage = {
   update(s) {
     for (const p of [IN.p[0], IN.p[1]]) {
       if (p.pressed.l) { s.sel = (s.sel + 2) % 3; A.sfx('move'); } if (p.pressed.r) { s.sel = (s.sel + 1) % 3; A.sfx('move'); }
-      if (s.t > .3 && (p.pressed.p || p.pressed.start)) { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; go('vs', { match: { mode: 'versus', stage: s.sel, p1: s.p1, p2: s.p2, ai: [null, null] } }); return; }
+      if (s.t > .3 && (p.pressed.p || p.pressed.start)) { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; CUPS.r = 0; go('vs', { match: { mode: 'versus', stage: s.sel, p1: s.p1, p2: s.p2, ai: [null, null] } }); return; }
       if (p.pressed.k) { A.sfx('back'); go('select', { mode: 'versus', keep: true }); return; }
     }
     if (IN.idleMs() > idleMs()) go('title');
   },
-  click(x, y) { for (let i = 0; i < 3; i++) { const r = stageRect(i); if (x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h) { if (scene.sel === i) { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; go('vs', { match: { mode: 'versus', stage: i, p1: scene.p1, p2: scene.p2, ai: [null, null] } }); } else { scene.sel = i; A.sfx('move'); } } } },
+  click(x, y) { for (let i = 0; i < 3; i++) { const r = stageRect(i); if (x > r.x && x < r.x + r.w && y > r.y && y < r.y + r.h) { if (scene.sel === i) { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; CUPS.r = 0; go('vs', { match: { mode: 'versus', stage: i, p1: scene.p1, p2: scene.p2, ai: [null, null] } }); } else { scene.sel = i; A.sfx('move'); } } } },
   draw(s) {
     menuBg(s.t); label('경기장을 고르세요', W / 2, 140, 84, '#ffe600', FONT, 'center', 12); label('SELECT STAGE', W / 2, 220, 34, '#19f5c8', NUM, 'center', 0);
     STAGES.forEach((st, i) => { const r = stageRect(i), on = s.sel === i, img = IMG['thumb' + i];
@@ -2188,13 +2189,13 @@ SCENES.vs = {
       ctx.fillStyle = 'rgba(255,255,255,.13)'; for (let y = 0; y < H; y += 40) for (let x = -900 + (y / 40 % 2) * 20; x < W + 900; x += 40) { ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); }   // 10/2 물방울 무늬 판넬
       const img = IMG[C.vs] || IMG[C.fightCut] || IMG[C.face]; const mirror = side === 0 ? C.facing !== 1 : C.facing !== -1;   // 10/2: 배경 뺀 그림(누끼) 먼저
       if (img) { const sc = Math.max(H / img.height, W * .66 / img.width) * (1 + Math.min(t, 3) * .02), cx = side ? W * .76 : W * .24;
-        ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror && C.vs) ctx.scale(-1, 1); ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
+        ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror) ctx.scale(-1, 1);   /* 11/6 다래: 예술가 등 vs 그림 없는 캐릭터도 상대 쪽 보게 */ ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
       ctx.restore(); }
     ctx.lineWidth = 24; ctx.strokeStyle = '#000'; ctx.beginPath(); ctx.moveTo(W / 2 + sl, 0); ctx.lineTo(W / 2 - sl, H); ctx.stroke(); ctx.lineWidth = 10; ctx.strokeStyle = '#ffe600'; ctx.stroke();
     profile(pickedInfo(m.p1), 40 - (1 - inP) * 700, H - 210, false); profile(pickedInfo(m.p2), W - 600 + (1 - inP) * 700, 120, true);   // 11/2 오른쪽 위 ♪·터치 버튼 단추와 겹쳐서 조금 내림
     const vsS = t < .3 ? 0 : t < .55 ? 3 - 2 * EASE.back((t - .3) / .25) : 1 + Math.sin(t * 8) * .03;
     if (vsS) { ctx.save(); ctx.translate(W / 2, H / 2); ctx.rotate(-.1); ctx.scale(vsS, vsS); label('VS', 0, 0, 300, '#ffe600', NUM, 'center', 26); ctx.restore(); }
-    const st = STAGES[m.stage]; if (t > .8 && !Q.has('novsround')) label(m.mode === 'versus' ? (CUP ? `ROUND ${CUPS.n + 1}   ${CUPS.w[0]} : ${CUPS.w[1]}` : `${st.place}`) : `${st.round} · ${st.place}`, W / 2, H - 70, 50, '#fff', FONT, 'center', 8);
+    const st = STAGES[m.stage]; if (t > .8 && !Q.has('novsround')) label(m.mode === 'versus' ? (CUP ? `${CUPS.w[0] === 1 && CUPS.w[1] === 1 ? 'FINAL ROUND' : 'ROUND ' + (CUPS.r + 1)}   ${CUPS.w[0]} : ${CUPS.w[1]}` : `${st.place}`) : `${st.round} · ${st.place}`, W / 2, H - 70, 50, '#fff', FONT, 'center', 8);
     if (m.mode === 'arcade' && t > .8) { const lv = clamp((m.ai && m.ai[1]) || STAGES[m.stage].ai, 1, 3) - 1; label(['쉬움', '보통', '어려움'][lv], W / 2, 60, 40, ['#9dff5a', '#ffe600', '#ff5a6a'][lv], FONT, 'center', 7); }
     if (t > 2.4) { ctx.fillStyle = `rgba(255,255,255,${Math.min(1, (t - 2.4) / .4)})`; ctx.fillRect(0, 0, W, H); }
   },
@@ -2320,13 +2321,13 @@ SCENES.cupwin = {   // 11/4 대회판 우승 화면: 6초 뒤(또는 2초 뒤 �
   enter(s) { A.bgmStop(); A.bgm('select'); A.voice('a_win'); s.score = CUPS.w.slice(); },
   update(s) {
     const pressed = IN.p[0].pressed.p || IN.p[0].pressed.start || IN.p[1].pressed.p || IN.p[1].pressed.start;
-    if (s.t > 8 || (s.t > 2 && pressed)) { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; go('select', { mode: 'versus' }); }
+    if (s.t > 2 && pressed)   /* 11/6 다래: 우승 화면은 버튼 누를 때까지 */ { A.sfx('select'); CUPS.w = [0, 0]; CUPS.n = 0; CUPS.r = 0; go('select', { mode: 'versus' }); }
   },
-  click() { if (scene.t > 2) { CUPS.w = [0, 0]; CUPS.n = 0; go('select', { mode: 'versus' }); } },
+  click() { if (scene.t > 2) { CUPS.w = [0, 0]; CUPS.n = 0; CUPS.r = 0; go('select', { mode: 'versus' }); } },
   draw(s) {
     const m = s.match, side = s.side, C = CHARS[side ? m.p2 : m.p1], t = s.t;
     menuBg(t);
-    const img = IMG[C.vs] || IMG[C.fightCut] || IMG[C.face];
+    const img = IMG[C.fightCut] || IMG[C.vs] || IMG[C.face];   /* 11/6: 산신령만 보라 배경(vs_s.jpg)이 나와서 누끼 먼저 */
     if (img) { const sc = Math.max(H / img.height, W * .5 / img.width) * (1 + Math.min(t, 6) * .015); ctx.save(); ctx.translate(W * .3, H * .52); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
     const pop = t < .25 ? 0 : 1 + Math.max(0, .6 - (t - .25)) * .6;
     if (pop) { ctx.save(); ctx.translate(W * .7, H * .36); ctx.scale(pop, pop); ctx.rotate(-.06); label(side ? '2P WINNER!' : '1P WINNER!', 0, 0, 150, '#ffe600', NUM, 'center', 16); ctx.restore(); }
