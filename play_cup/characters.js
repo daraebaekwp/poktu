@@ -122,7 +122,7 @@ window.CHARACTERS = {
     },
     META: {
       s_guard2: { k: 1.344, ax: 244, ay: 1158 }, s_walk: { k: 1, ax: 303, ay: 1305 }, s_run: { k: 1.13, ax: 303, ay: 1227 },
-      s_bow: { k: 1, ax: 372, ay: 1330 }, s_block: { k: 1.254, ax: 241, ay: 1161 }, s_reel: { k: 1.02, ax: 303, ay: 1325 },
+      s_bow: { k: 1, ax: 372, ay: 1330 }, s_block: { k: 1.33, ax: 241, ay: 1161 }, s_reel: { k: 1.02, ax: 303, ay: 1325 },
       s_sit: { k: 1.1, ax: 420, ay: 1385 }, s_hit: { k: 1.2, ax: 393, ay: 1153 }, s_comb: { k: .93, ax: 295, ay: 1313 },   // 11/6 Fable: 이김 자세 얼굴이 기본보다 컸음 (1.04→.93)
       s_relax: { k: 1.13, ax: 401, ay: 1335 }, s_flex: { k: 0.922, ax: 438, ay: 1335 }, s_beard: { k: .95, ax: 358, ay: 1352 },
       s_palm: { k: 1, ax: 465, ay: 1333 }, s_swing: { k: 1.38, ax: 556, ay: 1159 }, s_kick: { k: 1.02, ax: 425, ay: 1325 },
