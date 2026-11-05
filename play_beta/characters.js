@@ -81,7 +81,7 @@ window.CHARACTERS = {
       rapid:    { anim: [['g_rapid', 0], ['g_punch2', 5], ['g_rapid', 10], ['g_punch2', 15], ['g_rapid', 20]], startup: 3, active: 22, recovery: 10, dmg: 2, hitstun: 12, blockstun: 8, push: 3, hitbox: { x: 40, w: 170, y: 300, h: 140 }, level: 'mid', multi: 6 },
       crouchPunch: { pose: 'g_upper', startup: 4, active: 6, recovery: 16, dmg: 9, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 150, y: 250, h: 380 }, level: 'mid', kd: true, voice: 'g_hat', antiAir: true },   // 10/2 리치 짧은 대신 아래 공격 강화
       crouchKick:  { anim: [['g_duck', 0], ['g_sweep', 5]], startup: 5, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 260, y: 0, h: 110 }, level: 'low', kd: true, voice: 'g_yap', hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
-      jumpAttack:  { pose: 'g_knee', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 175, y: 120, h: 220 }, level: 'high', voice: 'g_yap' },
+      jumpAttack:  { pose: 'g_round', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 175, y: 120, h: 220 }, level: 'high', voice: 'g_yap' },
     },
     commands: [
       { name: '고래빵 던지기', move: 'cmdToss', btn: 'p', motion: '236', easy: 'f', desc: '작은 고래빵이 날아가요' },
