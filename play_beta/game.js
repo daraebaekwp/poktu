@@ -687,7 +687,7 @@ function updateFighter(f) {
       break;
     }
     case 'jumpsquat':
-      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; f.air = true; f.y -= 1; f.airAtk = -1; f.airHit = false;
+      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; { const o = G && G.f ? opp(f) : null; if (o && f.jumpDir > 0 && !o.air) { const dx = Math.abs(o.x - f.x), need = dx + f.C.body.hw + o.C.body.hw + 30, air = 2 * spd.jumpV / spd.gravity; if (dx < 460 && o.x - o.C.body.hw - 40 > WALL_L && o.x + o.C.body.hw + 40 < WALL_R) f.vx = f.dir * Math.min(15, Math.max(spd.jumpX, need / air)); } } f.air = true; f.y -= 1;   /* 11/6 다래: 가까이서 앞으로 뛰면 상대를 넘어갈 만큼 멀리 (벽에 붙은 상대는 그대로 못 넘음) */ f.airAtk = -1; f.airHit = false;
         setState(f, 'jump', P(f).jump); f.sy = 1.12; f.sx = .9; tw(f, { sy: 1, sx: 1 }, .3); A.sfx('jump'); dust(f.x, f.dir, 5); }
       break;
     case 'jump':
