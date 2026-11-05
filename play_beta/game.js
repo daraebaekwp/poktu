@@ -297,7 +297,7 @@ function startSpecial(f) {
   const o = opp(f);
   f.meter = 0; f.vx = 0; setState(f, 'special', sp.windupPose || P(f).idle); f.sp = { def: sp, t: 0, fired: false, shots: 0 };
   const cf = sp.cutinF || 72;                                       // 컷인 길이(프레임)
-  if (!o.ai && (sp.vfx || {}).type !== 'siren') fx.push({ type: 'pop', str: (o.x < f.x ? '← ' : '→ ') + '눌러서 막기!', x: o.x, y: headY(o) - 70, col: '#19f5c8', size: 56, t0: T + .5, life: 2.2 });   // 11/1 막는 법 알려 주기 (사람이 맞는 쪽일 때만 · 가드 불가 신고형은 빼고)
+  // 11/6 다래: '← 눌러서 막기!' 안내 뺌
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
   tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND + 40 - H / 2 / 1.22 }, .35, 'io');   // 11/6 발까지
@@ -985,12 +985,12 @@ function pushApart(a, b) {
 // =====================================================================
 //  CPU (난이도 1 쉬움 · 2 보통 · 3 어려움)
 // =====================================================================
-const AI_CMD = { 1: 0, 2: .15, 3: .31 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
+const AI_CMD = { 1: 0, 2: .18, 3: .32 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
 // 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
   1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
-  2: { punish: .31, adapt: .25, react: 16, block: .39, lowRead: .53, antiAir: .31, sup: .6, jumpIn: .06, aggr: .6, chain: .6, dmgOut: .95, dmgIn: 1.02, walkIn: .98 },   // 11/6 다래: 2단계 너무 쉬워짐 → 원래와 중간
-  3: { punish: .62, adapt: .37, react: 9, block: .55, lowRead: .8, antiAir: .62, sup: .95, jumpIn: .09, aggr: .77, chain: .92, dmgOut: 1.03, dmgIn: .98, walkIn: 1.08 },   // 11/6 다래: 3단계 너무 쉬워짐 → 원래와 중간보다 조금 세게   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
+  2: { punish: .38, adapt: .29, react: 14, block: .44, lowRead: .58, antiAir: .38, sup: .68, jumpIn: .07, aggr: .64, chain: .68, dmgOut: .98, dmgIn: 1, walkIn: 1 },   // 11/6 다래: 아직 쉬움 → 거의 원래(박람회판)대로
+  3: { punish: .7, adapt: .4, react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.05, dmgIn: .97, walkIn: 1.1 },   // 11/6 다래: 아직 쉬움 → 원래(박람회판)대로   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
