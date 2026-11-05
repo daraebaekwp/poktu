@@ -687,7 +687,7 @@ function updateFighter(f) {
       break;
     }
     case 'jumpsquat':
-      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; { const o = G && G.f ? opp(f) : null; if (o && f.jumpDir > 0 && !o.air) { const dx = Math.abs(o.x - f.x), need = dx + f.C.body.hw + o.C.body.hw + 30, air = 2 * spd.jumpV / spd.gravity; if (dx < 460 && o.x - o.C.body.hw - 40 > WALL_L && o.x + o.C.body.hw + 40 < WALL_R) { const hTop = o.C.body.h * .8, vy0 = Math.max(spd.jumpV, Math.sqrt(2 * spd.gravity * hTop)), air2 = 2 * vy0 / spd.gravity; f.vy = -vy0; f.vx = f.dir * Math.min(15, Math.max(spd.jumpX, need / air2)); f.crossJump = true; } } } f.air = true; f.y -= 1;   /* 11/6 다래: 가까이서 앞으로 뛰면 상대를 넘어갈 만큼 멀리 (벽에 붙은 상대는 그대로 못 넘음) */ f.airAtk = -1; f.airHit = false;
+      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; { const o = G && G.f ? opp(f) : null; if (o && f.jumpDir > 0 && !o.air) { const dx = Math.abs(o.x - f.x), need = dx + f.C.body.hw + o.C.body.hw + 30, air = 2 * spd.jumpV / spd.gravity; if (dx < 460 && o.x - o.C.body.hw - 40 > WALL_L && o.x + o.C.body.hw + 40 < WALL_R) { const gC = spd.gravity * 1.5, hTop = Math.min(o.C.body.h * 1.0, GROUND - f.C.body.h - 30), vy0 = Math.max(spd.jumpV, Math.sqrt(2 * gC * hTop)), air2 = 2 * vy0 / gC; f.vy = -vy0; f.vx = f.dir * Math.min(15, Math.max(spd.jumpX, need / air2)); f.crossJump = true; } } } f.air = true; f.y -= 1;   /* 11/6 다래: 가까이서 앞으로 뛰면 상대를 넘어갈 만큼 멀리 (벽에 붙은 상대는 그대로 못 넘음) */ f.airAtk = -1; f.airHit = false;
         setState(f, 'jump', P(f).jump); f.sy = 1.12; f.sx = .9; tw(f, { sy: 1, sx: 1 }, .3); A.sfx('jump'); dust(f.x, f.dir, 5); }
       break;
     case 'jump':
@@ -756,8 +756,8 @@ function updateFighter(f) {
   }
   // 물리
   if (f.air || f.y < GROUND) {
-    f.vy += spd.gravity; f.y += f.vy; f.x += f.vx;
-    if (f.y >= GROUND) { f.y = GROUND; f.vy = 0; f.air = false; landed(f); }
+    f.vy += f.crossJump ? spd.gravity * 1.5 : spd.gravity; f.y += f.vy; f.x += f.vx;   // 11/6 넘는 점프는 높이 뛰되 빨리 떨어지게(둥실거리지 않게)
+    if (f.y >= GROUND) { f.y = GROUND; f.vy = 0; f.air = false; f.crossJump = false; landed(f); }
   } else {
     f.x += f.vx;
     if (f.state === 'hitstun' || f.state === 'blockstun' || f.state === 'down' || f.state === 'dead' || f.state === 'getup') { f.vx *= .82; if (Math.abs(f.vx) > 4 && T % .1 < DT) dust(f.x, -Math.sign(f.vx) || 1, 1); }
