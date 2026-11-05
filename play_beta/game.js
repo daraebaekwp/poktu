@@ -2538,7 +2538,7 @@ cv.addEventListener('pointerdown', e => {
 // 첫 입력: 소리 켜기 + 전체 화면
 IN.onFirstGesture = () => {
   A.unlock();
-  if (!Q.has('nofs') && !document.fullscreenElement && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
+  if (!window.FS_ASKED && !Q.has('nofs') && !document.fullscreenElement && document.documentElement.requestFullscreen) { window.FS_ASKED = true; document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {}); }   // 11/6 코어닷 피드백: 전체 화면은 처음 한 번만 (풀면 다시 켜지지 않게)
 };
 
 // 테스트·점검용 (콘솔에서 사용)
