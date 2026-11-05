@@ -240,7 +240,7 @@ function superHit(x, y, col) {
 }
 function knockout(target) { // 멈칫 → 보색 번짐 → 확대 튕김 → K.O. 쾅
   ex.burstCol = ['#ffe600', '#7b2cff']; ex.burst = 1; G.hitstop = 27;
-  cam.zoom = 1.4; cam.x = clamp(target.x, 700, W - 700); cam.y = GROUND - 460; tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;
+  cam.zoom = 1.25; cam.x = clamp(target.x, 770, W - 770); cam.y = GROUND + 40 - H / 2 / 1.25;   // 11/6 KO 확대도 발까지 보이게 tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;
   later(.05, () => { text('K.O.', { size: 470, life: 2.4, col: '#ff2030', stroke: '#ffe600', rot: -.05, font: NUM }); A.voice('a_ko'); cam.shake = 34; });
   later(1.9, () => tw(ex, { burst: 0 }, .6));
 }
@@ -300,7 +300,7 @@ function startSpecial(f) {
   if (!o.ai && (sp.vfx || {}).type !== 'siren') fx.push({ type: 'pop', str: (o.x < f.x ? '← ' : '→ ') + '눌러서 막기!', x: o.x, y: headY(o) - 70, col: '#19f5c8', size: 56, t0: T + .5, life: 2.2 });   // 11/1 막는 법 알려 주기 (사람이 맞는 쪽일 때만 · 가드 불가 신고형은 빼고)
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
-  tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND - 430 }, .35, 'io');
+  tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND + 40 - H / 2 / 1.22 }, .35, 'io');   // 11/6 발까지
   ex.burstCol = sp.burstCol || [sp.col, sp.col2]; tw(ex, { burst: .75 }, .25);
   cutin(IMG[sp.cutin] ? sp.cutin : f.C.face, f.x <= o.x ? 'L' : 'R', /[!?]$/.test(sp.name) ? sp.name : sp.name + '!', sp.col, sp.col2, cf / 60, '필살기', IMG[sp.cutin] && sp.cutinY ? sp.cutinY : .42);   // 10/25 얼굴이 위에 있는 그림은 cutinY로 올림
   overlay.white = .7; tw(overlay, { white: 0 }, .3, 'lin', true); rlater(.12, () => { overlay.white = .45; tw(overlay, { white: 0 }, .2, 'lin', true); });   // 10/2 필살기 시작 번쩍번쩍
@@ -441,9 +441,10 @@ function spawnProj(f, v, dmg, y) {   // 필살기 발사체. v.from = { dx, dy }
 function slowMo(k, sec) { slow.to = k; slow.k = Math.min(slow.k, k + .25); slow.left = sec; }
 function slowSnap() { slow.left = 0; slow.to = 1; slow.k = 1; }
 function stepSlow() { if (slow.left > 0) { slow.left -= DT; slow.k += (slow.to - slow.k) * .35; if (slow.left <= 0) slow.to = 1; } else if (slow.k < 1) slow.k = Math.min(1, slow.k + .1); }
-function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), clamp(y, hh - 30, H - hh + 30)]; }
-function camTo(zoom, x, y, dur = .3, rot = 0) { const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
-function camFollow(x, y, zoom, rate = .12, rot = 0) { tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
+const CAM_MAX = 1.3;   // 11/6 다래: 필살기 확대 때 얼굴만 커지고 팔다리가 잘리지 않게 (전엔 2배까지)
+function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), Math.min(clamp(y, hh - 30, H - hh + 30), GROUND + 40 - hh)]; }   // 11/6 발까지 화면 안
+function camTo(zoom, x, y, dur = .3, rot = 0) { zoom = Math.min(zoom, CAM_MAX); const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
+function camFollow(x, y, zoom, rate = .12, rot = 0) { zoom = Math.min(zoom, CAM_MAX); tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
 function cineMood(desat, bars, dur = .25) { tw(cine, { desat, bars }, dur, 'out', true); }
 function cineEnd() { slowSnap(); cineMood(0, 0, .3); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .3, 'out', true); }
 function stamp(str, o = {}) {   // 도장 글자: 크게 떨어져 쾅! + 둥근 잉크 방울
