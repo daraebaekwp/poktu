@@ -49,7 +49,7 @@ window.CHARACTERS = {
     facing: 1, size: .86,                             // 10/2: 아홉 살이라 어른(예술가 등)보다 작게
     headH: 440,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
     body: { hw: 66, h: 440, crouchH: 290 },           // 몸 판정(맞는 상자): 반폭, 서 있을 때 높이, 앉았을 때 높이
-    speed: { walk: 9.2, back: 7.2, jumpV: 25, jumpX: 8.5, gravity: 1.25 },   // 11/1 박람회 피드백: 리치가 짧으니 더 빠르게 (7.5→9.2)
+    speed: { walk: 10.4, back: 8, jumpV: 25, jumpX: 9.2, gravity: 1.25 },   // 11/1 박람회 피드백: 리치가 짧으니 더 빠르게 (7.5→9.2) · 11/6 다래: 더 빠르게 (9.2→10.4)
     meterGain: 1,
     poses: {
       idle: 'g_guard', walk: 'g_walk', jump: 'g_jump', crouch: 'g_duck', guard: 'g_block', crouchGuard: 'g_duck',
@@ -349,7 +349,7 @@ window.CHARACTERS = {
     portrait: { sx: 190, sy: 153, size: 560 },
     facing: 1, size: 1, headH: 480, def: .88,
     body: { hw: 74, h: 480, crouchH: 340 },
-    speed: { walk: 6.2, back: 5, jumpV: 23, jumpX: 6.5, gravity: 1.25 },
+    speed: { walk: 7.6, back: 6, jumpV: 23, jumpX: 7.3, gravity: 1.25 },   // 11/6 다래: 할머니 더 빠르게 (걷기 6.2→7.6)
     meterGain: 1,
     poses: {
       idle: 'k_idle', walk: 'k_walk', jump: 'k_jump', crouch: 'k_crouch', guard: 'k_block', crouchGuard: 'k_crouch',
