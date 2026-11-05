@@ -129,14 +129,14 @@ window.CHARACTERS = {
       s_hip: { k: 1, ax: 231, ay: 1333 }, s_belly: { k: 1, ax: 305, ay: 1333 }, s_stomp: { k: 1, ax: 353, ay: 1333 },
       s_power: { k: 1, ax: 267, ay: 1305 }, s_drink: { k: 1, ax: 258, ay: 1305 }, s_smash: { k: 1, ax: 306, ay: 1333 },
     },
-    moves: {
+    moves: {   // 11/6 다래: s_kick 그림은 발이 뒤로 나가서 차다가 돌아선 것처럼 보임 → 앞으로 차는 s_stomp 로
       punch:  { pose: 's_palm',  startup: 7, active: 4, recovery: 12, dmg: 7,  hitstun: 18, blockstun: 11, push: 9,  hitbox: { x: 60, w: 230, y: 330, h: 150 }, level: 'mid', chain: 'punch2', links: { k: 'kick' }, voice: 's_hup' },
       punch2: { pose: 's_swing', startup: 8, active: 5, recovery: 20, dmg: 11, hitstun: 26, blockstun: 14, push: 16, hitbox: { x: 60, w: 330, y: 300, h: 180 }, level: 'mid', kd: true, big: 1.1 },
-      kick:   { pose: 's_kick',  startup: 8, active: 5, recovery: 16, dmg: 8,  hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 60, w: 210, y: 150, h: 170 }, level: 'mid', chain: 'kick2', voice: 's_hup' },
+      kick:   { pose: 's_stomp',  startup: 8, active: 5, recovery: 16, dmg: 8,  hitstun: 20, blockstun: 12, push: 10, hitbox: { x: 60, w: 210, y: 150, h: 170 }, level: 'mid', chain: 'kick2', voice: 's_hup' },
       kick2:  { pose: 's_hip',   startup: 7, active: 6, recovery: 20, dmg: 10, hitstun: 26, blockstun: 14, push: 18, hitbox: { x: 20, w: 170, y: 150, h: 300 }, level: 'mid', kd: true, big: 1.2, comboName: '산신령 삼단!' },
       crouchPunch: { pose: 's_belly', startup: 7, active: 6, recovery: 18, dmg: 8, hitstun: 22, blockstun: 12, push: 20, hitbox: { x: 30, w: 170, y: 150, h: 330 }, level: 'mid', kd: true, sfx: 'boing', popText: '뽀잉!', antiAir: true },
       crouchKick:  { pose: 's_stomp', startup: 10, active: 6, recovery: 20, dmg: 9, hitstun: 22, blockstun: 14, push: 10, hitbox: { x: 40, w: 300, y: 0, h: 110 }, level: 'low', kd: true, sfx: 'stomp', shock: true, hy: 60 },
-      jumpAttack:  { pose: 's_kick', startup: 5, active: 14, recovery: 4, dmg: 9, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 30, w: 190, y: 60, h: 250 }, level: 'high', voice: 's_hup' },
+      jumpAttack:  { pose: 's_stomp', startup: 5, active: 14, recovery: 4, dmg: 9, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 30, w: 190, y: 60, h: 250 }, level: 'high', voice: 's_hup' },
       cmdPalm:  { anim: [['s_power', 0], ['s_palm', 10]], startup: 12, active: 6, recovery: 18, dmg: 8, hitstun: 22, blockstun: 14, push: 26, hitbox: { x: 60, w: 300, y: 250, h: 260 }, level: 'mid', big: 1.1, rings: true, voice: 's_hup', popText: '장풍!' },
       cmdBelly: { anim: [['s_bow', 0], ['s_belly', 8]], startup: 10, active: 8, recovery: 20, dmg: 9, hitstun: 24, blockstun: 14, push: 18, hitbox: { x: 20, w: 200, y: 150, h: 330 }, level: 'mid', kd: true, dash: 12, sfx: 'boing', popText: '뽀잉!' },
       cmdStomp: { anim: [['s_power', 0], ['s_stomp', 12]], startup: 14, active: 1, recovery: 24, wave: { speed: 13, dmg: 7, kd: true, col: '#c9a6ff' }, sfx: 'stomp', shock: true },
