@@ -296,6 +296,7 @@ function startSpecial(f) {
   const sp = f.C.specials[G.stage] || f.C.specials[0]; if (!sp) return;
   const o = opp(f);
   f.meter = 0; f.vx = 0; setState(f, 'special', sp.windupPose || P(f).idle); f.sp = { def: sp, t: 0, fired: false, shots: 0 };
+  if ((o.state === 'special' && o.sp) || G.proj.some(p => p.sp && p.owner === o && !p.dead)) f.sp.clash = true;   // 11/6 다래: 상대 필살기가 아직 진행 중이면 → 내 컷인이 끝나는 순간 두 필살기가 부딪힘
   const cf = sp.cutinF || 72;                                       // 컷인 길이(프레임)
   // 11/6 다래: '← 눌러서 막기!' 안내 뺌
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
@@ -308,6 +309,15 @@ function startSpecial(f) {
   if (sp.notify) { const n = sp.notify; fx.push({ type: 'notify', title: n.title || '알림', body: n.text, col: sp.col, t0: T + (n.at ?? .75), life: n.life || 1.9 }); later(n.at ?? .75, () => A.voice(n.voice)); }   // 직장인: 월급 입금 알림
   if (sp.voiceAt == null) A.voice(sp.voice); A.sfx('charge'); A.duck(.1);
   f.sy = .88; tw(f, { sy: 1 }, .4, 'back');
+}
+function doClash(f) {   // 11/6 필살기 충돌: 둘 다 무효, 가운데서 폭발, 서로 튕겨 나감 (피해 없음)
+  const o = opp(f), mx = (f.x + o.x) / 2, my = GROUND - 360;
+  G.proj = G.proj.filter(p => !p.sp);
+  for (const x of [f, o]) { x.sp = null; x.invul = 45; x.glow = 0; setState(x, 'blockstun', P(x).guard); x.stun = 34; x.vx = (x.x < mx ? -1 : 1) * 24; x.meter = 0; }
+  tw(overlay, { dark: 0, speed: 0 }, .2); tw(ex, { burst: 0 }, .2); cineEnd(); A.duck(.28, .6);
+  superHit(mx, my, '#ffffff'); shockwave(mx, my, 1.8, '#ffd000'); spark(mx, my, 2.2, '#fff6c0');
+  overlay.white = 1; tw(overlay, { white: 0 }, .6, 'lin', true); cam.shake = 60; G.hitstop = 16;
+  text('충돌!', { size: 260, life: 1.5, y: 330, col: '#ffffff', stroke: '#ff2f8a', rot: -.04 }); A.sfx('bigboom'); A.sfx('ko');
 }
 function endFreeze(f) {
   tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .22, 'in', true); tw(overlay, { dark: 0, speed: 0 }, .25); tw(ex, { burst: 0 }, .25); A.duck(.28, .6);
@@ -744,6 +754,7 @@ function updateFighter(f) {
       const sp = f.sp; sp.t++;
       if (G.freeze > 0) break;
       const v = sp.def.vfx || {};
+      if (sp.clash) { doClash(f); break; }
       if (!sp.fired) { sp.fired = true; sp.t = 0; endFreeze(f); }
       if (v.type === 'multi') { (v.shots || []).forEach((s, i) => { if (sp.t === s.delay + 1) { const last = i === v.shots.length - 1, pr = spawnProj(f, s.img ? Object.assign({}, v, s) : v, sp.def.dmg / v.shots.length, s.y); if (!last) pr.keep = true; else pr.fin = true; } }); }
       if (v.type === 'siren' && sp.sirenAt && sp.t === sp.sirenAt) sirenHit(f, sp.def);
