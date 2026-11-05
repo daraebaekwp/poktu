@@ -985,12 +985,12 @@ function pushApart(a, b) {
 // =====================================================================
 //  CPU (난이도 1 쉬움 · 2 보통 · 3 어려움)
 // =====================================================================
-const AI_CMD = { 1: 0, 2: .1, 3: .28 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
+const AI_CMD = { 1: 0, 2: .1, 3: .31 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
 // 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
   1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
   2: { punish: .22, adapt: .2, react: 19, block: .32, lowRead: .45, antiAir: .22, sup: .5, jumpIn: .05, aggr: .55, chain: .5, dmgOut: .9, dmgIn: 1.04, walkIn: .95 },   // 11/6 다래: 2단계 더 쉽게
-  3: { punish: .5, adapt: .32, react: 11, block: .48, lowRead: .7, antiAir: .5, sup: .85, jumpIn: .08, aggr: .72, chain: .8, dmgOut: 1, dmgIn: 1, walkIn: 1.05 },   // 11/6 다래: 3단계 조금 약하게   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
+  3: { punish: .62, adapt: .37, react: 9, block: .55, lowRead: .8, antiAir: .62, sup: .95, jumpIn: .09, aggr: .77, chain: .92, dmgOut: 1.03, dmgIn: .98, walkIn: 1.08 },   // 11/6 다래: 3단계 너무 쉬워짐 → 원래와 중간보다 조금 세게   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
