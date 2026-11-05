@@ -226,7 +226,7 @@ window.CHARACTERS = {
     name: '군인', en: 'SOLDIER', age: '21세', tag: '휴가 첫날',
     signature: '"충성!" 경례하고 탕탕탕',
     col: ['#d8ff5a', '#3a5010'],
-    face: 'roster/face_soldier.jpg', vs: null, fight: null, fightCut: 'roster/face_soldier_nukki.webp',
+    face: 'roster/face_soldier.jpg', vs: null, fight: null, fightCut: 'roster/face_soldier_nukki.webp', cutFacing: 0,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 285, sy: 227, size: 420 },
     facing: 1, size: 1, headH: 550,
     body: { hw: 75, h: 540, crouchH: 360 },
@@ -283,7 +283,7 @@ window.CHARACTERS = {
   worker: {
     name: '직장인', en: 'WORKER', age: '42세', tag: '울산 공단 12년 차',
     col: ['#5ab8ff', '#16307a'],
-    face: 'roster/face_worker.jpg', vs: null, fight: null, fightCut: 'roster/face_worker_nukki.webp',
+    face: 'roster/face_worker.jpg', vs: null, fight: null, fightCut: 'roster/face_worker_nukki.webp', cutFacing: -1,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 257, sy: 180, size: 475 },
     signature: '휴대폰 띵동! "월급 입금!" 돈 폭풍',
     facing: 1, size: 1, headH: 560,
@@ -345,7 +345,7 @@ window.CHARACTERS = {
     name: '할머니', en: 'GRANDMA', age: '80세', tag: '영남알프스 9봉 완등',
     signature: '"생활근육!" 근육 할머니로 변신 → 꿀밤 한 방',
     col: ['#ff8ad0', '#7a1a5a'],
-    face: 'roster/face_grandma.jpg', vs: null, fight: null, fightCut: 'roster/face_grandma_nukki.webp',
+    face: 'roster/face_grandma.jpg', vs: null, fight: null, fightCut: 'roster/face_grandma_nukki.webp', cutFacing: 0,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 190, sy: 153, size: 560 },
     facing: 1, size: 1, headH: 480, def: .88,
     body: { hw: 74, h: 480, crouchH: 340 },
@@ -406,7 +406,7 @@ window.CHARACTERS = {
     name: '알바생', en: 'PART-TIMER', age: '28세', tag: '편의점 야간 근무',
     signature: '"사장님 말 걸지 마세요" · "집에 가고 싶다" 삼각김밥 폭풍',
     col: ['#5affc8', '#0a5a5a'],
-    face: 'roster/face_parttime.jpg', vs: null, fight: null, fightCut: 'roster/face_parttime_nukki.webp',
+    face: 'roster/face_parttime.jpg', vs: null, fight: null, fightCut: 'roster/face_parttime_nukki.webp', cutFacing: -1,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 288, sy: 198, size: 474 },
     facing: 1, size: 1, headH: 530, def: 1.05,   // 10/2 빠른 대신 힘·맷집 약하게
     body: { hw: 70, h: 520, crouchH: 350 },
@@ -463,7 +463,7 @@ window.CHARACTERS = {
     name: '학생', en: 'STUDENT', age: '17세', tag: '고2 · 시험 끝!',
     signature: '"센치멘탈…" 벚꽃 회오리 · "말 걸지 마세요" 이어폰 음파',
     col: ['#7fb2ff', '#1a2a6a'],
-    face: 'roster/face_hs.jpg', vs: null, fight: null, fightCut: 'roster/face_hs_nukki.webp',
+    face: 'roster/face_hs.jpg', vs: null, fight: null, fightCut: 'roster/face_hs_nukki.webp', cutFacing: -1,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 254, sy: 137, size: 393 },
     facing: 1, size: 1, headH: 540,
     body: { hw: 72, h: 530, crouchH: 350 },
@@ -515,7 +515,7 @@ window.CHARACTERS = {
     name: '연구원', en: 'RESEARCHER', age: '36세', tag: '12시 넘으면 내 시간',
     signature: '"12시 넘으면 내 시간이지~" 폭주 · "발견!"',
     col: ['#c9a6ff', '#2a0a4a'],
-    face: 'roster/face_researcher.jpg', vs: null, fight: null, fightCut: 'roster/face_researcher_nukki.webp',
+    face: 'roster/face_researcher.jpg', vs: null, fight: null, fightCut: 'roster/face_researcher_nukki.webp', cutFacing: -1,   /* 11/6: 큰 얼굴 그림이 보는 방향 (0=정면) */
     portrait: { sx: 267, sy: 209, size: 430 },
     facing: 1, size: 1, headH: 540,
     body: { hw: 72, h: 530, crouchH: 350 },

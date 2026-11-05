@@ -1537,13 +1537,14 @@ function drawCutins() {
     ctx.save(); ctx.translate(W / 2 + off, cy); ctx.rotate(-.06 * dir); ctx.fillStyle = f.col; ctx.shadowColor = f.col; ctx.shadowBlur = 20;
     ctx.fillRect(-W, -bh / 2 - 4, W * 2, 5); ctx.fillRect(-W, bh / 2 - 1, W * 2, 5); ctx.restore(); }
 }
+function cutMirror(C, side) { const cf = C.cutFacing ?? C.facing; return cf !== 0 && (side === 0 ? cf !== 1 : cf !== -1); }   /* 11/6 다래: 큰 얼굴은 모두 서로 마주 보게 */
 function fightImg(C) { return IMG[C.fightCut] || IMG[C.fight] || IMG[C.vs] || IMG[C.face]; }   // 9/30: FIGHT! 컷은 배경을 뺀 그림(누끼) → 판넬 색 + 물방울 무늬만 배경으로
 function drawFightCut() {
   for (const f of fx) { if (f.type !== 'fightcut') continue; const t = T - f.t0; if (t < 0 || t > f.life) continue;
     const inP = EASE.out(Math.min(1, t / .32)), outA = t > f.life - .25 ? (f.life - t) / .25 : 1;
     ctx.save(); ctx.globalAlpha = outA; const sl = 180;
     for (const [side, fr, c1, dot] of [['L', G.f[0], '#7d4fa1', '#ffe600'], ['R', G.f[1], '#1a9f9d', '#ff2f8a']]) {
-      const img = fightImg(fr.C), mirror = side === 'L' ? fr.C.facing !== 1 : fr.C.facing !== -1;
+      const img = fightImg(fr.C), mirror = cutMirror(fr.C, side === 'L' ? 0 : 1);
       ctx.save(); ctx.beginPath(); if (side === 'L') { ctx.moveTo(0, 0); ctx.lineTo(W / 2 + sl, 0); ctx.lineTo(W / 2 - sl, H); ctx.lineTo(0, H); } else { ctx.moveTo(W / 2 + sl, 0); ctx.lineTo(W, 0); ctx.lineTo(W, H); ctx.lineTo(W / 2 - sl, H); } ctx.closePath(); ctx.clip();
       ctx.translate((side === 'L' ? -1 : 1) * (1 - inP) * W * .6, 0); ctx.fillStyle = c1; ctx.fillRect(-W, 0, W * 3, H);
       ctx.globalAlpha = outA * .25; ctx.fillStyle = dot; for (let y = 0; y < H; y += 30) for (let x = (y / 30 % 2) * 15; x < W; x += 30) { ctx.beginPath(); ctx.arc(x, y, 5, 0, 7); ctx.fill(); } ctx.globalAlpha = outA;
@@ -2187,7 +2188,7 @@ SCENES.vs = {
       ctx.save(); ctx.beginPath(); if (side === 0) { ctx.moveTo(0, 0); ctx.lineTo(W / 2 + sl, 0); ctx.lineTo(W / 2 - sl, H); ctx.lineTo(0, H); } else { ctx.moveTo(W / 2 + sl, 0); ctx.lineTo(W, 0); ctx.lineTo(W, H); ctx.lineTo(W / 2 - sl, H); } ctx.closePath(); ctx.clip();
       ctx.translate((side ? 1 : -1) * (1 - inP) * 900, 0); ctx.fillStyle = bgc; ctx.fillRect(-900, 0, W + 1800, H);
       ctx.fillStyle = 'rgba(255,255,255,.13)'; for (let y = 0; y < H; y += 40) for (let x = -900 + (y / 40 % 2) * 20; x < W + 900; x += 40) { ctx.beginPath(); ctx.arc(x, y, 6, 0, 7); ctx.fill(); }   // 10/2 물방울 무늬 판넬
-      const img = IMG[C.vs] || IMG[C.fightCut] || IMG[C.face]; const mirror = side === 0 ? C.facing !== 1 : C.facing !== -1;   // 10/2: 배경 뺀 그림(누끼) 먼저
+      const img = IMG[C.vs] || IMG[C.fightCut] || IMG[C.face]; const mirror = cutMirror(C, side);   // 10/2: 배경 뺀 그림(누끼) 먼저
       if (img) { const sc = Math.max(H / img.height, W * .66 / img.width) * (1 + Math.min(t, 3) * .02), cx = side ? W * .76 : W * .24;
         ctx.save(); if (side === 1 && m.p1 === m.p2) ctx.filter = 'hue-rotate(160deg)'; ctx.translate(cx, H * .5); if (mirror) ctx.scale(-1, 1);   /* 11/6 다래: 예술가 등 vs 그림 없는 캐릭터도 상대 쪽 보게 */ ctx.drawImage(img, -img.width * sc / 2, -img.height * sc * .42, img.width * sc, img.height * sc); ctx.restore(); }
       ctx.restore(); }
