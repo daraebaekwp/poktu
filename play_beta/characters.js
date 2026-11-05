@@ -181,7 +181,7 @@ window.CHARACTERS = {
       intro: 'a_bow', taunt: 'a_taunt', land: 'a_crouch',
     },
     META: {
-      a_idle: { h: 520, flip: true }, a_walk: { h: 525 }, a_jump: { h: 470 }, a_crouch: { h: 430, flip: true }, a_guard: { h: 470, flip: true }, a_hit: { h: 520 },
+      a_idle: { h: 520, flip: true }, a_walk: { h: 525 }, a_jump: { h: 470 }, a_crouch: { h: 430, flip: true }, a_guard: { h: 540, flip: true }, a_hit: { h: 520 },
       a_down: { h: 115 }, a_win: { h: 620 }, a_sp_dizzy: { h: 380 }, a_bow: { h: 470 }, a_taunt: { h: 540, flip: true },
       a_punch: { h: 500 }, a_punch2: { h: 480 }, a_kick: { h: 560 }, a_upper: { h: 600 }, a_jumpatk: { h: 440 },
       a_sp_windup: { h: 600 }, a_sp_shout: { h: 530 }, a_sp_swing: { h: 520, flip: true },
@@ -298,7 +298,7 @@ window.CHARACTERS = {
     META: {
       w_idle: { h: 545 }, w_walk: { h: 550 }, w_jump: { h: 470 }, w_crouch: { h: 400 }, w_guard: { h: 520 }, w_hit: { h: 560 },
       w_down: { h: 265 }, w_win: { h: 620 }, w_lose: { h: 360 }, w_bow: { h: 470 }, w_taunt: { h: 560 },
-      w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 480 }, w_sweep: { h: 330 },
+      w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 405 }, w_sweep: { h: 330 },
       w_headbutt: { h: 470 }, w_towel: { h: 540 }, w_wrench: { h: 600 }, w_phone: { h: 545 }, w_power: { h: 560 }, w_joy: { h: 620 }, w_throw: { h: 520 },
     },
     moves: {
@@ -474,8 +474,8 @@ window.CHARACTERS = {
       hit: 'h_hit', crouchHit: 'h_crouch', down: 'h_down', ko: 'h_hit', win: 'h_win', lose: 'h_lose',
       intro: 'h_bow', taunt: 'h_taunt', land: 'h_crouch',
     },
-    META: {
-      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 520 }, h_hit: { h: 535, flip: true },
+    META: {   // 11/6 다래: 키 들쑥날쑥 → h_block·h_hit 키를 서 있는 자세와 맞춤
+      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 552 }, h_hit: { h: 548, flip: true },
       h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
