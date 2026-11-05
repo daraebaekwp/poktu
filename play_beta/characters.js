@@ -59,7 +59,7 @@ window.CHARACTERS = {
     META: {
       g_guard: { k: .94, ax: 259, ay: 1347 }, g_walk: { k: .885, ax: 353, ay: 1385 }, g_jump: { k: 1.2, ax: 190, ay: 1232 },
       g_duck: { k: .94, ax: 335, ay: 1328, flip: true }, g_block: { k: 1.2, ax: 273, ay: 1232, flip: true }, g_reel: { k: .94, ax: 540, ay: 1332 },
-      g_down: { k: .885, ax: 418, ay: 1385 }, g_win: { k: .885, ax: 277, ay: 1385 }, g_sit: { k: .865, ax: 293, ay: 1400 },
+      g_down: { k: .885, ax: 418, ay: 1385 }, g_win: { k: .885, ax: 277, ay: 1385 }, g_sit: { k: .865, ax: 293, ay: 1400 , flip: true },
       g_bow: { k: .85, ax: 402, ay: 1350 }, g_wink: { k: .8, ax: 452, ay: 1350 }, g_land: { k: .95, ax: 301, ay: 1354, flip: true },
       g_punch2: { k: 1.2, ax: 333, ay: 1232 }, g_rapid: { k: 1.2, ax: 247, ay: 1232 }, g_upper: { k: 1, ax: 233, ay: 1387 },
       g_kick: { k: 1.2, ax: 500, ay: 1232, flip: true }, g_round: { k: 1.2, ax: 187, ay: 1232 }, g_sweep: { k: 1, ax: 265, ay: 1387 },
@@ -358,7 +358,7 @@ window.CHARACTERS = {
     },
     META: {
       k_idle: { h: 455 }, k_walk: { h: 460 }, k_jump: { h: 400 }, k_crouch: { h: 370 }, k_block: { h: 455 }, k_hit: { h: 470 },
-      k_down: { h: 225 }, k_win: { h: 476 }, k_lose: { h: 305 }, k_bow: { h: 430 }, k_taunt: { h: 460 },   // 11/6 Fable: 쓰러짐·짐 자세 얼굴이 컸음 (255→225, 351→305)
+      k_down: { h: 225 }, k_win: { h: 476 }, k_lose: { h: 305 , flip: true }, k_bow: { h: 430 }, k_taunt: { h: 460 },   // 11/6 Fable: 쓰러짐·짐 자세 얼굴이 컸음 (255→225, 351→305)
       k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 565 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },   // 11/6 Fable: 올려치기 몸이 조금 컸음 (590→565)
       k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 640 }, k_hulk: { h: 860 }, k_hulkup: { h: 950 }, k_hulkbonk: { h: 840 }, k_scold: { h: 840 },
     },

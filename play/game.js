@@ -1162,7 +1162,7 @@ function timeOver() {
   text('TIME OVER', { size: 200, life: 1.8, col: '#ffe600', stroke: '#7b2cff', font: NUM }); A.bgmStop();
   if (Math.abs(a.hp - b.hp) < .5) { G.winner = null; G.loser = null; for (const f of G.f) setState(f, 'lose', P(f).lose); }
   else { G.winner = a.hp > b.hp ? a : b; G.loser = opp(G.winner); setState(G.loser, 'lose', P(G.loser).lose); A.voice(G.loser.C.voices.lose); }
-  for (const f of G.f) { f.vx = 0; }
+  for (const f of G.f) { f.vx = 0; faceOpp(f); }   // 11/6 다래: 시간 초과·무승부 때 서로 마주 보게
   G.pt = 40;
 }
 function resultText() {
