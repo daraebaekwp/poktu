@@ -987,8 +987,8 @@ const AI_CMD = { 1: 0, 2: .2, 3: .32 };   // CPU가 기술(커맨드)을 쓰는 
 // 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
   1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
-  2: { punish: .4, adapt: .3, react: 14, block: .45, lowRead: .6, antiAir: .4, sup: .7, jumpIn: .07, aggr: .65, chain: .7, dmgOut: 1, dmgIn: 1, walkIn: 1 },
-  3: { punish: .7, adapt: .4, react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.05, dmgIn: .97, walkIn: 1.1 },   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
+  2: { punish: .22, adapt: .2, react: 19, block: .32, lowRead: .45, antiAir: .22, sup: .5, jumpIn: .05, aggr: .55, chain: .5, dmgOut: .9, dmgIn: 1.04, walkIn: .95 },   // 11/6 다래: 2단계 더 쉽게
+  3: { punish: .5, adapt: .32, react: 11, block: .48, lowRead: .7, antiAir: .5, sup: .85, jumpIn: .08, aggr: .72, chain: .8, dmgOut: 1, dmgIn: 1, walkIn: 1.05 },   // 11/6 다래: 3단계 조금 약하게   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
