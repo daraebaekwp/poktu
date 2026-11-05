@@ -836,7 +836,7 @@ function resolveHit(a, d, m, r) {
     d.hp = Math.max(1, d.hp - 1); setState(d, 'blockstun', d.in.d ? P(d).crouchGuard : P(d).guard); d.stun = m.blockstun; d.vx = dirPush * m.push * .8;
     a.meter = Math.min(100, a.meter + 3); d.meter = Math.min(100, d.meter + 4);
     G.hitstop = 5; cam.shake = Math.max(cam.shake, 8); spark(hx, hy, .7, '#9fd8ff'); A.sfx('guard'); pop('GUARD', d.x, headY(d) - 60, '#9fd8ff', 50);
-    if (d.x <= WALL_L + 5 || d.x >= WALL_R - 5) a.vx = -dirPush * m.push * .6;
+    if (d.x <= WALL_L + 5 || d.x >= WALL_R - 5) a.vx = -dirPush * Math.min(m.push * .6, 7);   // 11/6 다래: 구석에서 장풍 쓰면 자기가 크게 밀려나던 것 → 반동 줄임
     return;
   }
   const fromAir = a.state === 'jump';
@@ -866,7 +866,7 @@ function resolveHit(a, d, m, r) {
   if (fromAir && !(m.kd || d.air || d.y < GROUND)) { setState(d, 'hitstun', d.in.d ? P(d).crouchHit : P(d).hit); d.stun = m.hitstun + 10; d.vx = dirPush * m.push * .6; return; }   // 점프 공격은 경직을 길게 → 착지 후 연결
   if (m.kd || d.air || d.y < GROUND) { setState(d, 'knockdown', P(d).hit); d.air = true; d.vy = -13; d.vx = dirPush * (m.push * .7 + 3); d.y = Math.min(d.y, GROUND - 1); }
   else { setState(d, 'hitstun', d.in.d ? P(d).crouchHit : P(d).hit); d.stun = m.hitstun; d.vx = dirPush * m.push; d.ox = dirPush * 8; tw(d, { ox: 0 }, .2); }
-  if (d.x <= WALL_L + 5 || d.x >= WALL_R - 5) a.vx = -dirPush * m.push * .7;
+  if (d.x <= WALL_L + 5 || d.x >= WALL_R - 5) a.vx = -dirPush * Math.min(m.push * .7, 8);   // 11/6 다래: 반동 줄임
 }
 function projHit(p, d) {
   if (G.phase !== 'fight') return;   // 9/30: 승패가 난 뒤(K.O.·TIME OVER)에는 더 맞지 않음 → 진 사람이 'YOU WIN'을 보는 일 없게
