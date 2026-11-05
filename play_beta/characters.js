@@ -360,7 +360,7 @@ window.CHARACTERS = {
       k_idle: { h: 455 }, k_walk: { h: 460 }, k_jump: { h: 400 }, k_crouch: { h: 370 }, k_block: { h: 455 }, k_hit: { h: 470 },
       k_down: { h: 255 }, k_win: { h: 476 }, k_lose: { h: 351 }, k_bow: { h: 430 }, k_taunt: { h: 460 },
       k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 590 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },
-      k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 500 }, k_hulk: { h: 560 }, k_hulkup: { h: 620 }, k_hulkbonk: { h: 540 }, k_scold: { h: 540 },
+      k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 640 }, k_hulk: { h: 860 }, k_hulkup: { h: 950 }, k_hulkbonk: { h: 840 }, k_scold: { h: 840 },
     },
     moves: {
       punch:  { pose: 'k_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 180, y: 300, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -475,7 +475,7 @@ window.CHARACTERS = {
       intro: 'h_bow', taunt: 'h_taunt', land: 'h_crouch',
     },
     META: {   // 11/6 다래: 키 들쑥날쑥 → h_block·h_hit 키를 서 있는 자세와 맞춤
-      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 552 }, h_hit: { h: 548, flip: true },
+      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 515 }, h_hit: { h: 520, flip: true },
       h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },

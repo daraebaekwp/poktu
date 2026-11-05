@@ -443,8 +443,9 @@ function slowSnap() { slow.left = 0; slow.to = 1; slow.k = 1; }
 function stepSlow() { if (slow.left > 0) { slow.left -= DT; slow.k += (slow.to - slow.k) * .35; if (slow.left <= 0) slow.to = 1; } else if (slow.k < 1) slow.k = Math.min(1, slow.k + .1); }
 const CAM_MAX = 1.3;   // 11/6 다래: 필살기 확대 때 얼굴만 커지고 팔다리가 잘리지 않게 (전엔 2배까지)
 function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), Math.min(clamp(y, hh - 30, H - hh + 30), GROUND + 40 - hh)]; }   // 11/6 발까지 화면 안
-function camTo(zoom, x, y, dur = .3, rot = 0) { zoom = Math.min(zoom, CAM_MAX); const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
-function camFollow(x, y, zoom, rate = .12, rot = 0) { zoom = Math.min(zoom, CAM_MAX); tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
+function camFit() { let t = 600; if (G && G.f) for (const f of G.f) { const sp = SPR[f.key + '/' + f.pose]; if (sp) t = Math.max(t, sp.ay); } return Math.max(1, Math.min(CAM_MAX, H / (t + 140))); }   // 11/6 큰 그림(헐크 할머니)도 머리부터 발까지
+function camTo(zoom, x, y, dur = .3, rot = 0) { zoom = Math.min(zoom, camFit()); const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
+function camFollow(x, y, zoom, rate = .12, rot = 0) { zoom = Math.min(zoom, camFit()); tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
 function cineMood(desat, bars, dur = .25) { tw(cine, { desat, bars }, dur, 'out', true); }
 function cineEnd() { slowSnap(); cineMood(0, 0, .3); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .3, 'out', true); }
 function stamp(str, o = {}) {   // 도장 글자: 크게 떨어져 쾅! + 둥근 잉크 방울
