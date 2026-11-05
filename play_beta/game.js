@@ -983,7 +983,7 @@ function pushApart(a, b) {
 // =====================================================================
 //  CPU (난이도 1 쉬움 · 2 보통 · 3 어려움)
 // =====================================================================
-const AI_CMD = { 1: 0, 2: .2, 3: .32 };   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
+const AI_CMD = { 1: 0, 2: .1, 3: .28 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
 // 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
   1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
@@ -1034,7 +1034,7 @@ function aiStep(f) {
   if (o.state === 'jump' && dist < 430 && Math.random() < P_.antiAir) {
     const aa = cmdP && cmds.find(c => f.C.moves[c.move].antiAir); if (aa && Math.random() < .5) return doCmd(aa);
     out.d = true; press('p'); ai.cd = P_.react; return out; }
-  if (cmdP && dist > kreach && dist < 1300 && Math.random() < cmdP * .12 && !G.proj.some(p => p.owner === f)) {   // 멀리서: 발사체 · 충격파
+  if (cmdP && T - (G.fightAt || 0) > 2 && dist > kreach && dist < 1300 && Math.random() < cmdP * .12 && !G.proj.some(p => p.owner === f)) {   // 11/6: FIGHT 직후 2초는 멀리서 기술(땅 울리기 등) 안 씀   // 멀리서: 발사체 · 충격파
     const far = cmds.filter(c => { const m = f.C.moves[c.move]; return m.proj || m.wave; }); if (far.length) return doCmd(pick(far)); }
   if (f.meter >= 100 && Math.random() < P_.sup * .25 && dist < 1100) { press('s'); ai.cd = P_.react; return out; }
   if (dist > kreach) {
@@ -1079,7 +1079,7 @@ function startMatch(opt) { // opt: { mode: 'arcade'|'versus'|'demo', stage, p1, 
   const tr = Math.max(t, 1.0); G.roundAt = tr;
   ev.push({ t: tr, fn: () => { for (const f of G.f) { setState(f, 'idle', P(f).idle); } text(G.mode === 'versus' ? st.place : st.round, { size: 170, life: 1.3, col: '#ffffff', stroke: G.stage === 2 ? '#5a1a1a' : '#15306b' }); tw(hud, { show: 1 }, .5); A.voice(G.mode === 'versus' ? 'a_round1' : st.announce); } });
   ev.push({ t: tr + 1.15, fn: () => { fx.push({ type: 'fightcut', t0: T, life: 1.2 }); A.sfx('cutin'); cam.shake = 12; A.voice('a_fight'); } });
-  ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
+  ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; G.fightAt = T; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
   A.bgm(null); A.bgmStop();
 }
 function updateMatch() {
