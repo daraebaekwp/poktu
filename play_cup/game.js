@@ -1503,7 +1503,7 @@ function drawHud() {
   ctx.fillStyle = secs <= 10 && Math.sin(T * 10) > 0 ? '#ff4040' : '#ffe600'; ctx.fillText(ts, 0, 22); ctx.restore();
   const S = STAGES[G.stage]; ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = '#000';
   ctx.font = `700 27px ${NUM}`; ctx.letterSpacing = '4px'; ctx.textBaseline = 'middle'; ctx.lineWidth = 4; const lr = G.mode === 'versus' ? (CUP ? `ROUND ${CUPS.n + 1}` : 'VERSUS') : S.round; ctx.strokeText(lr, W / 2 + 2, y + 97); ctx.fillStyle = '#fff'; ctx.fillText(lr, W / 2 + 2, y + 97); ctx.letterSpacing = '0px'; ctx.textBaseline = 'alphabetic'; ctx.lineWidth = 5;
-  const pl = CUP && G.mode === 'versus' ? `${CUPS.w[0]}  :  ${CUPS.w[1]}` : S.place; ctx.font = CUP && G.mode === 'versus' ? `700 44px ${NUM}` : `36px ${FONT}`; ctx.strokeText(pl, W / 2, y + 144); ctx.fillStyle = '#19f5c8'; ctx.fillText(pl, W / 2, y + 144);
+  const pl = CUP && G.mode === 'versus' ? `${CUPS.w[0]}  :  ${CUPS.w[1]}` : S.place; ctx.font = CUP && G.mode === 'versus' ? `700 44px ${NUM}` : `36px ${FONT}`; const ply = CUP && G.mode === 'versus' ? y + 162 : y + 144; ctx.strokeText(pl, W / 2, ply); ctx.fillStyle = '#19f5c8'; ctx.fillText(pl, W / 2, ply);   // 11/6 다래: ROUND 글자와 점수가 겹쳐서 점수를 아래로
   supBar(290, H - 64, 480, a.meter, false, 0); supBar(W - 290 - 480, H - 64, 480, b.meter, true, 1);
   ctx.restore();
   if (combo.shown > 0 && combo.n >= 2) {
