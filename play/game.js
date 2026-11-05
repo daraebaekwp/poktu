@@ -240,7 +240,7 @@ function superHit(x, y, col) {
 }
 function knockout(target) { // 멈칫 → 보색 번짐 → 확대 튕김 → K.O. 쾅
   ex.burstCol = ['#ffe600', '#7b2cff']; ex.burst = 1; G.hitstop = 27;
-  cam.zoom = 1.4; cam.x = clamp(target.x, 700, W - 700); cam.y = GROUND - 460; tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;
+  cam.zoom = 1.25; cam.x = clamp(target.x, 770, W - 770); cam.y = GROUND + 40 - H / 2 / 1.25;   // 11/6 KO 확대도 발까지 보이게 tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;
   later(.05, () => { text('K.O.', { size: 470, life: 2.4, col: '#ff2030', stroke: '#ffe600', rot: -.05, font: NUM }); A.voice('a_ko'); cam.shake = 34; });
   later(1.9, () => tw(ex, { burst: 0 }, .6));
 }
@@ -300,7 +300,7 @@ function startSpecial(f) {
   if (!o.ai && (sp.vfx || {}).type !== 'siren') fx.push({ type: 'pop', str: (o.x < f.x ? '← ' : '→ ') + '눌러서 막기!', x: o.x, y: headY(o) - 70, col: '#19f5c8', size: 56, t0: T + .5, life: 2.2 });   // 11/1 막는 법 알려 주기 (사람이 맞는 쪽일 때만 · 가드 불가 신고형은 빼고)
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
-  tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND - 430 }, .35, 'io');
+  tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND + 40 - H / 2 / 1.22 }, .35, 'io');   // 11/6 발까지
   ex.burstCol = sp.burstCol || [sp.col, sp.col2]; tw(ex, { burst: .75 }, .25);
   cutin(IMG[sp.cutin] ? sp.cutin : f.C.face, f.x <= o.x ? 'L' : 'R', /[!?]$/.test(sp.name) ? sp.name : sp.name + '!', sp.col, sp.col2, cf / 60, '필살기', IMG[sp.cutin] && sp.cutinY ? sp.cutinY : .42);   // 10/25 얼굴이 위에 있는 그림은 cutinY로 올림
   overlay.white = .7; tw(overlay, { white: 0 }, .3, 'lin', true); rlater(.12, () => { overlay.white = .45; tw(overlay, { white: 0 }, .2, 'lin', true); });   // 10/2 필살기 시작 번쩍번쩍
@@ -441,9 +441,11 @@ function spawnProj(f, v, dmg, y) {   // 필살기 발사체. v.from = { dx, dy }
 function slowMo(k, sec) { slow.to = k; slow.k = Math.min(slow.k, k + .25); slow.left = sec; }
 function slowSnap() { slow.left = 0; slow.to = 1; slow.k = 1; }
 function stepSlow() { if (slow.left > 0) { slow.left -= DT; slow.k += (slow.to - slow.k) * .35; if (slow.left <= 0) slow.to = 1; } else if (slow.k < 1) slow.k = Math.min(1, slow.k + .1); }
-function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), clamp(y, hh - 30, H - hh + 30)]; }
-function camTo(zoom, x, y, dur = .3, rot = 0) { const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
-function camFollow(x, y, zoom, rate = .12, rot = 0) { tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
+const CAM_MAX = 1.3;   // 11/6 다래: 필살기 확대 때 얼굴만 커지고 팔다리가 잘리지 않게 (전엔 2배까지)
+function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), Math.min(clamp(y, hh - 30, H - hh + 30), GROUND + 40 - hh)]; }   // 11/6 발까지 화면 안
+function camFit() { let t = 600; if (G && G.f) for (const f of G.f) { const sp = SPR[f.key + '/' + f.pose]; if (sp) t = Math.max(t, sp.ay); } return Math.max(1, Math.min(CAM_MAX, H / (t + 140))); }   // 11/6 큰 그림(헐크 할머니)도 머리부터 발까지
+function camTo(zoom, x, y, dur = .3, rot = 0) { zoom = Math.min(zoom, camFit()); const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
+function camFollow(x, y, zoom, rate = .12, rot = 0) { zoom = Math.min(zoom, camFit()); tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
 function cineMood(desat, bars, dur = .25) { tw(cine, { desat, bars }, dur, 'out', true); }
 function cineEnd() { slowSnap(); cineMood(0, 0, .3); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .3, 'out', true); }
 function stamp(str, o = {}) {   // 도장 글자: 크게 떨어져 쾅! + 둥근 잉크 방울
@@ -687,7 +689,7 @@ function updateFighter(f) {
       break;
     }
     case 'jumpsquat':
-      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; f.air = true; f.y -= 1; f.airAtk = -1; f.airHit = false;
+      if (f.st >= 3) { f.vy = -spd.jumpV; f.vx = f.jumpDir * spd.jumpX * f.dir; { const o = G && G.f ? opp(f) : null; if (o && f.jumpDir > 0 && !o.air) { const dx = Math.abs(o.x - f.x), need = dx + f.C.body.hw + o.C.body.hw + 30, air = 2 * spd.jumpV / spd.gravity; if (dx < 460 && o.x - o.C.body.hw - 40 > WALL_L && o.x + o.C.body.hw + 40 < WALL_R) { const gC = spd.gravity * 1.5, hTop = Math.min(o.C.body.h * 1.0, GROUND - f.C.body.h - 30), vy0 = Math.max(spd.jumpV, Math.sqrt(2 * gC * hTop)), air2 = 2 * vy0 / gC; f.vy = -vy0; f.vx = f.dir * Math.min(15, Math.max(spd.jumpX, need / air2)); f.crossJump = true; } } } f.air = true; f.y -= 1;   /* 11/6 다래: 가까이서 앞으로 뛰면 상대를 넘어갈 만큼 멀리 (벽에 붙은 상대는 그대로 못 넘음) */ f.airAtk = -1; f.airHit = false;
         setState(f, 'jump', P(f).jump); f.sy = 1.12; f.sx = .9; tw(f, { sy: 1, sx: 1 }, .3); A.sfx('jump'); dust(f.x, f.dir, 5); }
       break;
     case 'jump':
@@ -756,8 +758,8 @@ function updateFighter(f) {
   }
   // 물리
   if (f.air || f.y < GROUND) {
-    f.vy += spd.gravity; f.y += f.vy; f.x += f.vx;
-    if (f.y >= GROUND) { f.y = GROUND; f.vy = 0; f.air = false; landed(f); }
+    f.vy += f.crossJump ? spd.gravity * 1.5 : spd.gravity; f.y += f.vy; f.x += f.vx;   // 11/6 넘는 점프는 높이 뛰되 빨리 떨어지게(둥실거리지 않게)
+    if (f.y >= GROUND) { f.y = GROUND; f.vy = 0; f.air = false; f.crossJump = false; landed(f); }
   } else {
     f.x += f.vx;
     if (f.state === 'hitstun' || f.state === 'blockstun' || f.state === 'down' || f.state === 'dead' || f.state === 'getup') { f.vx *= .82; if (Math.abs(f.vx) > 4 && T % .1 < DT) dust(f.x, -Math.sign(f.vx) || 1, 1); }
@@ -798,6 +800,7 @@ function canBlock(d, level, from) {
   if (!['idle', 'walk', 'crouch', 'guardwait', 'blockstun'].includes(d.state)) return false;
   const awayHeld = from.x > d.x ? d.in.l : d.in.r; if (!awayHeld) return false;
   const low = d.in.d;
+  if (from.state === 'special' || from.sp) return true;   // 11/4: 필살기는 서서·앉아 상관없이 뒤만 누르면 막힘
   if (level === 'low' && !low) return false;
   if (level === 'high' && low) return false;
   return true;
@@ -982,12 +985,12 @@ function pushApart(a, b) {
 // =====================================================================
 //  CPU (난이도 1 쉬움 · 2 보통 · 3 어려움)
 // =====================================================================
-const AI_CMD = { 1: 0, 2: .2, 3: .32 };   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
+const AI_CMD = { 1: 0, 2: .1, 3: .28 };   // 11/6 다래: 2단계 기술 덜 쓰게(.2→.1), 3단계 조금(.32→.28)   // CPU가 기술(커맨드)을 쓰는 확률 — 1판(쉬움)은 안 씀
 // 11/1 punish = 상대가 헛친(막힌) 뒤 빈틈에 반격할 확률 · adapt = 같은 기술을 반복하면 더 잘 막는 최대치
 const AIP = {
   1: { punish: .15, adapt: .15, react: 22, block: .25, lowRead: .35, antiAir: .15, sup: .4, jumpIn: .04, aggr: .5, chain: .35, dmgOut: .85, dmgIn: 1.05, walkIn: .9 },
-  2: { punish: .4, adapt: .3, react: 14, block: .45, lowRead: .6, antiAir: .4, sup: .7, jumpIn: .07, aggr: .65, chain: .7, dmgOut: 1, dmgIn: 1, walkIn: 1 },
-  3: { punish: .7, adapt: .4, react: 8, block: .60, lowRead: .85, antiAir: .7, sup: 1, jumpIn: .1, aggr: .8, chain: 1, dmgOut: 1.05, dmgIn: .97, walkIn: 1.1 },   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
+  2: { punish: .22, adapt: .2, react: 19, block: .32, lowRead: .45, antiAir: .22, sup: .5, jumpIn: .05, aggr: .55, chain: .5, dmgOut: .9, dmgIn: 1.04, walkIn: .95 },   // 11/6 다래: 2단계 더 쉽게
+  3: { punish: .5, adapt: .32, react: 11, block: .48, lowRead: .7, antiAir: .5, sup: .85, jumpIn: .08, aggr: .72, chain: .8, dmgOut: 1, dmgIn: 1, walkIn: 1.05 },   // 11/6 다래: 3단계 조금 약하게   // 11/1 숫자 보정 줄임(1.15/.9) → 지면 '산신령이 잘해서' 지게
 };
 function makeAI(level) { const o = { level, P: AIP[level], cd: 20, hold: {}, out: { pressed: {} }, chainTry: false }; for (const b of ['l', 'r', 'u', 'd', 'p', 'k', 's', 'start']) { o.out[b] = false; o.out.pressed[b] = false; } return o; }
 function aiStep(f) {
@@ -1033,7 +1036,7 @@ function aiStep(f) {
   if (o.state === 'jump' && dist < 430 && Math.random() < P_.antiAir) {
     const aa = cmdP && cmds.find(c => f.C.moves[c.move].antiAir); if (aa && Math.random() < .5) return doCmd(aa);
     out.d = true; press('p'); ai.cd = P_.react; return out; }
-  if (cmdP && dist > kreach && dist < 1300 && Math.random() < cmdP * .12 && !G.proj.some(p => p.owner === f)) {   // 멀리서: 발사체 · 충격파
+  if (cmdP && T - (G.fightAt || 0) > 2 && dist > kreach && dist < 1300 && Math.random() < cmdP * .12 && !G.proj.some(p => p.owner === f)) {   // 11/6: FIGHT 직후 2초는 멀리서 기술(땅 울리기 등) 안 씀   // 멀리서: 발사체 · 충격파
     const far = cmds.filter(c => { const m = f.C.moves[c.move]; return m.proj || m.wave; }); if (far.length) return doCmd(pick(far)); }
   if (f.meter >= 100 && Math.random() < P_.sup * .25 && dist < 1100) { press('s'); ai.cd = P_.react; return out; }
   if (dist > kreach) {
@@ -1078,7 +1081,7 @@ function startMatch(opt) { // opt: { mode: 'arcade'|'versus'|'demo', stage, p1, 
   const tr = Math.max(t, 1.0); G.roundAt = tr;
   ev.push({ t: tr, fn: () => { for (const f of G.f) { setState(f, 'idle', P(f).idle); } text(G.mode === 'versus' ? st.place : st.round, { size: 170, life: 1.3, col: '#ffffff', stroke: G.stage === 2 ? '#5a1a1a' : '#15306b' }); tw(hud, { show: 1 }, .5); A.voice(G.mode === 'versus' ? 'a_round1' : st.announce); } });
   ev.push({ t: tr + 1.15, fn: () => { fx.push({ type: 'fightcut', t0: T, life: 1.2 }); A.sfx('cutin'); cam.shake = 12; A.voice('a_fight'); } });
-  ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
+  ev.push({ t: tr + 2.1, fn: () => { G.phase = 'fight'; G.fightAt = T; A.bgm('fight'); } });   // 11/1 박람회 피드백: FIGHT! 판(1.2초)이 화면을 다 가린 동안 CPU가 먼저 움직였음 → 판이 걷힐 때 시작   // 배경음악 고르기에서 고른 곡이 그대로 (곡 바꾸지 않음)
   A.bgm(null); A.bgmStop();
 }
 function updateMatch() {
@@ -1096,7 +1099,7 @@ function updateMatch() {
   }
   if (G.freeze > 0) {
     G.freeze--; const f = G.freezeBy; f.st++; if (f.sp) { f.sp.t++; specialPre(f); }
-    { const d = opp(f); if (!d.ai && ['idle', 'walk', 'crouch', 'guardwait'].includes(d.state)) { const away = d.x < f.x ? d.in.l : d.in.r; d.holdBack = away; if (away) { if (d.state !== 'guardwait') setState(d, 'guardwait'); d.vx = 0; d.pose = d.in.d ? P(d).crouchGuard : P(d).guard; } } }   // 11/1 박람회 피드백: 필살기 연출 동안 뒤를 누르면 바로 막는 자세 → 미리 막을 수 있음
+    { const d = opp(f); if (!d.ai && !d.air && d.y >= GROUND && ['idle', 'walk', 'crouch', 'guardwait', 'attack', 'land', 'jumpsquat'].includes(d.state)) { const away = d.x < f.x ? d.in.l : d.in.r; d.holdBack = away; if (away) { if (d.state !== 'guardwait') setState(d, 'guardwait'); d.vx = 0; d.pose = d.in.d ? P(d).crouchGuard : P(d).guard; } } }   // 11/1 박람회 피드백: 필살기 연출 동안 뒤를 누르면 바로 막는 자세 → 미리 막을 수 있음 · 11/4: 치고받던 중(attack)이어도 막는 자세로
     if (G.freeze === 0) { f.st = 0; }
   } else {
     // 슬로모션이면 k 만큼만 진행 (k = .2 → 5화면에 한 번). 날아가는 것(발사체)은 매 화면 k 만큼 부드럽게

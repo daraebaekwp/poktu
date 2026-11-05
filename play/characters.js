@@ -49,7 +49,7 @@ window.CHARACTERS = {
     facing: 1, size: .86,                             // 10/2: 아홉 살이라 어른(예술가 등)보다 작게
     headH: 440,                                       // 바닥에서 머리 꼭대기까지(말풍선·어지러움 별 위치)
     body: { hw: 66, h: 440, crouchH: 290 },           // 몸 판정(맞는 상자): 반폭, 서 있을 때 높이, 앉았을 때 높이
-    speed: { walk: 9.2, back: 7.2, jumpV: 25, jumpX: 8.5, gravity: 1.25 },   // 11/1 박람회 피드백: 리치가 짧으니 더 빠르게 (7.5→9.2)
+    speed: { walk: 10.4, back: 8, jumpV: 25, jumpX: 9.2, gravity: 1.25 },   // 11/1 박람회 피드백: 리치가 짧으니 더 빠르게 (7.5→9.2) · 11/6 다래: 더 빠르게 (9.2→10.4)
     meterGain: 1,
     poses: {
       idle: 'g_guard', walk: 'g_walk', jump: 'g_jump', crouch: 'g_duck', guard: 'g_block', crouchGuard: 'g_duck',
@@ -81,7 +81,7 @@ window.CHARACTERS = {
       rapid:    { anim: [['g_rapid', 0], ['g_punch2', 5], ['g_rapid', 10], ['g_punch2', 15], ['g_rapid', 20]], startup: 3, active: 22, recovery: 10, dmg: 2, hitstun: 12, blockstun: 8, push: 3, hitbox: { x: 40, w: 170, y: 300, h: 140 }, level: 'mid', multi: 6 },
       crouchPunch: { pose: 'g_upper', startup: 4, active: 6, recovery: 16, dmg: 9, hitstun: 22, blockstun: 12, push: 8, hitbox: { x: 0, w: 150, y: 250, h: 380 }, level: 'mid', kd: true, voice: 'g_hat', antiAir: true },   // 10/2 리치 짧은 대신 아래 공격 강화
       crouchKick:  { anim: [['g_duck', 0], ['g_sweep', 5]], startup: 5, active: 6, recovery: 18, dmg: 9, hitstun: 20, blockstun: 12, push: 9, hitbox: { x: 30, w: 260, y: 0, h: 110 }, level: 'low', kd: true, voice: 'g_yap', hy: 60 },   // 10/2 리치 짧은 대신 아래 공격 강화
-      jumpAttack:  { pose: 'g_knee', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 175, y: 120, h: 220 }, level: 'high', voice: 'g_yap' },
+      jumpAttack:  { pose: 'g_round', startup: 4, active: 14, recovery: 4, dmg: 8, hitstun: 18, blockstun: 10, push: 8, hitbox: { x: 20, w: 175, y: 120, h: 220 }, level: 'high', voice: 'g_yap' },
     },
     commands: [
       { name: '고래빵 던지기', move: 'cmdToss', btn: 'p', motion: '236', easy: 'f', desc: '작은 고래빵이 날아가요' },
@@ -181,7 +181,7 @@ window.CHARACTERS = {
       intro: 'a_bow', taunt: 'a_taunt', land: 'a_crouch',
     },
     META: {
-      a_idle: { h: 520, flip: true }, a_walk: { h: 525 }, a_jump: { h: 470 }, a_crouch: { h: 430, flip: true }, a_guard: { h: 470, flip: true }, a_hit: { h: 520 },
+      a_idle: { h: 520, flip: true }, a_walk: { h: 525 }, a_jump: { h: 470 }, a_crouch: { h: 430, flip: true }, a_guard: { h: 540, flip: true }, a_hit: { h: 520 },
       a_down: { h: 115 }, a_win: { h: 620 }, a_sp_dizzy: { h: 380 }, a_bow: { h: 470 }, a_taunt: { h: 540, flip: true },
       a_punch: { h: 500 }, a_punch2: { h: 480 }, a_kick: { h: 560 }, a_upper: { h: 600 }, a_jumpatk: { h: 440 },
       a_sp_windup: { h: 600 }, a_sp_shout: { h: 530 }, a_sp_swing: { h: 520, flip: true },
@@ -298,7 +298,7 @@ window.CHARACTERS = {
     META: {
       w_idle: { h: 545 }, w_walk: { h: 550 }, w_jump: { h: 470 }, w_crouch: { h: 400 }, w_guard: { h: 520 }, w_hit: { h: 560 },
       w_down: { h: 265 }, w_win: { h: 620 }, w_lose: { h: 360 }, w_bow: { h: 470 }, w_taunt: { h: 560 },
-      w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 480 }, w_sweep: { h: 330 },
+      w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 405 }, w_sweep: { h: 330 },
       w_headbutt: { h: 470 }, w_towel: { h: 540 }, w_wrench: { h: 600 }, w_phone: { h: 545 }, w_power: { h: 560 }, w_joy: { h: 620 }, w_throw: { h: 520 },
     },
     moves: {
@@ -349,7 +349,7 @@ window.CHARACTERS = {
     portrait: { sx: 190, sy: 153, size: 560 },
     facing: 1, size: 1, headH: 480, def: .88,
     body: { hw: 74, h: 480, crouchH: 340 },
-    speed: { walk: 6.2, back: 5, jumpV: 23, jumpX: 6.5, gravity: 1.25 },
+    speed: { walk: 7.6, back: 6, jumpV: 23, jumpX: 7.3, gravity: 1.25 },   // 11/6 다래: 할머니 더 빠르게 (걷기 6.2→7.6)
     meterGain: 1,
     poses: {
       idle: 'k_idle', walk: 'k_walk', jump: 'k_jump', crouch: 'k_crouch', guard: 'k_block', crouchGuard: 'k_crouch',
@@ -360,7 +360,7 @@ window.CHARACTERS = {
       k_idle: { h: 455 }, k_walk: { h: 460 }, k_jump: { h: 400 }, k_crouch: { h: 370 }, k_block: { h: 455 }, k_hit: { h: 470 },
       k_down: { h: 255 }, k_win: { h: 476 }, k_lose: { h: 351 }, k_bow: { h: 430 }, k_taunt: { h: 460 },
       k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 590 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },
-      k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 500 }, k_hulk: { h: 560 }, k_hulkup: { h: 620 }, k_hulkbonk: { h: 540 }, k_scold: { h: 540 },
+      k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 640 }, k_hulk: { h: 860 }, k_hulkup: { h: 950 }, k_hulkbonk: { h: 840 }, k_scold: { h: 840 },
     },
     moves: {
       punch:  { pose: 'k_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 180, y: 300, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -474,8 +474,8 @@ window.CHARACTERS = {
       hit: 'h_hit', crouchHit: 'h_crouch', down: 'h_down', ko: 'h_hit', win: 'h_win', lose: 'h_lose',
       intro: 'h_bow', taunt: 'h_taunt', land: 'h_crouch',
     },
-    META: {
-      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 520 }, h_hit: { h: 535, flip: true },
+    META: {   // 11/6 다래: 키 들쑥날쑥 → h_block·h_hit 키를 서 있는 자세와 맞춤
+      h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 515 }, h_hit: { h: 520, flip: true },
       h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
       h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
