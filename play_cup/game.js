@@ -59,7 +59,7 @@ function resetFx() {
   fx = []; tweens = []; queue = [];
   cam = { zoom: 1, x: W / 2, y: H / 2, shake: 0, rot: 0 };
   slow = { k: 1, to: 1, left: 0 };                 // 슬로모션: k = 게임 속도(1 = 보통, .15 = 아주 느리게)
-  cine = { desat: 0, bars: 0 };                    // 연출: 배경 흑백 정도 · 위아래 검은 띠
+  cine = { desat: 0, bars: 0, barsTo: 0 };         // 연출: 배경 흑백 정도 · 위아래 검은 띠 (barsTo = 띠가 가려는 값, 11/6 Fable: 카메라가 띠만큼 더 내려가 발이 띠에 안 가리게)
   overlay = { dark: 0, white: 0, speed: 0, speedX: 0, speedCol: '#ffe9a0' };
   ex = { burst: 0, burstCol: ['#ffb000', '#ff4d00'], sun: 0, siren: 0 };
   hud = { show: 0 };
@@ -242,7 +242,8 @@ function superHit(x, y, col) {
 }
 function knockout(target) { // 멈칫 → 보색 번짐 → 확대 튕김 → K.O. 쾅
   ex.burstCol = ['#ffe600', '#7b2cff']; ex.burst = 1; G.hitstop = 27;
-  cam.zoom = 1.25; cam.x = clamp(target.x, 770, W - 770); cam.y = GROUND + 40 - H / 2 / 1.25;   // 11/6 KO 확대도 발까지 보이게 tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;
+  { const z = Math.min(1.25, camFit()); cam.zoom = z; cam.x = clamp(target.x, W / 2 / z, W - W / 2 / z); cam.y = GROUND + 40 - H / 2 / z; }   // 11/6 KO 확대도 발까지 보이게 · 11/6 Fable: 헐크 할머니가 이겼을 때 머리 안 잘리게 camFit 한도
+  tw(cam, { zoom: 1, x: W / 2, y: H / 2 }, .55, 'out'); cam.shake = 40;   // 11/6 Fable: 이 줄이 주석 속에 들어가 있어서 KO 뒤 5초 내내 확대된 채 진 쪽만 보였음(이긴 쪽 승리 자세가 화면 밖) → 되살림
   later(.05, () => { text('K.O.', { size: 470, life: 2.4, col: '#ff2030', stroke: '#ffe600', rot: -.05, font: NUM }); A.voice('a_ko'); cam.shake = 34; });
   later(1.9, () => tw(ex, { burst: 0 }, .6));
 }
@@ -303,11 +304,11 @@ function startSpecial(f) {
   // 11/6 다래: '← 눌러서 막기!' 안내 뺌
   f.invul = 999; G.freeze = cf + (sp.hold || 0); G.freezeBy = f;   // hold = 컷인이 끝난 뒤에도 멈춘 채로 보여 줄 준비 동작(경례·안경 벗기)
   tw(f, { glow: 1 }, .5); overlay.speedX = f.dir < 0 ? 1 : 0; overlay.speedCol = sp.col; tw(overlay, { dark: .62, speed: 1 }, .25);
-  tw(cam, { zoom: 1.22, x: clamp(f.x + f.dir * 120, 790, W - 790), y: GROUND + 40 - H / 2 / 1.22 }, .35, 'io');   // 11/6 발까지
+  const cn = CINE[sp.cine]; if (cn && cn.start) cn.start(f, f.sp);   // 11/6 Fable: 띠(barsTo)를 먼저 정해야 아래 카메라가 띠만큼 내려감 → 순서를 앞으로
+  { const z = Math.min(1.22, camFit()); tw(cam, { zoom: z, x: clamp(f.x + f.dir * 120, W / 2 / z, W - W / 2 / z), y: camFloor(z) - H / 2 / z }, .35, 'io'); }   // 11/6 발까지 · 11/6 Fable: 변신 뒤 커지는 할머니는 머리가 잘려서 필살기 자세 중 제일 큰 키로 확대 한도를 정함, 검은 띠 위로 발이 보이게
   ex.burstCol = sp.burstCol || [sp.col, sp.col2]; tw(ex, { burst: .75 }, .25);
   cutin(IMG[sp.cutin] ? sp.cutin : f.C.face, f.x <= o.x ? 'L' : 'R', /[!?]$/.test(sp.name) ? sp.name : sp.name + '!', sp.col, sp.col2, cf / 60, '필살기', IMG[sp.cutin] && sp.cutinY ? sp.cutinY : .42);   // 10/25 얼굴이 위에 있는 그림은 cutinY로 올림
   overlay.white = .7; tw(overlay, { white: 0 }, .3, 'lin', true); rlater(.12, () => { overlay.white = .45; tw(overlay, { white: 0 }, .2, 'lin', true); });   // 10/2 필살기 시작 번쩍번쩍
-  const cn = CINE[sp.cine]; if (cn && cn.start) cn.start(f, f.sp);
   if (sp.notify) { const n = sp.notify; fx.push({ type: 'notify', title: n.title || '알림', body: n.text, col: sp.col, t0: T + (n.at ?? .75), life: n.life || 1.9 }); later(n.at ?? .75, () => A.voice(n.voice)); }   // 직장인: 월급 입금 알림
   if (sp.voiceAt == null) A.voice(sp.voice); A.sfx('charge'); A.duck(.1);
   f.sy = .88; tw(f, { sy: 1 }, .4, 'back');
@@ -454,11 +455,20 @@ function slowMo(k, sec) { slow.to = k; slow.k = Math.min(slow.k, k + .25); slow.
 function slowSnap() { slow.left = 0; slow.to = 1; slow.k = 1; }
 function stepSlow() { if (slow.left > 0) { slow.left -= DT; slow.k += (slow.to - slow.k) * .35; if (slow.left <= 0) slow.to = 1; } else if (slow.k < 1) slow.k = Math.min(1, slow.k + .1); }
 const CAM_MAX = 1.3;   // 11/6 다래: 필살기 확대 때 얼굴만 커지고 팔다리가 잘리지 않게 (전엔 2배까지)
-function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z; return [clamp(x, hw - 30, W - hw + 30), Math.min(clamp(y, hh - 30, H - hh + 30), GROUND + 40 - hh)]; }   // 11/6 발까지 화면 안
-function camFit() { let t = 600; if (G && G.f) for (const f of G.f) { const sp = SPR[f.key + '/' + f.pose]; if (sp) t = Math.max(t, sp.ay); } return Math.max(1, Math.min(CAM_MAX, H / (t + 140))); }   // 11/6 큰 그림(헐크 할머니)도 머리부터 발까지
+const BAR_H = 118;   // 영화 띠 높이(화면 px)
+function camFloor(z) { return GROUND + 40 + BAR_H * (cine.barsTo || 0) / z; }   // 11/6 Fable: 화면 맨 아래에 와야 하는 세계 y = 발 아래 40px + 검은 띠 높이만큼 (띠 위로 발이 보이게)
+function camClamp(z, x, y) { const hw = W / 2 / z, hh = H / 2 / z, fl = camFloor(z); return [clamp(x, hw - 30, W - hw + 30), Math.min(clamp(y, hh - 30, fl - hh), fl - hh)]; }   // 11/6 발까지 화면 안 · 11/6 Fable: 띠 고려
+const sprTall = sp => sp ? (sp.head ? -sp.head.y : sp.ay) : 0;   // 11/6 Fable: 발바닥에서 진짜 머리 꼭대기까지(그림 위 투명 여백은 빼고) → 산신령 싸움도 알맞게 확대됨
+function specialTall(f) {   // 11/6 Fable: 필살기 동안 거칠 모든 자세 중 가장 큰 키 (헐크 할머니는 변신 뒤 커지므로 미리 셈)
+  const d = f.sp && f.sp.def; if (!d) return 0; let t = 0;
+  for (const p of [d.windupPose, d.pose, ...(d.pre || []).map(a => a[0]), ...(d.anim || []).map(a => a[0]), d.vfx && d.vfx.aimPose]) if (p) t = Math.max(t, sprTall(SPR[f.key + '/' + p]));
+  return t;
+}
+function camFit() { let t = 600; if (G && G.f) for (const f of G.f) { t = Math.max(t, sprTall(SPR[f.key + '/' + f.pose]), specialTall(f)); } return Math.max(1, Math.min(CAM_MAX, (H - 2 * BAR_H * (cine.barsTo || 0)) / (t + 90))); }   // 11/6 큰 그림(헐크 할머니)도 머리부터 발까지 · 11/6 Fable: 위아래 검은 띠 사이에 머리~발이 다 들어가는 배율(발 아래 40 + 머리 위 50)
+function camEnforce() { const z = Math.min(cam.zoom, camFit()); if (z < cam.zoom) cam.zoom = z; const [cx, cy] = camClamp(cam.zoom, cam.x, cam.y); cam.x = cx; cam.y = cy; }   // 11/6 Fable: 매 프레임 한 번 더 확인 (트윈 중간값·자세가 바뀐 뒤에도 머리·발이 안 잘리게)
 function camTo(zoom, x, y, dur = .3, rot = 0) { zoom = Math.min(zoom, camFit()); const [cx, cy] = camClamp(zoom, x, y); tw(cam, { zoom, x: cx, y: cy, rot }, dur, 'io', true); }
 function camFollow(x, y, zoom, rate = .12, rot = 0) { zoom = Math.min(zoom, camFit()); tweens = tweens.filter(t => t.o !== cam); cam.zoom += (zoom - cam.zoom) * rate; const [cx, cy] = camClamp(cam.zoom, x, y); cam.x += (cx - cam.x) * rate; cam.y += (cy - cam.y) * rate; cam.rot += (rot - cam.rot) * rate; }
-function cineMood(desat, bars, dur = .25) { tw(cine, { desat, bars }, dur, 'out', true); }
+function cineMood(desat, bars, dur = .25) { cine.barsTo = bars; tw(cine, { desat, bars }, dur, 'out', true); }   // 11/6 Fable: barsTo 기록
 function cineEnd() { slowSnap(); cineMood(0, 0, .3); tw(cam, { zoom: 1, x: W / 2, y: H / 2, rot: 0 }, .3, 'out', true); }
 function stamp(str, o = {}) {   // 도장 글자: 크게 떨어져 쾅! + 둥근 잉크 방울
   const dots = []; for (let i = 0; i < 14; i++) { const a = rnd() * Math.PI * 2, r2 = .58 + rnd() * .2; dots.push({ x: Math.cos(a) * r2, y: Math.sin(a) * r2, r: 6 + rnd() * 18 }); }
@@ -520,7 +530,7 @@ const CINE = {
   gun: {
     start() { cineMood(.2, .5, .3); },
     pre(f, sp, t) { const end = cutF(sp) + (sp.def.hold || 0); if (t === end - 12) camTo(1.3, f.x + f.dir * 300, GROUND - 450, .25); },
-    fire0() { tw(cam, { zoom: 1.12, x: cam.x, y: cam.y }, .2, 'out', true); },
+    fire0() { tw(cam, { zoom: Math.min(1.12, camFit()), x: cam.x, y: cam.y }, .2, 'out', true); },   // 11/6 Fable: 확대 한도 지키기
     bulletTime(f, v, sp, mx) {   // 이 총알부터 슬로모션: 마지막 총알이 약 1.2초 걸려 닿게 속도를 맞춤
       const o = opp(f), n = v.shots || 3, rest = (n - 1 - v.slowFrom) * (v.gapSlow || 3), dist = Math.max(120, Math.abs(o.x - mx) - o.C.body.hw);
       const k = clamp((rest + dist / (v.speed || 38)) / 74, .12, .45);
@@ -705,6 +715,7 @@ function updateFighter(f) {
         setState(f, 'jump', P(f).jump); f.sy = 1.12; f.sx = .9; tw(f, { sy: 1, sx: 1 }, .3); A.sfx('jump'); dust(f.x, f.dir, 5); }
       break;
     case 'jump':
+      if (f.airAtk < 0) faceOpp(f);   // 11/6 Fable: 상대를 뛰어넘는 순간 공중에서 상대 쪽으로 돌아섬 (전엔 착지까지 등을 보이고, 넘어간 뒤 점프 킥이 반대쪽으로 나갔음)
       if (f.airAtk < 0 && (inp.pressed.p || inp.pressed.k) && canAct) { f.airAtk = 0; f.move = C.moves.jumpAttack; f.moveHit = false; f.pose = f.move.pose; A.sfx('whoosh'); if (f.move.voice && Math.random() < .5) A.voice(f.move.voice, .8); }
       if (f.airAtk >= 0) f.airAtk++;
       break;
@@ -935,7 +946,7 @@ function sirenHit(f, sp) {
 }
 function doKO(d, a, dirPush) {
   if (G.phase !== 'fight') return;
-  G.phase = 'ko'; G.pt = 0; G.winner = a; G.loser = d; slow.k = slow.to = 1; slow.left = 0; tw(cine, { desat: 0, bars: 0 }, .4, 'out', true);
+  G.phase = 'ko'; G.pt = 0; G.winner = a; G.loser = d; slow.k = slow.to = 1; slow.left = 0; cine.barsTo = 0; tw(cine, { desat: 0, bars: 0 }, .4, 'out', true);
   setState(d, 'ko', P(d).ko); d.air = true; d.vy = -17; d.vx = dirPush * 11; d.y = Math.min(d.y, GROUND - 1);
   A.voice(d.C.voices.ko || pick(d.C.voices.hurt || []));
   A.sfx('ko'); A.bgmStop(); knockout(d);
@@ -1117,6 +1128,7 @@ function updateMatch() {
   } else {
     // 슬로모션이면 k 만큼만 진행 (k = .2 → 5화면에 한 번). 날아가는 것(발사체)은 매 화면 k 만큼 부드럽게
     G.slowAcc = (G.slowAcc || 0) + slow.k; let n = 0;
+    if (G.slowAcc < .999) for (const f of G.f) for (const b of ['p', 'k', 's']) if (f.in.pressed[b]) f.late = b;   // 11/6 Fable: 슬로모션(총알 시간) 동안 게임이 몇 화면에 한 번만 돌아서 그 사이에 누른 버튼(필살기 등)이 사라졌음 → 기억해 뒀다가 다음 진행 때 씀
     while (G.slowAcc >= .999 && n < 2 && G.hitstop <= 0 && G.freeze <= 0) { G.slowAcc -= 1; n++;
       for (const f of G.f) if (f.ai) aiStep(f);
       updateFighter(a); updateFighter(b);
@@ -1133,6 +1145,7 @@ function updateMatch() {
     if (G.freeze <= 0 && (G.phase === 'fight' || G.phase === 'ko')) projUpdate(slow.k);
   }
   for (const f of G.f) if (f.sp && f.sp.fired) { const cn = CINE[f.sp.def.cine]; if (cn && cn.frame) cn.frame(f, f.sp); }   // 필살기 연출: 매 화면 (카메라 따라가기 등)
+  camEnforce();   // 11/6 Fable
   if (G.phase === 'ko') {
     G.pt++;
     if (G.pt === 100) { const w = G.winner; if (w && w.state !== 'dead') { setState(w, 'win', P(w).win); A.voice(w.C.voices.win); w.sy = .9; tw(w, { sy: 1 }, .4, 'back'); } resultText(); }
@@ -2589,6 +2602,7 @@ window.GAME = {
   draw() { const S = SCENES[scene.name]; ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.filter = 'none'; ctx.globalCompositeOperation = 'source-over'; if (S && S.draw) S.draw(scene); if (NOW_PLAYING_ON[scene.name]) nowPlaying(performance.now() / 1000); songToast(); },
   get STORY() { return { on: STORY, seen: Object.assign({}, STORY_SEEN) }; },
   get RUN() { return RUN; }, get fx() { return fx; }, get tweens() { return tweens; }, get queue() { return queue; }, get T() { return T; }, get simFrames() { return simFrames; }, ranking: rankLoad, rankClear,
+  get cam() { return cam; }, get cine() { return cine; }, get slow() { return slow; }, get overlay() { return overlay; },   // 11/6 Fable: 점검용(카메라 확대 때 잘림 재기)
   fakeRun(sec = 95.5, p1 = 'chodding', cont = 0) { RUN = { time: sec, cont }; go('ending', { p1 }); },   // 시험용: 가짜 클리어 기록으로 엔딩부터
   quick(p1 = 'chodding', p2 = BOSS, stage = 0, mode = 'versus', ai = [null, null]) { go('fight', { match: { mode, stage, p1, p2, ai } }); },
 };

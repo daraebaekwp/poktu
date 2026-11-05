@@ -123,10 +123,10 @@ window.CHARACTERS = {
     META: {
       s_guard2: { k: 1.344, ax: 244, ay: 1158 }, s_walk: { k: 1, ax: 303, ay: 1305 }, s_run: { k: 1.13, ax: 303, ay: 1227 },
       s_bow: { k: 1, ax: 372, ay: 1330 }, s_block: { k: 1.254, ax: 241, ay: 1161 }, s_reel: { k: 1.02, ax: 303, ay: 1325 },
-      s_sit: { k: 1.1, ax: 420, ay: 1385 }, s_hit: { k: 1.2, ax: 393, ay: 1153 }, s_comb: { k: 1.04, ax: 295, ay: 1313 },
+      s_sit: { k: 1.1, ax: 420, ay: 1385 }, s_hit: { k: 1.2, ax: 393, ay: 1153 }, s_comb: { k: .93, ax: 295, ay: 1313 },   // 11/6 Fable: 이김 자세 얼굴이 기본보다 컸음 (1.04→.93)
       s_relax: { k: 1.13, ax: 401, ay: 1335 }, s_flex: { k: 0.922, ax: 438, ay: 1335 }, s_beard: { k: .95, ax: 358, ay: 1352 },
       s_palm: { k: 1, ax: 465, ay: 1333 }, s_swing: { k: 1.38, ax: 556, ay: 1159 }, s_kick: { k: 1.02, ax: 425, ay: 1325 },
-      s_hip: { k: 1.058, ax: 231, ay: 1333 }, s_belly: { k: 1.15, ax: 305, ay: 1333 }, s_stomp: { k: 1.1, ax: 353, ay: 1333 },
+      s_hip: { k: 1, ax: 231, ay: 1333 }, s_belly: { k: 1.04, ax: 305, ay: 1333 }, s_stomp: { k: 1.1, ax: 353, ay: 1333 },   // 11/6 Fable: 엉덩이·배치기 얼굴이 기본보다 컸음 (1.058→1, 1.15→1.04)
       s_power: { k: 1, ax: 267, ay: 1305 }, s_drink: { k: 1, ax: 258, ay: 1305 }, s_smash: { k: 1, ax: 306, ay: 1333 },
     },
     moves: {   // 11/6 다래: s_kick 그림은 발이 뒤로 나가서 차다가 돌아선 것처럼 보임 → 앞으로 차는 s_stomp 로
@@ -182,10 +182,10 @@ window.CHARACTERS = {
     },
     META: {
       a_idle: { h: 520, flip: true }, a_walk: { h: 525 }, a_jump: { h: 470 }, a_crouch: { h: 430, flip: true }, a_guard: { h: 540, flip: true }, a_hit: { h: 520 },
-      a_down: { h: 115 }, a_win: { h: 620 }, a_sp_dizzy: { h: 380 }, a_bow: { h: 470 }, a_taunt: { h: 540, flip: true },
+      a_down: { h: 115 }, a_win: { h: 560 }, a_sp_dizzy: { h: 380 }, a_bow: { h: 470 }, a_taunt: { h: 540, flip: true },   // 11/6 Fable: 이김 자세 얼굴·몸이 기본보다 컸음 (620→560)
       a_punch: { h: 500 }, a_punch2: { h: 480 }, a_kick: { h: 560 }, a_upper: { h: 600 }, a_jumpatk: { h: 440 },
-      a_sp_windup: { h: 600 }, a_sp_shout: { h: 530 }, a_sp_swing: { h: 520, flip: true },
-      a_sp_deadline: { h: 540 }, a_sp_glasses: { h: 540, flip: true }, a_sp_throw: { h: 410 },   // 필살기 "작업 마감!" 안경 던지기 (9/29 재디자인 h 반영: darae_redesign_meta_0929.json)
+      a_sp_windup: { h: 600 }, a_sp_shout: { h: 495 }, a_sp_swing: { h: 520, flip: true },   // 11/6 Fable: 샤우트 얼굴이 조금 컸음 (530→495)
+      a_sp_deadline: { h: 540 }, a_sp_glasses: { h: 540, flip: true }, a_sp_throw: { h: 330 },   // 11/6 Fable: 던지기(앞으로 숙인 자세) 얼굴이 훨씬 컸음 (410→330)   // 필살기 "작업 마감!" 안경 던지기 (9/29 재디자인 h 반영: darae_redesign_meta_0929.json)
     },
     moves: {
       punch:  { pose: 'a_punch', startup: 5, active: 4, recovery: 10, dmg: 5, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 195, y: 300, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -239,8 +239,8 @@ window.CHARACTERS = {
     },
     META: {
       m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 490 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561, flip: true },
-      m_down: { h: 192 }, m_win: { h: 668 }, m_bow: { h: 443 }, m_taunt: { h: 575 },
-      m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 340 },
+      m_down: { h: 192 }, m_win: { h: 635 }, m_bow: { h: 443 }, m_taunt: { h: 575 },   // 11/6 Fable: 이김 자세 몸이 조금 컸음 (668→635)
+      m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 295 },   // 11/6 Fable: 다리 쓸기 얼굴이 컸음 (340→295)
       m_sp_windup: { h: 556 }, m_sp_charge: { h: 450 }, m_sp_slam: { h: 488 },
       m_sp_salute: { h: 575 }, m_sp_aim: { h: 534 }, m_sp_fire: { h: 532 }, m2_salute: { h: 585, flip: true }, m2_aim: { h: 540 }, m2_fire: { h: 540 },   // 10/2 새 경례·조준·사격 (진짜 게임 그림은 그대로 두려고 새 이름)   // 필살기 "충성!" 사격
     },
@@ -296,8 +296,8 @@ window.CHARACTERS = {
       intro: 'w_bow', taunt: 'w_taunt', land: 'w_crouch',
     },
     META: {
-      w_idle: { h: 545 }, w_walk: { h: 550 }, w_jump: { h: 470 }, w_crouch: { h: 400 }, w_guard: { h: 520 }, w_hit: { h: 560 },
-      w_down: { h: 265 }, w_win: { h: 620 }, w_lose: { h: 360 }, w_bow: { h: 470 }, w_taunt: { h: 560 },
+      w_idle: { h: 545 }, w_walk: { h: 550 }, w_jump: { h: 470 }, w_crouch: { h: 400 }, w_guard: { h: 520 }, w_hit: { h: 520 },   // 11/6 Fable: 맞는 자세 얼굴이 컸음 (560→520)
+      w_down: { h: 230 }, w_win: { h: 620 }, w_lose: { h: 325 }, w_bow: { h: 470 }, w_taunt: { h: 560 },   // 11/6 Fable: 쓰러짐·짐 자세 안전모(머리)가 컸음 (265→230, 360→325)
       w_punch: { h: 540 }, w_punch2: { h: 540 }, w_kick: { h: 540 }, w_upper: { h: 620 }, w_jumpatk: { h: 405 }, w_sweep: { h: 330 },
       w_headbutt: { h: 470 }, w_towel: { h: 540 }, w_wrench: { h: 600 }, w_phone: { h: 545 }, w_power: { h: 560 }, w_joy: { h: 620 }, w_throw: { h: 520 },
     },
@@ -358,8 +358,8 @@ window.CHARACTERS = {
     },
     META: {
       k_idle: { h: 455 }, k_walk: { h: 460 }, k_jump: { h: 400 }, k_crouch: { h: 370 }, k_block: { h: 455 }, k_hit: { h: 470 },
-      k_down: { h: 255 }, k_win: { h: 476 }, k_lose: { h: 351 }, k_bow: { h: 430 }, k_taunt: { h: 460 },
-      k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 590 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },
+      k_down: { h: 225 }, k_win: { h: 476 }, k_lose: { h: 305 }, k_bow: { h: 430 }, k_taunt: { h: 460 },   // 11/6 Fable: 쓰러짐·짐 자세 얼굴이 컸음 (255→225, 351→305)
+      k_punch: { h: 455 }, k_poke: { h: 445 }, k_kick: { h: 470 }, k_upper: { h: 565 }, k_jumpatk: { h: 418 }, k_sweep: { h: 300 }, k_ram: { h: 270 },   // 11/6 Fable: 올려치기 몸이 조금 컸음 (590→565)
       k_drink: { h: 480 }, k_power: { h: 460 }, k_transform: { h: 640 }, k_hulk: { h: 860 }, k_hulkup: { h: 950 }, k_hulkbonk: { h: 840 }, k_scold: { h: 840 },
     },
     moves: {
@@ -419,9 +419,9 @@ window.CHARACTERS = {
     },
     META: {
       t_idle: { h: 510 }, t_walk: { h: 515 }, t_jump: { h: 420 }, t_crouch: { h: 429 }, t_block: { h: 510 }, t_hit: { h: 520, flip: true },
-      t_down: { h: 150 }, t_win: { h: 560 }, t_lose: { h: 290 }, t_bow: { h: 470 }, t_taunt: { h: 515 },
+      t_down: { h: 150 }, t_win: { h: 560 }, t_lose: { h: 260 }, t_bow: { h: 470 }, t_taunt: { h: 515 },   // 11/6 Fable: 짐 자세 얼굴이 컸음 (290→260)
       t_punch: { h: 510 }, t_scan: { h: 500, flip: true }, t_kick: { h: 540 }, t_upper: { h: 590 }, t_jumpatk: { h: 470 }, t_sweep: { h: 330 },
-      t_aim: { h: 510 }, t_power: { h: 440 }, t_throw: { h: 470 }, t_stop: { h: 545, flip: true },
+      t_aim: { h: 510 }, t_power: { h: 400 }, t_throw: { h: 470 }, t_stop: { h: 545, flip: true },   // 11/6 Fable: 필살기 준비(웅크림) 얼굴이 컸음 (440→400)
     },
     moves: {
       punch:  { pose: 't_punch', startup: 4, active: 4, recovery: 9, dmg: 5, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -478,7 +478,7 @@ window.CHARACTERS = {
       h_idle: { h: 525 }, h_walk: { h: 530 }, h_jump: { h: 440, flip: true }, h_crouch: { h: 370 }, h_block: { h: 515 }, h_hit: { h: 520, flip: true },
       h_down: { h: 100 }, h_win: { h: 545 }, h_lose: { h: 285 }, h_bow: { h: 530 }, h_taunt: { h: 530 },
       h_punch: { h: 520 }, h_bag: { h: 520 }, h_kick: { h: 580 }, h_upper: { h: 610 }, h_jumpatk: { h: 526 }, h_sweep: { h: 391 },
-      h_power: { h: 520 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },
+      h_power: { h: 480 }, h_senti: { h: 530 }, h_throw: { h: 500 }, h_ignore: { h: 520 },   // 11/6 Fable: 필살기 준비(다리 벌림) 얼굴이 컸음 (520→480)
     },
     moves: {
       punch:  { pose: 'h_punch', startup: 5, active: 4, recovery: 10, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
@@ -528,9 +528,9 @@ window.CHARACTERS = {
     },
     META: {
       r_idle: { h: 520 }, r_walk: { h: 530 }, r_jump: { h: 440 }, r_crouch: { h: 460 }, r_block: { h: 520 }, r_hit: { h: 530 },
-      r_down: { h: 238 }, r_win: { h: 616 }, r_lose: { h: 300, flip: true }, r_bow: { h: 500 }, r_taunt: { h: 583 },
+      r_down: { h: 238 }, r_win: { h: 565 }, r_lose: { h: 300, flip: true }, r_bow: { h: 500 }, r_taunt: { h: 540 },   // 11/6 Fable: 이김·도발 자세 얼굴이 컸음 (616→565, 583→540)
       r_punch: { h: 520 }, r_throw: { h: 500 }, r_kick: { h: 580 }, r_upper: { h: 610 }, r_jumpatk: { h: 508 }, r_sweep: { h: 425 },
-      r_power: { h: 530 }, r_eureka: { h: 560 }, r_midnight: { h: 520 }, r_clip: { h: 510 },
+      r_power: { h: 530 }, r_eureka: { h: 530 }, r_midnight: { h: 520 }, r_clip: { h: 510 },   // 11/6 Fable: 발견! 얼굴이 조금 컸음 (560→530)
     },
     moves: {
       punch:  { pose: 'r_punch', startup: 5, active: 4, recovery: 9, dmg: 6, hitstun: 16, blockstun: 10, push: 7, hitbox: { x: 40, w: 205, y: 330, h: 130 }, level: 'mid', chain: 'punch2', links: { k: 'kick' } },
