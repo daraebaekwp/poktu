@@ -238,10 +238,10 @@ window.CHARACTERS = {
       intro: 'm_bow', taunt: 'm_taunt', land: 'm_crouch',
     },
     META: {
-      m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 465 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561, flip: true },
+      m_idle: { h: 537 }, m_walk: { h: 539 }, m_jump: { h: 490 }, m_crouch: { h: 412, flip: true }, m_guard: { h: 546 }, m_hit: { h: 561, flip: true },
       m_down: { h: 192 }, m_win: { h: 668 }, m_bow: { h: 443 }, m_taunt: { h: 575 },
       m_punch: { h: 534 }, m_punch2: { h: 528 }, m_kick: { h: 563 }, m_upper: { h: 623 }, m_sweep: { h: 340 },
-      m_sp_windup: { h: 556 }, m_sp_charge: { h: 407 }, m_sp_slam: { h: 488 },
+      m_sp_windup: { h: 556 }, m_sp_charge: { h: 450 }, m_sp_slam: { h: 488 },
       m_sp_salute: { h: 575 }, m_sp_aim: { h: 534 }, m_sp_fire: { h: 532 }, m2_salute: { h: 585, flip: true }, m2_aim: { h: 540 }, m2_fire: { h: 540 },   // 10/2 새 경례·조준·사격 (진짜 게임 그림은 그대로 두려고 새 이름)   // 필살기 "충성!" 사격
     },
     moves: {
