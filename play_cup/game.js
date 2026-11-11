@@ -1668,12 +1668,12 @@ SCENES.title = {
     const m = IN.merged();
     if (m.p && m.k && m.s) { s.hold += DT; s.pend = null; if (s.hold >= 3) { A.sfx('select'); go('settings'); } return; } else s.hold = 0;
     if (s.t > .4 && (IN.p[0].pressed.d || IN.p[1].pressed.d)) { A.sfx('select'); go('movelist', { back: 'title' }); return; }   // ↓ = 기술표
-    if (s.t > .4 && (IN.p[0].pressed.u || IN.p[1].pressed.u)) { A.sfx('select'); go('ranking', { from: 'title' }); return; }   // 10/2 ↑ = 순위표
+    if (!CUP && s.t > .4 && (IN.p[0].pressed.u || IN.p[1].pressed.u)) { A.sfx('select'); go('ranking', { from: 'title' }); return; }   // 10/2 ↑ = 순위표 (11/11 대회판은 순위 없음)
     if (s.t > .4 && IN.anyPressed && s.pend == null) s.pend = s.t;   // 눌림 → 0.25초 안에 세 버튼이 다 안 눌리면 시작
     if (s.pend != null && s.t - s.pend > .3) { A.sfx('select'); go('howto'); return; }   // 10/25: 시작하면 조작법 화면을 한 번 거쳐 감
     if (!CUP && IN.idleMs() > idleMs()) startDemo();
   },
-  click(x, y) { if (scene.t > .3) { A.sfx('select'); if (y > 925 && y < 975 && Math.abs(x - W / 2) < 300) go('movelist', { back: 'title' }); else if (x < 520 && y > 100 && y < 400) go('ranking', { from: 'title' }); else go('howto'); } },
+  click(x, y) { if (scene.t > .3) { A.sfx('select'); if (y > 925 && y < 975 && Math.abs(x - W / 2) < 300) go('movelist', { back: 'title' }); else if (!CUP && x < 520 && y > 100 && y < 400) go('ranking', { from: 'title' }); else go('howto'); } },
   draw(s) {
     const bg = BG[2]; const z = 1.04 + Math.sin(s.t * .15) * .02;
     ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2); if (bg) ctx.drawImage(bg, -40, -40); ctx.restore();
@@ -1685,8 +1685,8 @@ SCENES.title = {
     logo(W / 2, 370 + Math.sin(s.t * 2) * 6, 1);   // 10/25 살짝 내림
     if (blink(1.4)) label('아무 버튼이나 누르면 시작!', W / 2, 790, 64, '#ffffff', FONT, 'center', 6);   // 10/25 덜 두껍게
     label('PRESS ANY BUTTON', W / 2, 862, 34, '#ffe600', NUM, 'center', 6);
-    label('▼ 아래 = 기술표   ▲ 위 = 순위표', W / 2, 950, 28, '#19f5c8', FONT, 'center', 6);
-    titleTop3(40, 104, s.t);   // 10/25: 조작법 상자는 다음 화면(howto)으로 옮김
+    label(CUP ? '▼ 아래 = 기술표' : '▼ 아래 = 기술표   ▲ 위 = 순위표', W / 2, 950, 28, '#19f5c8', FONT, 'center', 6);
+    if (!CUP) titleTop3(40, 104, s.t);   // 11/11 다래: 대회판 첫 화면엔 순위 안 보이게   // 10/25: 조작법 상자는 다음 화면(howto)으로 옮김
     label('2026 문화도시 울산 「AI 콘텐츠 활성화」 사업으로 만든 게임입니다.', W / 2, 44, 22, 'rgba(255,255,255,.85)', NUM, 'center', 0, 300);   // 10/25 다래: 위쪽 가운데 작게
     drawBrand(W / 2, 1060);
     if (s.hold > .3) { ctx.save(); ctx.fillStyle = 'rgba(0,0,0,.7)'; ctx.fillRect(0, 0, W, H); ctx.restore(); label(`박람회 설정 여는 중… ${Math.ceil(3 - s.hold)}`, W / 2, H / 2, 70, '#ffe600', FONT, 'center', 9); }
